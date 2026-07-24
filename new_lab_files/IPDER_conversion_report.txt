@@ -1,0 +1,138 @@
+IPD (iinves) + ER (einves) footer conversion report — 2026-07-18
+===============================================================
+
+FILE                             STATUS       CATEGORY(subtype)
+----                             ------       -----------------
+24ccratereport.php               CONVERTED    BIOCHEMISTRY
+24ccratereport2.php              CONVERTED    BIOCHEMISTRY
+24urinealbuminreport.php         CONVERTED    BIOCHEMISTRY
+24urinechloridereport.php        CONVERTED    BIOCHEMISTRY
+24urinecorreport.php             CONVERTED    BIOCHEMISTRY
+24urinepotassiumreport.php       CONVERTED    BIOCHEMISTRY
+24urineproteinreport.php         CONVERTED    FLUIDS & EXCREATIONS
+24urineproteinreport2.php        CONVERTED    FLUIDS & EXCREATIONS
+24urinesodiumreport.php          CONVERTED    BIOCHEMISTRY
+anareport1.php                   CONVERTED    IMMUNOLOGY/SEROLOGY
+antihbc11report1.php             CONVERTED    IMMUNOLOGY/SEROLOGY
+antihbcprint1.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+antihbcprint1e.php               CONVERTED    IMMUNOLOGY/SEROLOGY
+antihbcprint1in.php              CONVERTED    IMMUNOLOGY/SEROLOGY
+antihbcreport.php                MISSING      IMMUNOLOGY/SEROLOGY
+antihbcreport2.php               MISSING      IMMUNOLOGY/SEROLOGY
+antihcvreport.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+antihcvreport2.php               CONVERTED    IMMUNOLOGY/SEROLOGY
+antihevprint.php                 MISSING      IMMUNOLOGY/SEROLOGY
+antihevreport.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+bfluidprintin.php                CONVERTED    BIOCHEMISTRY
+bgroupprint.php                  CONVERTED    (MULTI) BLOOD BANK|IMMUNOLOGY/SEROLOGY
+bgroupprint2.php                 CONVERTED    (MULTI) BLOOD BANK|IMMUNOLOGY/SEROLOGY
+brucellprint.php                 MISSING      IMMUNOLOGY/SEROLOGY
+cbcreport.php                    CONVERTED    HAEMATOLOGY
+cbcreport2.php                   CONVERTED    HAEMATOLOGY
+chikunreport.php                 CONVERTED    IMMUNOLOGY/SEROLOGY
+chikunreport2.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+covid_anti_ae_report.php         CONVERTED    IMMUNOLOGY/SEROLOGY
+covid_anti_ipd_report.php        CONVERTED    IMMUNOLOGY/SEROLOGY
+covid_r_report_ae.php            CONVERTED    IMMUNOLOGY/SEROLOGY
+covid_r_report_ipd.php           CONVERTED    IMMUNOLOGY/SEROLOGY
+covid_t_ipd_report.php           CONVERTED    IMMUNOLOGY/SEROLOGY
+denguereport.php                 CONVERTED    IMMUNOLOGY/SEROLOGY
+denguereport1_1.php              CONVERTED    IMMUNOLOGY/SEROLOGY
+denguereport1_32.php             CONVERTED    IMMUNOLOGY/SEROLOGY
+denguereport1_33.php             CONVERTED    IMMUNOLOGY/SEROLOGY
+denguereport2.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+denguereport2_2.php              CONVERTED    IMMUNOLOGY/SEROLOGY
+denguereport3_3.php              CONVERTED    IMMUNOLOGY/SEROLOGY
+dicreport.php                    CONVERTED    PROFILE
+dicreport2.php                   CONVERTED    PROFILE
+dlcreport.php                    CONVERTED    HAEMATOLOGY
+dlcreport2.php                   CONVERTED    BIOCHEMISTRY
+egfr2.php                        SKIP(form)   FLUIDS & EXCREATIONS
+egfrreport.php                   CONVERTED    FLUIDS & EXCREATIONS
+febrilereport.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+febrilereport2.php               MISSING      IMMUNOLOGY/SEROLOGY
+febrilereportae.php              CONVERTED    IMMUNOLOGY/SEROLOGY
+febrilereportipd.php             CONVERTED    IMMUNOLOGY/SEROLOGY
+fluid_report_view_ae.php         CONVERTED    (MULTI) BACTERIOLOGY|BIOCHEMISTRY\t|BIOCHEMISTRY|Body Fluid|HAEMATOLOGY|IMMUNOLOGY/SEROLOGY|PROFILE|VIROLOGY
+fluid_report_view_in.php         CONVERTED    (MULTI) BACTERIOLOGY|BIOCHEMISTRY\t|BIOCHEMISTRY|BLOOD BANK|Body Fluid|CYTOLOGY|FLUIDS & EXCREATIONS|HAEMATOLOGY|HISTOLOGY|IMMUNOLOGY/SEROLOGY|MRI|PROFILE|ULTRASOUND|VIROLOGY
+gtolerancereport.php             MISSING      BIOCHEMISTRY
+gtolernacereport.php             CONVERTED    BIOCHEMISTRY
+gtolernacereport2.php            CONVERTED    BIOCHEMISTRY
+havreport.php                    CONVERTED    IMMUNOLOGY/SEROLOGY
+havreport2.php                   CONVERTED    IMMUNOLOGY/SEROLOGY
+hbeaprint.php                    CONVERTED    HAEMATOLOGY
+hbsagreport.php                  CONVERTED    IMMUNOLOGY/SEROLOGY
+hbsagreport1.php                 CONVERTED    IMMUNOLOGY/SEROLOGY
+hbsagreport2.php                 CONVERTED    IMMUNOLOGY/SEROLOGY
+hev_igm_report1.php              CONVERTED    IMMUNOLOGY/SEROLOGY
+hev_igm_report2.php              CONVERTED    IMMUNOLOGY/SEROLOGY
+historeport_ipd.php              CONVERTED    HISTOLOGY
+hiv_elisa_report1.php            CONVERTED    IMMUNOLOGY/SEROLOGY
+hiv_elisa_report2.php            CONVERTED    IMMUNOLOGY/SEROLOGY
+hpv_pcr_ipd_report.php           CONVERTED    BACTERIOLOGY
+hpv_pcr_opd_report.php           CONVERTED    BACTERIOLOGY
+ironreport.php                   CONVERTED    PROFILE
+ironreport2.php                  CONVERTED    PROFILE
+lab_new_report_view_in.php       CONVERTED    (MULTI) BIOCHEMISTRY|CYTOLOGY|HISTOLOGY
+labmicroreport11ae.php           CONVERTED    BACTERIOLOGY
+labmicroreport11in.php           CONVERTED    (MULTI)  BACTERIOLOGY|BACTERIOLOGY|FLUIDS & EXCREATIONS
+labmicroreportae.php             CONVERTED    (MULTI)  BACTERIOLOGY|BACTERIOLOGY
+labmicroreportin.php             CONVERTED    (MULTI)  BACTERIOLOGY|BACTERIOLOGY|LAB
+lipidreport.php                  CONVERTED    (MULTI) biochemistry|PROFILE
+lipidreport2.php                 CONVERTED    (MULTI) biochemistry|PROFILE
+liverreport.php                  CONVERTED    PROFILE
+liverreport2.php                 CONVERTED    PROFILE
+mtb_ipd_report.php               CONVERTED    BACTERIOLOGY
+new_inves_1_report.php           CONVERTED    PROFILE
+pcr_myco_report_in.php           CONVERTED    BACTERIOLOGY
+plastinreport.php                CONVERTED    HAEMATOLOGY
+plastinreport2.php               CONVERTED    HAEMATOLOGY
+printlabreport.php               CONVERTED    (MULTI)  BACTERIOLOGY|BACTERIOLOGY|BIOCHEMISTRY\t|Biochemistry|BLOOD BANK|CYTOLOGY|FLUIDS & EXCREATIONS|HAEMATOLOGY|HISTOLOGY|IMMUNOLOGY/SEROLOGY|PROFILE|VIROLOGY
+printlabreport11.php             CONVERTED    (MULTI)  BACTERIOLOGY|BIOCHEMISTRY|FLUIDS & EXCREATIONS|IMMUNOLOGY/SEROLOGY
+printlabreportae.php             CONVERTED    (MULTI)  BACTERIOLOGY|BACTERIOLOGY|BIOCHEMISTRY|BLOOD BANK|FLUIDS & EXCREATIONS|HAEMATOLOGY|IMMUNOLOGY/SEROLOGY|PROFILE|VIROLOGY
+printlabreportaehigh.php         CONVERTED    BACTERIOLOGY
+printlabreportaepbf.php          CONVERTED    HAEMATOLOGY
+printlabreporthigh.php           CONVERTED    BACTERIOLOGY
+printlabreportopd.php            CONVERTED    IMMUNOLOGY/SEROLOGY
+printlabreportopdpcrin.php       CONVERTED    (MULTI) BACTERIOLOGY|VIROLOGY
+printlabreportpbf.php            CONVERTED    HAEMATOLOGY
+prothrombinreport.php            CONVERTED    HAEMATOLOGY
+prothrombinreport2.php           CONVERTED    HAEMATOLOGY
+pylori_endo_report_in.php        CONVERTED    IMMUNOLOGY/SEROLOGY
+pylorireporte.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+pylorireportin.php               CONVERTED    IMMUNOLOGY/SEROLOGY
+renalreport.php                  CONVERTED    PROFILE
+renalreport2.php                 CONVERTED    PROFILE
+rhantibodyprint.php              CONVERTED    BLOOD BANK
+rubella_ipd_report.php           CONVERTED    IMMUNOLOGY/SEROLOGY
+semenreport.php                  CONVERTED    (MULTI)  BACTERIOLOGY|FLUIDS & EXCREATIONS
+serumreport.php                  CONVERTED    PROFILE
+serumreport1_gas1.php            CONVERTED    PROFILE
+serumreport1_gas2.php            CONVERTED    PROFILE
+serumreport2.php                 CONVERTED    PROFILE
+smoothantireport.php             CONVERTED    IMMUNOLOGY/SEROLOGY
+stoolreport.php                  CONVERTED    FLUIDS & EXCREATIONS
+stoolreport2.php                 CONVERTED    FLUIDS & EXCREATIONS
+tcdcipd_report.php               CONVERTED    HAEMATOLOGY
+test_report_ae.php               CONVERTED    BACTERIOLOGY
+test_report_ipd.php              CONVERTED    BACTERIOLOGY
+thyroidreport.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+tphareport_ae.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+tphareport_in.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+urineacratioreport.php           CONVERTED    BIOCHEMISTRY
+urineacratioreport2.php          CONVERTED    BIOCHEMISTRY
+urineelectroreport.php           CONVERTED    BIOCHEMISTRY
+urineelectroreport2.php          CONVERTED    BIOCHEMISTRY
+urinepcratioreport.php           CONVERTED    BIOCHEMISTRY
+urinephosphatereport.php         CONVERTED    BIOCHEMISTRY
+urinereport.php                  CONVERTED    FLUIDS & EXCREATIONS
+urinereport2.php                 CONVERTED    FLUIDS & EXCREATIONS
+vdrlreport_ae.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+vdrlreport_in.php                CONVERTED    IMMUNOLOGY/SEROLOGY
+widalreport.php                  CONVERTED    IMMUNOLOGY/SEROLOGY
+widalreport2.php                 CONVERTED    IMMUNOLOGY/SEROLOGY
+
+Notes:
+ - MISSING: referenced in iinves/einves but not present on disk.
+ - SKIP(form): egfr2.php is an HTML data-entry form, not a printed PDF report.
+ - MULTI viewers resolve subtype from the report's own alltest record.

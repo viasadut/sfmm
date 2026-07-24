@@ -1,0 +1,765 @@
+<?php 
+
+    session_start();
+	
+	//$tt = $_SESSION['sess_fullname'];
+    $role = $_SESSION['sess_userrole'];
+	
+    if(!isset($_SESSION['sess_username']) || $role!="oic"){
+      header('Location: login2?err=2');
+	  
+    }
+?>
+<?php
+$url1=$_SERVER['REQUEST_URI'];
+header("Refresh: 30; URL=$url1");
+//$tt=$_SERVER['HTTP_HOST']	;
+$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+
+?>
+
+	<?php
+$did = "CtaXiM7Zd3Ds9.Y";
+$ciphering = "AES-192-CTR";
+$iv_length = openssl_cipher_iv_length($ciphering);
+$options = 0;
+$encryption_iv = '1234567891011123';
+$encryption_key = "login";
+$encryption = openssl_encrypt($did,$ciphering,$encryption_key, $options, $encryption_iv);
+//accounts
+//echo "<a target='_blank' href='https://sfmmkpjsh.com/login?e=admission@sfmmkpjsh.com&p=".$encryption."'>Login<a/>";
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+//session_start();
+require('db1.php');
+//include("auth.php");
+$fullname = $_SESSION['sess_username'];
+$query39 = "SELECT * FROM user where uname= '$fullname'"; 
+	 
+$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+
+// Print out result
+$row39 = mysqli_fetch_array($result39)
+?>
+<?php
+
+$query_staff = "SELECT * FROM staff3 where sid= '$fullname'"; 
+	 
+$result_staff = mysqli_query($con, $query_staff) or die(mysqli_error());
+
+// Print out result
+$row_staff = mysqli_fetch_array($result_staff);
+$full_l = $row_staff['sid1'];
+
+
+
+
+$adate=date('Y-m-d');
+$full = $row39['fullname'];
+
+$phar1 = "SELECT COUNT(id) FROM medicineedit where status='Waiting For CEO Approval'";
+$phar11 = mysqli_query($con, $phar1) or die(mysqli_error());
+$phar111 = mysqli_fetch_array($phar11);
+$phar_ceo=$phar111['COUNT(id)'];
+
+$phar1_cfo = "SELECT COUNT(id) FROM medicineedit where status='Waiting For CFO Approval'";
+$phar11_cfo = mysqli_query($con, $phar1_cfo) or die(mysqli_error());
+$phar111_cfo = mysqli_fetch_array($phar11_cfo);
+$phar_cfo=$phar111_cfo['COUNT(id)'];
+
+$phar1_md = "SELECT COUNT(id) FROM medicineedit where status='Waiting For MD Approval'";
+$phar11_md = mysqli_query($con, $phar1_md) or die(mysqli_error());
+$phar111_md = mysqli_fetch_array($phar11_md);
+$phar_md=$phar111_md['COUNT(id)'];
+
+
+
+$phar1a = "SELECT COUNT(id) FROM medicinerequest where rstatus='Waiting For CEO Approval'";
+$phar11a = mysqli_query($con, $phar1a) or die(mysqli_error());
+$phar111a = mysqli_fetch_array($phar11a);
+$phar_ceoa=$phar111a['COUNT(id)'];
+
+$phar1_cfoa = "SELECT COUNT(id) FROM medicinerequest where rstatus='Waiting For CFO Approval'";
+$phar11_cfoa = mysqli_query($con, $phar1_cfoa) or die(mysqli_error());
+$phar111_cfoa = mysqli_fetch_array($phar11_cfoa);
+$phar_cfoa=$phar111_cfoa['COUNT(id)'];
+
+$phar1_mda = "SELECT COUNT(id) FROM medicinerequest where rstatus='Waiting For MD Approval'";
+$phar11_mda = mysqli_query($con, $phar1_mda) or die(mysqli_error());
+$phar111_mda = mysqli_fetch_array($phar11_mda);
+$phar_mda=$phar111_mda['COUNT(id)'];
+
+
+
+$death_n = "SELECT COUNT(id) FROM deathn where new_issue='new'";
+$death_n1 = mysqli_query($con, $death_n) or die(mysqli_error());
+$death_n11 = mysqli_fetch_array($death_n1);
+$death_n_r=$death_n11['COUNT(id)'];
+
+
+$death_b = "SELECT COUNT(id) FROM deathb where new_issue='new'";
+$death_b1 = mysqli_query($con, $death_b) or die(mysqli_error());
+$death_b11 = mysqli_fetch_array($death_b1);
+$death_b_r=$death_b11['COUNT(id)'];
+$total_death=$death_n_r+$death_b_r;
+
+$query22 = "SELECT COUNT(lseen) FROM conleavedetails where md='$full' and status='Approved By Replacement Consultant' and lseen='RSEEN'"; 
+$result22 = mysqli_query($con, $query22) or die(mysqli_error());
+$row22 = mysqli_fetch_array($result22);
+
+$query21 = "SELECT COUNT(lseen) FROM conleavedetails where ceo='$full' and status='Approved By MD' and lseen='MDSEEN'"; 
+$result21 = mysqli_query($con, $query21) or die(mysqli_error());
+$row21 = mysqli_fetch_array($result21);
+
+
+
+$query23 = "SELECT COUNT(apstatus) FROM preadm where apstatus='Forwarded For CEO Approval' and ddrequest='Pending'"; 
+$result23 = mysqli_query($con, $query23) or die(mysqli_error());
+$row23 = mysqli_fetch_array($result23);
+$c1=$row23['COUNT(apstatus)'];
+
+$query24 = "SELECT COUNT(apstatus) FROM endopapp where apstatus='Forwarded For CEO Approval' and ddrequest='Pending'"; 
+$result24 = mysqli_query($con, $query24) or die(mysqli_error());
+$row24 = mysqli_fetch_array($result24);
+$c2=$row24['COUNT(apstatus)'];
+
+
+
+$query25 = "SELECT COUNT(apstatus) FROM preadm where apstatus='Forwarded For MD Approval' and ddrequest='Pending'"; 
+$result25 = mysqli_query($con, $query25) or die(mysqli_error());
+$row25 = mysqli_fetch_array($result25);
+$c3=$row25['COUNT(apstatus)'];
+
+$query26 = "SELECT COUNT(apstatus) FROM endopapp where apstatus='Forwarded For MD Approval' and ddrequest='Pending'"; 
+$result26 = mysqli_query($con, $query26) or die(mysqli_error());
+$row26 = mysqli_fetch_array($result26);
+$c4=$row26['COUNT(apstatus)'];
+
+
+
+$query27 = "SELECT COUNT(apstatus) FROM preadm where apstatus='Forwarded For CFO Approval'and ddrequest='Pending'"; 
+$result27 = mysqli_query($con, $query27) or die(mysqli_error());
+$row27 = mysqli_fetch_array($result27);
+$c5=$row27['COUNT(apstatus)'];
+
+$query28 = "SELECT COUNT(apstatus) FROM endopapp where apstatus='Forwarded For CFO Approval'and ddrequest='Pending'"; 
+$result28 = mysqli_query($con, $query28) or die(mysqli_error());
+$row28 = mysqli_fetch_array($result28);
+$c6=$row28['COUNT(apstatus)'];
+
+$query59 = "SELECT * FROM attendance where sid= '$fullname' and adate='$adate'"; 
+$result59 = mysqli_query($con, $query59) or die(mysqli_error());
+
+// Print out result
+$row59 = mysqli_fetch_array($result59);
+$etime=$row59['etime'];
+
+$server=$_SERVER['REMOTE_ADDR'];
+
+$queryb = "SELECT COUNT(sid) FROM attendance where adate='$adate' and sid='$fullname'"; 
+$resultb = mysqli_query($con, $queryb) or die(mysqli_error());
+$rowb = mysqli_fetch_array($resultb);
+$c11=$rowb['COUNT(sid)'];
+
+
+$queryin = "SELECT COUNT(id) FROM incident1 where status='Forwarded'"; 
+$resultin = mysqli_query($con, $queryin) or die(mysqli_error());
+$rowin = mysqli_fetch_array($resultin);
+$cin=$rowin['COUNT(id)'];
+
+
+
+$queryin2 = "SELECT COUNT(id) FROM incident1 where status='Forwarded' and com3 !='' and com4 !='' and com5!='' and chaircom!='' and itype='Clinical'"; 
+$resultin2 = mysqli_query($con, $queryin2) or die(mysqli_error());
+$rowin2 = mysqli_fetch_array($resultin2);
+$cin2=$rowin2['COUNT(id)'];
+
+
+$queryin1 = "SELECT COUNT(id) FROM incident1 where status='Forwarded' and com5!='' and chaircom!='' and itype='Non-Clinical'"; 
+$resultin1 = mysqli_query($con, $queryin1) or die(mysqli_error());
+$rowin1 = mysqli_fetch_array($resultin1);
+$cin1=$rowin1['COUNT(id)'];
+
+$cin3=$cin1+$cin2;
+
+
+
+
+$queryit = "SELECT COUNT(id) FROM ticket_tickets where status in('In Progress','Open')"; 
+$resultit = mysqli_query($con, $queryit) or die(mysqli_error());
+$rowit = mysqli_fetch_array($resultit);
+$cit=$rowit['COUNT(id)'];
+
+
+$query_s = "SELECT COUNT(id) FROM dleave where hstatus='Approval Pending' and hos in('$full_l') and recomby=''";
+$result_s = mysqli_query($con, $query_s) or die(mysqli_error());
+$row_s = mysqli_fetch_array($result_s);
+$s_l=$row_s['COUNT(id)'];
+
+
+$query_inves = "SELECT COUNT(id) FROM edit_inves where status='Waiting For CEO Approval'";
+$result_inves = mysqli_query($con, $query_inves) or die(mysqli_error());
+$row_inves = mysqli_fetch_array($result_inves);
+$s_inves=$row_inves['COUNT(id)'];
+
+$query_inves_a = "SELECT COUNT(id) FROM radio where status='Waiting For CEO Approval'";
+$result_inves_a = mysqli_query($con, $query_inves_a) or die(mysqli_error());
+$row_inves_a = mysqli_fetch_array($result_inves_a);
+$s_inves_a=$row_inves_a['COUNT(id)'];
+
+$ss_ceo=$s_inves_a+$s_inves+$phar_ceo+$phar_ceoa;
+
+
+
+$query_inves1 = "SELECT COUNT(id) FROM edit_inves where status='Waiting For CFO Approval'";
+$result_inves1 = mysqli_query($con, $query_inves1) or die(mysqli_error());
+$row_inves1 = mysqli_fetch_array($result_inves1);
+$s_inves1=$row_inves1['COUNT(id)'];
+
+$query_inves_a1 = "SELECT COUNT(id) FROM radio where status='Waiting For CFO Approval'";
+$result_inves_a1 = mysqli_query($con, $query_inves_a1) or die(mysqli_error());
+$row_inves_a1 = mysqli_fetch_array($result_inves_a1);
+$s_inves_a1=$row_inves_a1['COUNT(id)'];
+
+$ss_cfo=$s_inves_a1+$s_inves1+$phar_cfo+$phar_cfoa;
+
+
+$query_inves2 = "SELECT COUNT(id) FROM edit_inves where status='Waiting For MD Approval'";
+$result_inves2 = mysqli_query($con, $query_inves2) or die(mysqli_error());
+$row_inves2 = mysqli_fetch_array($result_inves2);
+$s_inves2=$row_inves2['COUNT(id)'];
+
+$query_inves_a2 = "SELECT COUNT(id) FROM radio where status='Waiting For MD Approval'";
+$result_inves_a2 = mysqli_query($con, $query_inves_a2) or die(mysqli_error());
+$row_inves_a2 = mysqli_fetch_array($result_inves_a2);
+$s_inves_a2=$row_inves_a2['COUNT(id)'];
+
+$ss_md=$s_inves_a2+$s_inves2+$phar_md+$phar_mda;
+
+
+
+$query_inves_asset = "SELECT COUNT(id) FROM storenew where estatus='Waiting For CEO Approval'";
+$result_inves_asset = mysqli_query($con, $query_inves_asset) or die(mysqli_error());
+$row_inves_asset = mysqli_fetch_array($result_inves_asset);
+$s_inves_asset=$row_inves_asset['COUNT(id)'];
+
+$query_inves_asset1 = "SELECT COUNT(id) FROM storenew_edit where estatus='Waiting For CEO Approval'";
+$result_inves_asset1 = mysqli_query($con, $query_inves_asset1) or die(mysqli_error());
+$row_inves_asset1 = mysqli_fetch_array($result_inves_asset1);
+$s_inves_asset1=$row_inves_asset1['COUNT(id)'];
+
+$asset_ceo=$s_inves_asset+$s_inves_asset1;
+$ceo_new=$ss_ceo+$asset_ceo+$phar_ceo;
+
+$query_inves_asset_cfo = "SELECT COUNT(id) FROM storenew where estatus='Waiting For CFO Approval'";
+$result_inves_asset_cfo = mysqli_query($con, $query_inves_asset_cfo) or die(mysqli_error());
+$row_inves_asset_cfo = mysqli_fetch_array($result_inves_asset_cfo);
+$s_inves_asset_cfo=$row_inves_asset_cfo['COUNT(id)'];
+
+$query_inves_asset1_cfo = "SELECT COUNT(id) FROM storenew_edit where estatus='Waiting For CFO Approval'";
+$result_inves_asset1_cfo = mysqli_query($con, $query_inves_asset1_cfo) or die(mysqli_error());
+$row_inves_asset1_cfo = mysqli_fetch_array($result_inves_asset1_cfo);
+$s_inves_asset1_cfo=$row_inves_asset1_cfo['COUNT(id)'];
+
+$asset_cfo=$s_inves_asset_cfo+$s_inves_asset1_cfo;
+$cfo_new=$ss_cfo+$asset_cfo;
+
+
+
+$query_inves_asset_md = "SELECT COUNT(id) FROM storenew where estatus='Waiting For MD Approval'";
+$result_inves_asset_md = mysqli_query($con, $query_inves_asset_md) or die(mysqli_error());
+$row_inves_asset_md = mysqli_fetch_array($result_inves_asset_md);
+$s_inves_asset_md=$row_inves_asset_md['COUNT(id)'];
+
+$query_inves_asset1_md = "SELECT COUNT(id) FROM storenew_edit where estatus='Waiting For CFO Approval'";
+$result_inves_asset1_md = mysqli_query($con, $query_inves_asset1_md) or die(mysqli_error());
+$row_inves_asset1_md = mysqli_fetch_array($result_inves_asset1_md);
+$s_inves_asset1_md=$row_inves_asset1_md['COUNT(id)'];
+
+$asset_md=$s_inves_asset_md+$s_inves_asset1_md;
+
+$md_new=$ss_md+$asset_md+$phar_md;
+
+
+
+$proposal = "SELECT COUNT(id) FROM proposal where status!='Approved'";
+$proposal_q = mysqli_query($con, $proposal) or die(mysqli_error());
+$proposal_q1 = mysqli_fetch_array($proposal_q);
+$proposal_q2=$proposal_q1['COUNT(id)'];
+
+
+
+$queryw = "SELECT COUNT(id) FROM todolist where dis='' and status!='DONE'"; 
+	 
+$resultw = mysqli_query($con, $queryw) or die(mysqli_error());
+
+// Print out result
+$roww = mysqli_fetch_array($resultw);
+$p_work=$roww['COUNT(id)'];
+
+
+
+$apdate=date('Y-m-d');
+$test=date('Y-m-d', strtotime('-30 days') );
+
+$lab = "SELECT COUNT(id) from alltest where type='lab' and subtype in('BIOCHEMISTRY','HAEMATOLOGY','PROFILE','FLUIDS & EXCREATIONS','BLOOD BANK','BACTERIOLOGY','IMMUNOLOGY/SEROLOGY','VIROLOGY') and rstatus ='RECEIVED' and status ='RECEIVED' and resultstatus='Updated By Technologist' and date1 between '$test' and '$apdate' and rejectby=''"; 
+$lab_result= mysqli_query($con, $lab) or die(mysqli_error());
+$lab_row = mysqli_fetch_array($lab_result);
+$lab_r=$lab_row['COUNT(id)'];
+
+$lab1 = "SELECT COUNT(id) from iinves where type='lab' and subtype in('BIOCHEMISTRY','HAEMATOLOGY','PROFILE','FLUIDS & EXCREATIONS','BLOOD BANK','BACTERIOLOGY','IMMUNOLOGY/SEROLOGY','VIROLOGY') and rstatus ='RECEIVED' and status ='RECEIVED' and resultstatus='Updated By Technologist' and ndate between '$test' and '$apdate' and rejectby=''"; 
+$lab_result1= mysqli_query($con, $lab1) or die(mysqli_error());
+$lab_row1 = mysqli_fetch_array($lab_result1);
+$lab_r1=$lab_row1['COUNT(id)'];
+
+$lab2 = "SELECT COUNT(id) from einves where type='lab' and subtype in('BIOCHEMISTRY','HAEMATOLOGY','PROFILE','FLUIDS & EXCREATIONS','BLOOD BANK','BACTERIOLOGY','IMMUNOLOGY/SEROLOGY','VIROLOGY') and rstatus ='RECEIVED' and status ='RECEIVED' and resultstatus='Updated By Technologist' and ndate between '$test' and '$apdate' and rejectby=''"; 
+$lab_result2= mysqli_query($con, $lab2) or die(mysqli_error());
+$lab_row2 = mysqli_fetch_array($lab_result2);
+$lab_r2=$lab_row2['COUNT(id)'];
+
+$lab_all=$lab_r + $lab_r1 + $lab_r2;
+
+
+
+$cafe= "SELECT COUNT(approve_by) FROM restaurant_category_items where approve_by=''"; 
+$cafe_result = mysqli_query($con, $cafe) or die(mysqli_error());
+$row_cafe = mysqli_fetch_array($cafe_result);
+$cafe_data=$row_cafe['COUNT(approve_by)'];
+
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>View Records</title>
+<link rel="stylesheet" href="css/style2.css">
+<style type="text/css">
+<!--
+.style1 {
+	font-size: x-large;
+	font-weight: bold;
+	font-style: italic;
+}
+-->
+
+div1 {
+    height: 40px;
+    width: 30%;
+    background-color: powderblue;
+}
+
+
+img {
+  border-radius: 50%;
+  
+}
+</style>
+
+
+   <link rel="stylesheet" href="styles.css">
+   <script src="jsnew/jquery-latest.min.js" type="text/javascript"></script>
+   <script src="script.js"></script>
+
+<script type="text/javascript">
+function confirm_click()
+{
+return confirm("Are you Sure to Proceed ?");
+}
+
+</script>
+
+<script type="text/javascript">
+function confirm_click1()
+{
+return confirm("Are you Sure to Proceed ?");
+}
+
+</script>
+
+<script type="text/javascript">
+function confirm_click3()
+{
+return confirm("Are you Sure to Proceed ?");
+}
+
+</script>
+
+
+<script type="text/javascript">
+function confirm_click4()
+{
+return confirm("Are you Sure to Proceed ?");
+}
+
+</script>
+
+<script type="text/javascript">
+function confirm_click5()
+{
+return confirm("Are you Sure to Proceed ?");
+}
+
+</script>
+
+<script type="text/javascript">
+function confirm_click6()
+{
+return confirm("Are you Sure to Proceed ?");
+}
+
+</script>
+
+
+</head>
+
+
+<body>
+
+
+
+
+
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='homemng'><span>Home</span></a></li>
+  
+   <li class='active has-sub'><a href='#'><span>BED MANAGEMENT</span></a>
+      <ul>
+	   <li class='last'><a href='bedviewbill_bill'><span>Old Format</span></a></li>
+	   <li class='last'><a href='bed_mng_test5'><span>New Format (Under Construction)</span></a></li>
+	   <li class='last'><a href='add_new_bed'><span>Add New Bed</span></a></li>
+	   
+            
+         
+      </ul>
+   </li>
+   
+  
+   <li class='last'><a href='mngpassword'><span>Change Password</span></a></li>
+   
+   <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+<table width="100%" height ="100%" border="1" align="center" bgcolor="#FFFF99" style="border-collapse:collapse;" >
+<tr>
+<td colspan="20"align="right"bgcolor="lightblue">
+<a target='_blank' href="hinfo111"><img src="hinfo.jpg" title="Hospital Information" width="50" height="30" /></a>
+<a target='_blank' href="task_index"><img src="to_do.jpg" title="ADD YOUR TO-DO-LIST" width="50" height="30" /></a>
+<a target='_blank' href="event_cal/calender.php"><img src="event_cal/cal_view.png" title="View Even Calendar" width="50" height="30" /></a>
+</tr>
+
+<tr><td colspan="19"align="center"bgcolor="lightblue"class="style1" border="0">Welcome!! <?php echo $row39['fullname']; ?></td>
+
+</tr>
+
+<tr><td colspan="20"align="center"bgcolor="lightgreen"><img  src="staff_pic/<?php echo $row_staff['pic'] ?>" width="100"  height="100" align="center"></td>
+
+</tr>
+
+
+<tr><td align="center" colspan="10" bgcolor="lightblue">
+
+
+
+
+
+<?php
+		
+		$sid=$fullname;
+		
+		$url = "aattnoic?sid=$sid"; 
+		$url3 = "aattn3oic?sid=$sid"; 
+		$url4 = "aattn4oic?sid=$sid";
+		$url5 = "aattn5oic?sid=$sid";		
+		$url6 = "aattn6oic?sid=$sid";
+	if($c11==0)
+	{ 
+echo "<a onclick='return confirm_click();' href='$url'><img src='happy.jpg' title='Happy' width='130' height='90' /></a>
+<a onclick='return confirm_click3();' href='$url3'><img src='sad.jpg' title='Sad' width='130' height='90' /></a>
+<a onclick='return confirm_click4();' href='$url4'><img src='tired.jpg' title='Tired' width='130' height='90' /></a>
+<a onclick='return confirm_click5();' href='$url5'><img src='angry.jpg' title='Angry' width='130' height='90' /></a>
+<a onclick='return confirm_click6();' href='$url6'><img src='anxious.jpg' title='Anxious' width='130' height='90' /></a>";
+
+	}
+	
+	else 
+	{ 
+echo "<h3>Day Started</h3>";
+	}
+	
+	
+	?>
+	
+	
+		
+
+
+</td>
+
+<td align="center" colspan="10" bgcolor="lightblue">
+
+
+
+
+
+<?php
+		
+		$sid=$fullname;
+		
+		$url = "attn1?sid=$sid"; 
+	if($c11>0 && $etime =='')
+	{ 
+echo "<a onclick='return confirm_click();' href='$url'><h3>End Your Day</h3></a>";
+	}
+	
+	else if($c11>0 && $etime !=='')
+	{ 
+echo "<h3>Day Ended</h3>";
+	}
+	else
+	{ 
+echo "<h3>Day Not Started Yet</h3>";
+	}
+	
+	
+	?>
+	
+	
+		
+
+
+</td>
+
+
+
+
+
+
+
+
+
+
+
+</tr>
+
+
+</table>
+
+<?php 
+
+
+if($c11>0 and $fullname=='oic'){
+	echo'
+<table width="100%" height ="100%" border="1" align="center" bgcolor="#FFFF99" style="border-collapse:collapse;">
+
+<tr><td colspan="20"align="center"bgcolor="lightgreen"><h3> Please Select Your Desire Module</h3></td></tr>
+<tr>
+	<td colspan="5"align="center"><a href="opdstatmng"><font size="4.5">OPD Stat</a></td>
+		<td colspan="5" align="center"><a href="ipdstatmng"><font size="4.5">IPD Stat</a></td>
+		<td colspan="3" align="center"><a href="ot_all_oic"><font size="4.5">	OT STAT</a></td>
+		<td colspan="3" align="center"><a href="phar_opd_oic"><font size="4.5">	Pharmacy</a></td>
+		<td colspan="2" align="center"><a href="lab_all_oic"><font size="4.5">LAB</a></td>
+		
+
+		
+	  
+</tr>
+<tr>
+	<td colspan="5"align="center"><a href="opd_home_oic"><font size="4.5">	Todays OPD</a></td>
+		<td colspan="5" align="center"><a href="mngview"><font size="4.5">Todays IPD</a></td>
+		<td colspan="3" align="center"><a href="enereport44mng"><font size="4.5">	Datewise Emergency Discharge</a></td>
+		<td colspan="3" align="center"><a href="endo_all_oic"><font size="4.5">Endoscopy Suite</a></td>
+		<td colspan="3" align="center"><a href="spd_all_oic"><font size="4.5">SPD Stats</a></td>
+		
+		
+		
+	  
+</tr>
+
+
+<tr>
+<td colspan="5"align="center"><a href="hinfo111"><font size="4.5">Hospital Information</a></td>	
+<td colspan="5"align="center"><a href="rad_all_oic"><font size="4.5">Radiology</a></td>	
+
+';}
+
+
+if($c11>0 and $fullname=='1350'){
+	echo'
+<table width="100%" height ="100%" border="1" align="center" bgcolor="#FFFF99" style="border-collapse:collapse;">
+
+<tr><td colspan="20"align="center"bgcolor="lightgreen"><h3> Please Select Your Desire Module</h3></td></tr>
+<tr>
+	<td colspan="5"align="center"><a href="opdstatmng"><font size="4.5">OPD Stat</a></td>
+		<td colspan="5" align="center"><a href="ipdstatmng"><font size="4.5">IPD Stat</a></td>
+		<td colspan="3" align="center"><a href="ot_all_oic"><font size="4.5">	OT STAT</a></td>
+		<td colspan="3" align="center"><a href="phar_opd_oic"><font size="4.5">	Pharmacy</a></td>
+		<td colspan="2" align="center"><a href="lab_all_oic"><font size="4.5">LAB</a></td>
+		
+
+		
+	  
+</tr>
+<tr>
+	<td colspan="5"align="center"><a href="opd_home_oic"><font size="4.5">	Todays OPD</a></td>
+		<td colspan="5" align="center"><a href="mngview"><font size="4.5">Todays IPD</a></td>
+		<td colspan="3" align="center"><a href="enereport44mng"><font size="4.5">	Datewise Emergency Discharge</a></td>
+		<td colspan="3" align="center"><a href="endo_all_oic"><font size="4.5">Endoscopy Suite</a></td>
+		<td colspan="3" align="center"><a href="spd_all_oic"><font size="4.5">SPD Stats</a></td>
+		
+		
+		
+	  
+</tr>
+
+
+<tr>
+<td colspan="5"align="center"><a href="hinfo111"><font size="4.5">Hospital Information</a></td>	
+<td colspan="5"align="center"><a href="rad_all_oic"><font size="4.5">Radiology</a></td>	
+<td colspan="3" align="center"><a href="research_home"><font size="4.5">Research Portal</a></td>
+<td colspan="3">
+<a target="_blank" href="https://sfmmkpjsh.com/login?e=accounts@sfmmkpjsh.com&p='.$encryption.'">Online Payment<a/>
+
+</td>
+
+
+
+
+';}
+    
+else{
+	
+	echo '<h3 align="center" style=”color: red; font-weight: bold;">How Are You Feeling Today !!! Set Your Todays Mood By Clicking Any Of the Above Emoji And Proceed...</h3>';
+}
+?>
+
+
+
+  
+  <table>
+  
+<?php 
+
+$date77=date('Y-m-d');
+$date78=date('m/d/Y');
+
+$query43 = "SELECT COUNT(pmrn) FROM presnew where date1 ='$date77';"; 
+	 
+$result43 = mysqli_query($con, $query43) or die(mysqli_error());
+$row43 = mysqli_fetch_assoc($result43);
+
+
+
+$query44 = "SELECT COUNT(pmrn) FROM inpatient where discharge !='Discharged';"; 
+$result44 = mysqli_query($con, $query44) or die(mysqli_error());
+$row44 = mysqli_fetch_assoc($result44);
+
+
+
+$query44a = "SELECT COUNT(pmrn) FROM inpatient where discharge ='Discharged' and dnew='$date77';"; 
+$result44a = mysqli_query($con, $query44a) or die(mysqli_error());
+$row44a = mysqli_fetch_assoc($result44a);
+
+
+$query45 = "SELECT COUNT(pmrn) FROM emergency where adate2 ='$date77';"; 
+	 
+$result45 = mysqli_query($con, $query45) or die(mysqli_error());
+$row45 = mysqli_fetch_assoc($result45);
+
+
+$query46 = "SELECT COUNT(pmrn) FROM ot where date5 ='$date77' and status='Received';"; 
+	 
+$result46 = mysqli_query($con, $query46) or die(mysqli_error());
+$row46 = mysqli_fetch_assoc($result46);
+
+
+$query47 = "SELECT COUNT(pmrn) FROM endopapp where adate ='$date77' and status in ('Received','SEEN');"; 
+	 
+$result47 = mysqli_query($con, $query47) or die(mysqli_error());
+$row47 = mysqli_fetch_assoc($result47);
+
+
+
+$query48 = "SELECT COUNT(id) FROM covidopd where ssent ='$date77' and status ='collected';"; 
+	 
+$result48 = mysqli_query($con, $query48) or die(mysqli_error());
+$row48 = mysqli_fetch_assoc($result48);
+
+
+echo "<br><br>";
+
+echo "<font color=white font size=5.5><b> TODAY'S HOSPITAL ACTIVITIES AT A GLANCE  - ";
+
+	 
+	 
+	 
+
+echo "OPD-  ";	 
+echo $row43['COUNT(pmrn)'];
+echo " , ";	 
+echo "IPD-  ";	 
+echo $row44['COUNT(pmrn)'];
+echo " , ";	 
+
+echo "IPD Discharged-  ";	 
+echo $row44a['COUNT(pmrn)'];
+echo " , ";	 
+
+
+echo "A&E-  ";	 
+echo $row45['COUNT(pmrn)'];
+echo " , ";	 
+echo "OT-  ";	 
+echo $row46['COUNT(pmrn)'];
+echo " , ";	 
+
+echo "Endoscopy-  ";	 
+echo $row47['COUNT(pmrn)'];
+echo " , ";	 
+
+
+echo "Covid Sample Collection-  ";	 
+echo $row48['COUNT(id)'];
+
+
+
+
+
+?>    
+
+<?php 
+
+if($c11==0)
+{
+	$txt='Greetings'.' '.$full.'WELCOME TO SFMMKPJSH PATIENT Management SYStem';
+  $txt1=htmlspecialchars($txt);
+  $txt2=rawurlencode($txt1);
+  $html=file_get_contents('https://translate.google.com/translate_tts?ie=UTF-8&client=gtx&q='.$txt2.'&tl=en-IN');
+   
+	echo '
+	<audio autoplay>
+	<source src="data:audio/mpeg;base64,'.base64_encode($html).'">
+  <source src="data:audio/ogg;base64,'.base64_encode($html).'">
+ 
+</audio>';}?>
+     
+
+    
+	  
+   
+  </tbody>
+</table>
+</form>
+
+</body>
+
+</html>

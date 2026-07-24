@@ -1,0 +1,556 @@
+<?php
+include_once 'dbconfig.php';
+?>
+
+<?php 
+    session_start();
+    $role = $_SESSION['sess_userrole'];
+    if(!isset($_SESSION['sess_username']) || $role!="endo"){
+      header('Location: login2?err=2');
+    }
+?>
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+//include("auth.php"); 
+require('db1.php');
+
+$user=$_SESSION['sess_username'];
+//$eid=$_REQUEST['eid'];
+  
+?>
+
+<?php
+require('db1.php');
+ $fullname = $_SESSION['sess_username'];
+$query39 = "SELECT * FROM user where uname= '$fullname'"; 
+	 
+$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+
+// Print out result
+$row39 = mysqli_fetch_array($result39)
+?>
+<?php
+$full = $row39['fullname'];
+
+?>
+
+
+<?php
+require('db1.php');
+ $user = $_SESSION['sess_username'];
+$query39 = "SELECT * FROM user where uname= '$user'"; 
+	 
+$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+
+// Print out result
+$row39 = mysqli_fetch_array($result39)
+?>
+<?php
+$full = $row39['fullname'];
+
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+ 
+require('db1.php');
+
+
+
+
+//include("auth1.php");
+$user1=$_SESSION["sess_userrole"];
+$status = "";
+if(isset($_POST['submit9'])==1)
+{
+
+//$name =$_REQUEST['dname'];
+//$did =$_REQUEST['did'];
+$date = $_REQUEST['date'];
+$checkbox = $_REQUEST['select'];
+
+
+
+ 
+if (($_POST['select'])=="ENDOSCOPY")
+{
+	
+	
+$ins_query1="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','09:00AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query1);
+$ins_query100="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','09:20AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query100);
+$ins_query101="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','09:40AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query101);
+$ins_query102="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','10:00AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query102);
+$ins_query103="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','10:20AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query103);
+$ins_query104="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','10:40AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query104);
+$ins_query105="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','11:00AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query105);
+$ins_query106="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','11:20AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query106);
+$ins_query107="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','11:40AM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query107);
+$ins_query108="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','12:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query108);
+$ins_query109="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','12:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query109);
+$ins_query110="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','12:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query110);
+$ins_query111="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','02:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query111);
+$ins_query112="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','02:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query112);
+$ins_query113="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','02:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query113);
+$ins_query114="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','03:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query114);
+$ins_query115="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','03:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query115);
+$ins_query116="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','03:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query116);
+$ins_query117="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','04:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query117);
+$ins_query118="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','04:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query118);
+$ins_query119="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','04:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query119);
+$ins_query120="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','05:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query120);
+$ins_query121="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','05:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query121);
+$ins_query122="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','05:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query122);
+$ins_query123="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','06:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query123);
+$ins_query124="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','06:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query124);
+$ins_query125="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','06:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query125);
+$ins_query126="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','07:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query126);
+$ins_query127="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','07:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query127);
+$ins_query128="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','07:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query128);
+$ins_query129="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','08:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query129);
+$ins_query130="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','08:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query130);
+$ins_query131="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','08:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query131);
+$ins_query132="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','09:00PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query132);
+$ins_query133="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','09:20PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query133);
+$ins_query134="insert into endoapp (`dname`,`ddate`,`dslot`,`status`,`user`) values ('$checkbox', '$date','09:40PM','AVAILABLE','$user')";
+mysqli_query($con,$ins_query134);
+
+
+
+
+
+
+
+
+
+
+   
+    echo '<script language="javascript">';
+    echo 'alert("Appointment Set Successfully"); ';
+    echo '</script>';
+
+}
+
+
+
+else 
+{
+       echo '<script language="javascript">';
+    echo 'alert("Appointment time is not set because Doctor Appointment Already set for requested Date !!"); ';
+    echo '</script>';
+
+    }
+}
+
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Admission Form</title>
+  
+    <link rel="stylesheet" href="jsnew/normalize.min.css">
+
+  
+      <style>
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      /* Stephonce R. MOrris | 2014 */
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito',sans-serif;
+  color: #384047;
+  background: #A085C6;
+}
+
+form {
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  border: 1px solid #8265B0;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2)
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+  width: 30%;
+}
+
+select1 {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+  width: 20%;
+}
+
+
+textarea {
+  padding: 2px;
+  height: 100px;
+  border-radius: 2px;
+  width: 100%;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 16px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+
+  width: 100%;
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 3px;
+}
+
+
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 0px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #A085C6;
+  /*#5fcf80*/
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+abbr[title] {
+	border-bottom-width: 0;
+}
+label1 {
+  background-color: lightgreen;
+  color: black;
+  font-weight: bold;
+  padding: 4px;
+  text-transform: uppercase;
+  
+}
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 750px;
+  }
+
+}
+      </style>
+
+   <script src="jsnew/pprefixfree.min.js"></script>
+
+
+
+<link rel="stylesheet" href="jsnew/jquery-ui.css">
+<script src="jsnew/jquery.min.js"></script>
+<script src="jsnew/jquery-ui.min.js"></script>
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+  <script>
+  $(document).ready(function() {
+    $("#datepicker1").datepicker();
+  });
+  </script>
+  
+  
+  
+  <link rel="stylesheet" href="styles.css">
+  <script type="text/javascript" src="jquery-1.4.1.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#loding1").hide();
+	$("#loding2").hide();
+	$(".country").change(function()
+	{
+		$("#loding1").show();
+		var id=$(this).val();
+		var dataString = 'id='+ id;
+		$(".state").find('option').remove();
+		$(".city").find('option').remove();
+		$.ajax
+		({
+			type: "POST",
+			url: "get_otslot.php",
+			data: dataString,
+			cache: false,
+			success: function(html)
+			{
+				$("#loding1").hide();
+				$(".state").html(html);
+			} 
+		});
+	});
+	
+	
+	$(".state").change(function()
+	{
+		$("#loding2").show();
+		var id=$(this).val();
+		var dataString = 'id='+ id;
+	
+		$.ajax
+		({
+			type: "POST",
+			url: "get_city.php",
+			data: dataString,
+			cache: false,
+			success: function(html)
+			{
+				$("#loding2").hide();
+				$(".city").html(html);
+			} 
+		});
+	});
+	
+});
+</script>
+
+</head>
+
+<body>
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='inviewnew1'><span>Home</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Patients</span></a>
+      <ul>
+         <li class='has-sub'><a href='psadmin'><span>Patient Search By MRN</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='gg3new'><span>Manual Admission</span></a>
+            
+         </li>
+      </ul>
+	  
+   </li>
+   
+   <li class='active has-sub'><a href='#'><span>Discharge</span></a>
+      <ul>
+         <li class='has-sub'><a href='dcview'><span>Discharge Request By Cnsultants</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='discharge'><span>Manual Discharge</span></a>
+            
+         </li>
+		 <li class='has-sub'><a href='dischargeview'><span>Print Discharge Report</span></a>
+            
+         </li>
+		 
+      </ul>
+	  
+   </li>
+   
+   <li class='active has-sub'><a href='#'><span>Bed Management</span></a>
+      <ul>
+         <li class='has-sub'><a href='bedview'><span>All Bed Status</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='tes7'><span>Detail History</span></a>
+            
+         </li>
+		          <li class='has-sub'><a href='tes77'><span>Detail History Episodewise</span></a>
+            
+         </li>
+
+		 
+      </ul>
+	  
+   </li>
+   
+   <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+<!-- Google Font -->
+		<link href='jsnew/fonts' rel='stylesheet' type='text/css'>
+
+<form action="" method="post">
+
+<!-- Form Title -->
+		<h1>PATIENT'S ADMISSION </h1>
+
+
+        <fieldset>
+
+			<legend></legend>
+           
+		
+
+
+		      
+			  <label for="name"><strong>Select Ward :</strong></label>
+			<p>
+			<select name="btype1" class="country" value=''required/>
+<option ="">--Select Ward--</option>
+<?php
+	$stmt = $DB_con->prepare("SELECT distinct otname FROM otslot");
+	$stmt->execute();
+	while($row=$stmt->fetch(PDO::FETCH_ASSOC))
+	{
+		?>
+        <option value="<?php echo $row['otname']; ?>"><?php echo $row['otname']; ?></option>
+        <?php
+	} 
+?>
+</select>
+
+			       
+		
+		<label for="mail"><strong>Avaiable Bed :</strong></label>
+									<p>
+									
+									
+			<select name="bno" class="state" value=''required/>
+
+</select>
+
+	<label for="mail"><strong>Avaiable Bed :</strong></label>
+									<p>
+									
+									
+			<select name="bno" class="state" value=''required/>
+
+</select>
+
+										
+
+
+<table><tr><td colspan="15">		<button type="submit" name="Submit">Confirm</button></td>
+<td colspan="10">		<a target='_blank' href="admnew?pmrn=<?php echo "$pmrn"; ?>&adoc=<?php echo $data49["adoc"]; ?>&adate=<?php echo $data49["adate"]; ?>&eid=<?php echo $count1; ?>&id=<?php echo $id; ?>"><img src="print.png" title="Print Report" width="150" height="60" /></a></td></tr></table>
+
+</form>
+  
+
+
+</body>
+
+</html>

@@ -1,0 +1,423 @@
+<?php
+
+    session_start();
+    $role = $_SESSION['sess_userrole'];
+    if(!isset($_SESSION['sess_username']) || $role!="histo"){
+      header('Location: login2.php?err=2');
+    }
+?>
+<?php
+require('db1.php');
+ $user = $_SESSION['sess_username'];
+$query139 = "SELECT * FROM user where uname= '$user'"; 
+	 
+$result139 = mysqli_query($con, $query139) or die(mysqli_error());
+
+// Print out result
+$row139 = mysqli_fetch_array($result139)
+?>
+<?php
+$full = $row139['fullname'];
+
+?>
+
+<?php
+
+require('db1.php');
+
+//$pmrn=$_REQUEST['pmrn'];
+//$dname1=$_REQUEST['dname1'];
+//include("auth.php");
+$user=$_SESSION["sess_userrole"];
+
+//$query39 = "SELECT * FROM patient where pmrn= '$pmrn'"; 
+//$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+//$row39 = mysqli_fetch_array($result39);
+
+$status = "";
+  
+?>
+
+<?php
+//$query543 = "SELECT COUNT(pmrn) FROM histo where pmrn= '$pmrn';"; 
+//$result543 = mysqli_query($con, $query543) or die(mysqli_error());
+//$row543 = mysqli_fetch_assoc($result543);
+//$count =$row543['COUNT(pmrn)'];
+$count1 = 1;
+?>
+
+<?php
+ 
+require('db1.php');
+$stime=date("h:i:sa");
+if(isset($_POST['Submit']))
+{
+
+$tname45 =$_REQUEST['tname45'];
+$date1 =date('m/d/Y');
+$time =date("h:i:sa");
+$pmrn =$_REQUEST['pmrn'];
+$pname =$_REQUEST['pname'];
+$pphone =$_REQUEST['pphone'];
+$page =$_REQUEST['page'];
+$psex =$_REQUEST['psex'];
+$shistory =$_REQUEST['shistory'];
+$noperation =$_REQUEST['noperation'];
+$indication =$_REQUEST['indication'];
+$find =$_REQUEST['find'];
+$bio1 =$_REQUEST['bio1'];
+$bio2 =$_REQUEST['bio2'];
+//$compli =$_REQUEST['compli'];
+
+
+$ins_query="insert into histo (`dname`,`date`,`time`,`pmrn`,`pname`,`pphone`,`page`,`psex`,`shistory`,`noperation`,`indication`,`find`,`bio1`,`bio2`,`eid`,`status`,`bstatus`) 
+values ('$tname45','$date1', '$time','$pmrn','$pname','$pphone','$page','$psex','$shistory','$noperation','$indication','$find','$bio1','$bio2','$count1','NOT SEEN','Not Confirm')";
+mysqli_query($con,$ins_query) or die("Problem in histo");
+
+$ins_query1="insert into patient (`pname`,`pmrn`,`pphone`,`page`,`psex`) values ('$pname', '$pmrn','$pphone','$page','$psex')";
+mysqli_query($con,$ins_query1);
+
+
+//$gg= $_REQUEST['pname'];
+//$update="update pappnew set status='SEEN' where `ID`='$id'";
+//mysqli_query($con,$update) or die(mysql_error());
+
+
+
+}
+?>
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Out Patient Record</title>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  
+      <style>
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito',sans-serif;
+  color: #384047;
+  background: #A085C6;
+}
+
+form {
+  max-width: 2000px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  border: 1px solid #8265B0;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2)
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 12px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  width: 100%;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 10px;
+}
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #A085C6;
+  /*#5fcf80*/
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+abbr[title] {
+	border-bottom-width: 0;
+}
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 2000px;
+  }
+
+}
+      </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+
+
+
+
+
+  <style type="text/css">
+<!--
+.style1 {font-weight: bold}
+-->
+  </style>
+  
+  <head>
+    <title>PHP - Dynamically Add or Remove input fields using JQuery</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />  
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="./jquery.multiselect.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="./jquery.multiselect.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+
+   <script src="script.js"></script>
+</head>
+
+<body>
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='viewnew1'><span>Home</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Patients</span></a>
+      <ul>
+         <li class='has-sub'><a href='viewnew'><span>OPD Patients</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='iview'><span>In-Patients</span></a>
+            
+         </li>
+      </ul>
+   </li>
+   <li class='active has-sub'><a href='#'><span>Appointment</span></a>
+      <ul>
+         <li class='has-sub'><a href='cggtttt'><span>Set Doctor's Appointment</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='ami2'><span>Set Restrictions on Appointment Time</span></a>
+            
+         </li>
+      </ul>
+	  
+   </li>
+
+   <li class='last'><a href='ot'><span>OT BOOKING</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Reports</span></a>
+      <ul>
+         <li class='has-sub'><a href='view3new'><span>OPD Prescription</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='con1'><span>Outpatient Stats</span></a>
+            
+         </li>
+		          <li class='has-sub'><a href='con2'><span>OT Stats</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='con3'><span>In-Patient Stats</span></a>
+            
+         </li>
+		   <li class='has-sub'><a href='con11'><span>Medicine Stats</span></a>
+            
+         </li>
+
+      </ul>
+   </li>
+   <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+<h1 align="center">OUTPATIENT RECORD </h1>
+
+  <!-- Stephonce R. MOrris | 2014 -->
+
+<!-- Google Font -->
+		<link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+
+<form action="" method="post" onsubmit='return confirm("Do You Want To Proceed??");' />
+
+
+<!-- Form Title -->
+        <table align="center" class="table table-bordered" id="dynamic_field">  
+		<tr><td align="right" colspan="20"><a target='_blank' href="view3newtest?pmrn=<?php echo "$pmrn"; ?>&dname=<?php echo "$full"?>"><b>Record of Previous Visits<b></a>&nbsp;&nbsp;
+		<a target='_blank' href="https://medex.com.bd"><b>Reference Drug Index of Bangladesh(medex.com.bd)<b></a></td></tr>
+		
+				<tr><td colspan="20"><label><strong>Doctors's Name :</strong></label></td></tr>
+				<td colspan="20"><input list="tname45" name="tname45" size=75% class="form-control" value="">
+	
+	<datalist id="tname45">
+
+						<option value=''>-Select Investigation-</option>
+				<?php 
+			$sql = "select * from `doctor1`";
+			$res = mysqli_query($con, $sql);
+			if(mysqli_num_rows($res) > 0) {
+				while($row = mysqli_fetch_object($res)) {
+					echo "<option value='".$row->dname."'>".$row->dname."</option>";
+				}
+			}
+			?>  </datalist></td>
+			
+	
+			<br><br>
+				
+						
+						
+				
+					<input type="hidden" name="new" value="1" />
+					<input name="ID" type="hidden" value="<?php echo $row['ID'];?>" />
+						</select></td></tr>
+						
+												<tr>
+						
+						
+						<td colspan="10"><label><strong>Patient's Name:</strong></label></td>
+						<td colspan="2"><label><strong>Patient's MRN:</strong></label></td>				
+						<td colspan="2"><label><strong>Patient's Age:</strong></label></td>
+						<td colspan="2"><label><strong>Patient's Gender:</strong></label></td>
+						<td colspan="4"><label><strong>Patient's Phone No:</strong></label></td>
+						
+						
+						</tr>
+
+<tr>				 <td colspan="10"><input type="text" name="pname"  value="" /></td>
+					<td colspan="2"><input type="text" name="pmrn"   value="" /></td>
+					<td colspan="2"><input type="text" name="page" required value="" /></td>  	
+					 <td colspan="2"><input type="text" name="psex" required value="" /></td>
+					 <td colspan="4"><input type="text" name="pphone" required value="" /></td>  
+
+					 
+</tr>
+
+			
+				<tr><td colspan="20" bgcolor="#00CCCC"><label><strong></strong></label></td></tr>					
+
+
+
+						 <tr><td colspan="20"><label><strong>Short History:</strong></label></td>  </tr>
+						 <tr><td colspan="20"><textarea class="form-control" id="exampleTextarea" name="shistory" rows="5" ></textarea></td>  </tr>
+						 
+						 <tr><td colspan="20"><label><strong>Name Of Operation:</strong></label></td>  </tr>
+						  <tr><td colspan="20"><textarea class="form-control" id="exampleTextarea1" name="noperation" rows="5"></textarea></td>  </tr>
+						<tr><td colspan="20"><label><strong>Indication:</strong></label></td>  </tr>
+						  <tr><td colspan="20"><textarea class="form-control" id="exampleTextarea1" name="indication" rows="5"></textarea></td>  </tr>
+				<tr><td colspan="20"><label><strong>Findings</strong></label></td>  </tr>
+						  <tr><td colspan="20"><textarea class="form-control" id="exampleTextarea1" name="find" rows="5"></textarea></td>  </tr>
+														<tr><td colspan="20"><label><strong>Biospy Specimen:</strong></label></td>  </tr>
+						  <tr><td colspan="20"><textarea class="form-control" id="exampleTextarea1" name="bio1" rows="5"></textarea></td>  </tr>
+
+<tr><td colspan="20"><label><strong>Biospy For:</strong></label></td>  </tr>
+						  <tr><td colspan="20"><textarea class="form-control" id="exampleTextarea1" name="bio2" rows="5">HISTOPATHOLOGY</textarea></td>  </tr>
+
+						 
+
+
+<tr>
+		<td colspan="10"><button type="submit" name="Submit">Confirm</button></td>
+	  <td colspan="10"><a target='_blank' href="p4new.php?pmrn=<?php echo "$pm"; ?>&dname=<?php echo "$pd"; ?>&date=<?php echo "$pdate"; ?>&eid=<?php echo "$count1"; ?>"><img src="print.png" title="Print Report" width="150" height="60" /></a></td>	
+	  				
+</tr>
+
+</body>
+
+</html>

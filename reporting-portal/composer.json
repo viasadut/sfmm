@@ -1,0 +1,8 @@
+{
+    "require": {
+        "tecnickcom/tcpdf": "^6.7",
+        "phpoffice/phpspreadsheet": "^1.19"
+    }
+}
+
+/*BG image 1012 px × 638 px*/

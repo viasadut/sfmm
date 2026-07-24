@@ -1,0 +1,163 @@
+<?php
+//require('force_justify.php');
+//require('fpdf/fpdf.php');
+
+
+require('force_justify.php');
+
+
+$eid=$_REQUEST['eid'];
+$pmrn=$_REQUEST['pmrn'];
+$id=$_REQUEST['id'];
+//$dname=$_REQUEST['dname'];
+//$bkdate=$_REQUEST['bkdate'];
+//$id=['id'];
+$db = mysqli_connect('localhost','root','Godiloveu16');
+mysqli_select_db($db,'sfmmkpjnew');
+$queryn = mysqli_query($db,"select * from cath_charge where id='$id' and c_status!='Cancelled'");
+$datan = mysqli_fetch_array($queryn);
+
+
+
+
+$query = mysqli_query($db,"select * from cath_receive where id='$eid'");
+$data = mysqli_fetch_array($query);
+
+$dname=$data['dname'];
+
+
+$query2 = mysqli_query($db,"select * from doctor1 where dname='$dname'");
+$data2 = mysqli_fetch_array($query2);
+
+//$db = new PDO('mysql:host=localhost;dbname=sfmmkpj','root','');
+class myPDF extends FPDF{
+function header(){
+$this->Image('logo1.jpg',15,7);
+//$this->Image('logo1.jpg',180,7);
+$this->SetFont('Arial','B',12);
+//$this->Cell(190,5,'SHEIKH FAZILATUNNESA MUJIB MEMORIAL',0,0,'C');
+$this->Ln(3);
+$this->SetFont('Arial','B',12);
+$this->Cell(195,10,'KPJ SPECIALIZED HOSPITAL AND NURSING COLLEGE',0,0,'C'); 
+$this->ln(5);
+$this->SetFont('Arial','B',12);
+$this->Cell(190,10,'C/12, Tetuibari, Kashimpur, Gazipur, Bangladesh.',0,0,'C'); 
+$this->ln(15);
+
+}
+function footer(){
+$this->SetY(-15);
+$this->SetFont('Arial','B',8);
+$this->Cell(0,10,'Page'.$this->PageNo().' /(SFMMKPJ)',0,0,'C');
+
+}
+
+
+//$this->Ln();
+}
+
+
+$pdf = new myPDF();
+$pdf->AliasNbPages();
+$pdf->AddPage('P','A4',0);
+$pdf->SetFont('Arial' , 'b' , 9);
+$pdf->SetLeftMargin('15');
+//$pdf->headerTable();
+//$pdf->viewTable($db);
+
+$pdf->SetFont('Arial' , 'b' , 15);
+$pdf->Cell('183',6,'Cathlab Post Operative Order',1,1,'C');
+//$this->SetFont('Arial','B',);
+$pdf->ln(10);
+$pdf->SetFont('Arial' , 'b' , 12);
+$pdf->Cell('50',5,'Surgeon Name:',0,0,'L');
+$pdf->Cell('90',5,$data['dname'],0,0,'L');
+$pdf->ln(4);
+$pdf->SetFont('Arial' , 'b' , 12);
+$pdf->Cell('50');
+$pdf->Cell('160',5,$data2['degree'],0,0,'L');
+$pdf->ln(4);
+$pdf->SetFont('Arial' , 'b' , 12);
+$pdf->Cell('50');
+$pdf->Cell('160',5,$data2['Discipline'],0,0,'L');
+$pdf->ln(8);
+
+$pdf->SetFont('Arial' , 'b' , 10);
+$pdf->Cell('50',5,'Name Of 2nd / 3rd Surgeon:',0,0,'L');
+$pdf->MultiCell('170',5,$data['dname1'].','.$data['dname2'],0,1);
+
+$pdf->SetFont('Arial' , 'b' , 10);
+$pdf->Cell('50',5,'Name Of Anaethesist:',0,0,'L');
+$pdf->MultiCell('170',5,$data['nanes'],0,1);
+
+
+$pdf->ln(8);
+
+$pdf->SetFont('Arial' , 'b' , 10);
+$pdf->Cell('26',5,'Patient Name:',1,0,'L');
+$pdf->Cell('60',5,$data['pname'],1,0,'L');
+$pdf->Cell('15',5,'MRN:',1,0,'L');
+$pdf->Cell('18',5,$data['pmrn'],1,0,'L');
+$pdf->Cell('20',5,'GENDER:',1,0,'L');
+$pdf->Cell('15',5,$data['psex'],1,0,'L');
+$pdf->Cell('10',5,'AGE:',1,0,'L');
+$pdf->Cell('25',5,$data['page'],1,1,'L');
+
+$pdf->ln(1);
+$pdf->SetFont('Arial' , 'b' , 9);
+$pdf->SetFont('Arial' , 'b' , 9.5);
+$pdf->Cell('35',5,'Proce Date:',1,0,'L');
+$pdf->SetFont('Arial' , 'b' , 10);
+$pdf->Cell('30',5,date('d/m/Y',strtotime($data['date1'])),1,0,'L');
+
+$pdf->SetFont('Arial' , 'b' , 10);
+$pdf->Cell('30',5,'Book Time:',1,0,'L');
+$pdf->Cell('30',5,$data['ptime'],1,0,'L');
+$pdf->ln(6);
+$pdf->SetFont('Arial' , 'b' , 10);
+
+
+$pdf->ln(5);
+$pdf->Cell('35',5,'Type of Anaethesia:',1,0,'L');
+$pdf->Cell('148',5,$data['tanes'],1,0,'L');
+
+
+$pdf->ln(5);
+
+
+$pdf->ln(4);
+
+
+
+$pdf->SetFont('Arial' , 'b' , 10);
+$pdf->Cell('182',5,'Post Operative Order :',0,1,'L');
+$pdf->SetFont('Arial' , '' , 10);
+$pdf->MultiCell('182' , 5,$datan['inorder'],0,1);
+
+
+
+
+
+
+$pdf->ln(20);
+$pdf->SetFont('Arial' , 'b' , 10);
+$pdf->Cell('182',5,'Consultants Signature:',0,1,'R');
+
+
+
+
+//$pdf->SetFont('Arial' , 'b' , 15);
+//$pdf->Cell('90',5,'OUT PATIENT RECORD',1,0,'L');
+
+
+//$pdf->ln(10);
+//$pdf->MultiCell('160' , 5,$data['xl'],1,1);
+//$pdf->Cell('30' , 5,'Doasge',1,1);
+//$pdf->MultiCell('160' , 5,'jashfjh sjfh jsdhfjsdhjfh jsdhjf hjsdhfj dsjhf djsh jfdshjf dsjhf jdsh fdhsf hjsdhf sdhf jdhsf hdsjfhjsdhf sdhf jdshjfhjskdhf jsdh fjhsdjkf hjdsfjd s',1,1);
+
+
+
+
+
+$pdf->Output();
+?>

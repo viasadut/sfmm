@@ -1,0 +1,443 @@
+<?php
+include_once 'dbconfig.php';
+?>
+
+<?php 
+   session_start();
+    require('db1.php');
+	$role = $_SESSION['sess_userrole'];
+	
+	$queryc = "SELECT COUNT(utype) FROM user where '$role' in ('staff')"; 
+$resultc = mysqli_query($con, $queryc) or die(mysqli_error());
+$rowc = mysqli_fetch_array($resultc);
+$c1=$rowc['COUNT(utype)'];
+	
+    if(!isset($_SESSION['sess_username']) || $c1==0){
+      header('Location: login2?err=2');
+    }
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+//include("auth.php"); 
+require('db1.php');
+
+$user=$_SESSION['sess_username'];
+$id=$_REQUEST['id'];
+
+
+$db = mysqli_connect('localhost','root','Godiloveu16');
+mysqli_select_db($db,'sfmmkpjnew');
+$sel9=mysqli_query($db,"SELECT * FROM medi_stock WHERE `id`='$id'");
+$re = mysqli_fetch_assoc($sel9);
+//$pname=$result9["pname"];
+  
+
+//include("auth.php");
+//echo $count1;
+
+$runningTime = date('Ydmsi');
+  
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+ 
+require('db1.php');
+
+if(isset($_POST['Submit']))
+{
+
+$code = $_REQUEST['code'];
+$g_name = $_REQUEST['g_name'];
+//$b_name = $_REQUEST['b_name'];
+$add_qty=$_REQUEST['add_qty'];
+//$exdate=$_REQUEST["exdate"];
+
+//$exdate=date('Y-m-d',strtotime($_REQUEST["exdate"]));
+
+//$batch_no=$_REQUEST['batch_no'];
+//$remarks=$_REQUEST['remarks'];
+
+//$adate= date('d/m/Y H:i:s');
+
+//$adate1= date('m/d/Y');
+//$ittime1= date('Y-m-d H:i:s');
+
+
+
+
+
+//$ins_query2="update medi_stock set `add_qty`='0' where code='$code' and location='Pharmacy'";
+//mysqli_query($con,$ins_query2) or die(mysql_error());
+
+
+//$ins_query3="insert into medi_stock (`add_qty`,`g_name`,`location`) values('$add_qty','$g_name','Pharmacy')";
+//mysqli_query($con,$ins_query3) or die(mysql_error());
+
+
+$ins_query1="insert into medi_stock (`g_name`,`add_qty`,`location`)
+ values ('$g_name','$add_qty','Pharmacy')";
+mysqli_query($con,$ins_query1) or die(mysql_error());
+
+
+
+//header("Location: medi_bar?g_name=$g_name&rfid=$rfid");
+
+/*$ins_query1="update medicine set mname='$mname', brand1='$bname', brand2='$cname', pre='$form', 
+pcat='$cat', etime='$adate',eby='$user',frequency='$frequency',frelation='$frelation',pcategory='$pcategory',duration='$duration',contrain='$contrain',meffect='$meffect',uprice='$uprice' where id='$id'";
+mysqli_query($con,$ins_query1) or die(mysql_error());*/
+
+
+//if ($con->query($ins_query) == TRUE) 
+//{
+if(mysqli_query==true){
+    echo '<script language="javascript">';
+    echo 'alert("Entry Successful"); ';
+    echo '</script>';
+}
+else {
+	 echo '<script language="javascript">';
+    echo 'alert("Not Successful"); ';
+    echo '</script>';
+	
+}
+
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up Form</title>
+  
+    <link rel="stylesheet" href="jsnew/normalize.min.css">
+
+  
+      <style>
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      /* Stephonce R. MOrris | 2014 */
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito',sans-serif;
+  color: #384047;
+  background: #A085C6;
+}
+
+form {
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  border: 1px solid #8265B0;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2)
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+  width: 25%;
+}
+textarea {
+  padding: 2px;
+  height: 100px;
+  border-radius: 2px;
+  width: 100%;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 16px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+
+  width: 100%;
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 3px;
+}
+
+
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 0px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #A085C6;
+  /*#5fcf80*/
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+abbr[title] {
+	border-bottom-width: 0;
+}
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 750px;
+  }
+
+}
+      </style>
+
+    <script src="jsnew/pprefixfree.min.js"></script>
+
+
+
+<link rel="stylesheet" href="jsnew/jquery-ui.css">
+<script src="jsnew/jquery.min.js"></script>
+<script src="jsnew/jquery-ui.min.js"></script>
+
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+  
+  
+  
+  <link rel="stylesheet" href="styles.css">
+  <script type="text/javascript" src="jquery-1.4.1.min.js"></script>
+
+
+</head>
+
+<body>
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='edischarge3'><span>Home</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Patients</span></a>
+      <ul>
+         <li class='has-sub'><a href='esearch'><span>Patient Search By MRN</span></a>         </li>
+         <li class='has-sub'><a href='eadm'><span>New Patient</span></a>         </li>
+      </ul>
+   </li>
+   
+   
+   
+   <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+<!-- Google Font -->
+		<link href='jsnew/fonts' rel='stylesheet' type='text/css'>
+
+<form action="" method="post">
+
+<!-- Form Title -->
+		<h1>Stock Edit Panel</h1>
+
+
+        <fieldset>
+
+			<legend></legend>
+            <!-- Name Input -->
+			
+	  <label for="age"><strong>Code:</strong></label>
+      <input type="text" onkeyup="GetDetail(this.value)" id="pmrn" class="form-control action" list="categoryname" autocomplete="off" name='code' value="<?php echo $re['code'];?>" required style="font-weight: bold;font-size:22px;color:green">
+
+    <datalist id="categoryname">
+	<option value=''>-Select-</option>
+				
+				<?php
+            require('db1.php');
+            $uname = '';
+            $query = "select * from `medicine` where status='Active'";
+            $result = mysqli_query($con, $query);
+            while($row = mysqli_fetch_array($result)) {
+        ?>
+            <option value="<?php echo $row['code']; ?>"><?php echo $row['code'].'('.$row['mname'].')'; ?></option>
+        <?php } ?>
+        
+    </datalist>
+
+<label for="age"><strong>Generic Name:</strong></label>							
+	
+	  
+	  
+	  <textarea name="g_name" id="code" class="form-control action" cols="30" rows="5"style="font-weight: bold;font-size:22px;color:green"readonly required><?php echo $re['g_name']; ?>
+	  </textarea>
+
+    
+
+		
+<label for="age"><strong>Available In Stock:</strong></label>								
+<tr>
+
+<?php
+ $id = $re['id'];
+                        $mcode = $re['code'];
+						$pdos = $re['pdos'];
+						$g_name = $re['g_name'];
+						$frelation = $re['frelation'];
+                       
+ $sum = "SELECT SUM(add_qty) FROM medi_stock where code='$mcode' and location='Pharmacy'" ;
+	 
+$sum1 = mysqli_query($con, $sum) or die(mysqli_error());
+$sumr = mysqli_fetch_assoc($sum1);
+$new_qty=$sumr['SUM(add_qty)'];
+
+
+?>
+<td colspan="3" ><input type="text" name="add_qty" id="tqty" required value="<?php echo $new_qty;?>"  style="font-weight: bold;font-size:22px;color:green"readonly></td>
+
+
+
+<table><tr><td colspan="15">		<button type="submit" name="Submit">Edit</button></td>
+</table>
+
+</form>
+  
+
+
+</body>
+
+
+</html>
+<script>
+
+		// onkeyup event will occur when the user
+		// release the key and calls the function
+		// assigned to this event
+		function GetDetail(str) {
+			if (str.length == 0) {
+				
+				document.getElementById("code").value = "";
+				
+				//document.getElementById("pp").value = "";
+				
+				return;
+			}
+			else {
+
+				// Creates a new XMLHttpRequest object
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function () {
+
+					// Defines a function to be called when
+					// the readyState property changes
+					if (this.readyState == 4 &&
+							this.status == 200) {
+						
+						// Typical action to be performed
+						// when the document is ready
+						var myObj = JSON.parse(this.responseText);
+
+						// Returns the response data as a
+						// string and store this array in
+						// a variable assign the value
+						// received to first name input field
+						
+						document.getElementById
+							("code").value = myObj[0];
+						
+						// Assign the value received to
+						// last name input field
+//						document.getElementById(
+	//						"page").value = myObj[1];
+							
+							
+					}
+				};
+
+				// xhttp.open("GET", "filename", true);
+				xmlhttp.open("GET", "stock_pull.php?pmrn=" + str, true);
+				
+				// Sends the request to the server
+				xmlhttp.send();
+			}
+		}
+	</script>  
+	

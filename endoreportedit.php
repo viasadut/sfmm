@@ -1,0 +1,432 @@
+<?php
+
+    session_start();
+    $role = $_SESSION['sess_userrole'];
+    if(!isset($_SESSION['sess_username']) || $role!="doctor"){
+      header('Location: login2.php?err=2');
+    }
+?>
+
+
+<?php
+
+require('db1.php');
+
+$user=$_SESSION['sess_username'];
+$query39 = "SELECT * FROM user where uname= '$user'"; 
+	 
+$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+$row39 = mysqli_fetch_array($result39);
+$full = $row39['fullname'];
+
+$id=$_REQUEST['id'];
+//$pmrn=$_REQUEST['pmrn'];
+//$dreffer=$_REQUEST['dreffer'];
+//$dname1=$_REQUEST['dname1'];
+
+
+
+//$query43 = "SELECT COUNT(pmrn) FROM endoreport where pmrn= '$pmrn';"; 
+//$result43 = mysqli_query($con, $query43) or die(mysqli_error());
+//$row43 = mysqli_fetch_assoc($result43);
+//$count =$row43['COUNT(pmrn)'];
+//$count1 = $count+1;
+$query = "SELECT * from endoreport where id='$id'"; 
+$result = mysqli_query($con, $query) or die ( mysqli_error());
+$row = mysqli_fetch_assoc($result);
+$pn= $row['pname'];
+$pm= $row['pmrn'];
+$pp= $row['pphone'];  
+$pr= $row['type'];
+//$pdate= $row['adate'];
+$pa= $row['age'];
+$ps= $row['gender'];
+$type=$row['type'];
+$eid=$row['eid'];
+
+//$pa= $row['padd'];
+
+
+$querys = "SELECT * from ivisitendo where pmrn='$pm' and eid='$eid' and vtype='$type'"; 
+$results = mysqli_query($con, $querys) or die ( mysqli_error());
+$rows = mysqli_fetch_assoc($results);
+$ch=$rows['room'];
+  
+?>
+
+
+<?php
+ 
+require('db1.php');
+
+if(isset($_POST['Submit']))
+{
+$report =$_REQUEST['cdetails'];
+$find = $_REQUEST['find'];
+$charge = $_REQUEST['charge'];
+$tname = $_REQUEST['tname'];
+$update="update endoreport set report='$report',find='$find',type='$tname' where `id`='$id'";
+mysqli_query($con,$update);
+
+$update1="update ivisitendo set room='$charge' where pmrn='$pm' and eid='$eid' and vtype='$type'";
+mysqli_query($con,$update1);
+
+
+
+}
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up Form</title>
+  
+    <link rel="stylesheet" href="jsnew/normalize.min.css">
+
+  
+      <style>
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito',sans-serif;
+  color: #384047;
+  background: #A085C6;
+}
+
+form {
+  max-width: 2000px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  border: 1px solid #8265B0;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2)
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  width: 100%;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 10px;
+}
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #A085C6;
+  /*#5fcf80*/
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+abbr[title] {
+	border-bottom-width: 0;
+}
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 2000px;
+  }
+
+}
+      </style>
+
+    <script src="jsnew/pprefixfree.min.js"></script>
+
+
+
+<link rel="stylesheet" href="jsnew/jquery-ui.css">
+<script src="jsnew/jquery.min.js"></script>
+<script src="jsnew/jquery-ui.min.js"></script>
+
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+
+
+
+
+
+  <style type="text/css">
+<!--
+.style1 {font-weight: bold}
+-->
+  </style>
+  
+  <head>
+    <title>PHP - Dynamically Add or Remove input fields using JQuery</title>
+   <link rel="stylesheet" href="jsnew/bootstrap.min.css" />  
+    <script src="jsnew/jjquery.min.js"></script>
+    <script src="jsnew/bootstrap.min.js"></script>
+
+    <link href="jsnew/jquery-ui.css" rel="stylesheet" />
+    <link href="./jquery.multiselect.css" rel="stylesheet" />
+    <script src="jsnew/jquery-1.12.4.js"></script>
+    <script src="jsnew/jquery-ui.js"></script>
+    <script src="./jquery.multiselect.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+
+   <script src="script.js"></script>
+</head>
+
+<body>
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='endohome'><span>Home</span></a></li>
+      
+		  		  
+      <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+<h1 align="center">OUTPATIENT RECORD </h1>
+
+  <!-- Stephonce R. MOrris | 2014 -->
+
+<!-- Google Font -->
+		<link href='jsnew/fonts' rel='stylesheet' type='text/css'>
+
+<form action="" method="post" onSubmit="if(confirm('Want to proceed the submission?')){return true;}" autocomplete="on">
+
+
+<!-- Form Title -->
+        <table align="center" class="table table-bordered" id="dynamic_field">  
+		<tr><td align="right" colspan="20"><a target='_blank' href="viewradrecord?pmrn=<?php echo "$pmrn"; ?>&dname=<?php echo $row['dreffer'];?>"><b>See Clinical Details<b></a></td></tr>
+				<tr><td colspan="15"><label><strong>Doctors's Name :</strong></label></td>
+				<td colspan="5"><label><strong>Referral Doctors's Name :</strong></label></td></tr>
+				<tr>	  
+				<td colspan="15"><input type="text" name="select" required value="<?php echo $full;?>" readonly/ style="background-color:skyblue;"></td>
+				
+				<td colspan="5" ><input type="text" name="dname" required value="<?php echo $row['dreffer'];?>" readonly/ style="background-color:skyblue;"></td>
+				
+						
+						
+				
+					<input type="hidden" name="new" value="1" />
+					<input name="ID" type="hidden" value="<?php echo $row['id'];?>" />
+					</td></tr>
+						
+												<tr>
+						
+						
+						<td colspan="10"><label><strong>Patient's MRN:</strong></label></td>
+						<td colspan="10"><label><strong>Patient's Name:</strong></label></td>
+						
+						
+						</tr>
+
+<tr>				<td colspan="10"><input type="text" name="pmrn"  required value="<?php echo $pm;?>" readonly/></td>
+					 <td colspan="10"><input type="text" name="pname" required value="<?php echo $pn;?>" readonly/></td>
+
+					 
+</tr>
+
+						
+						
+
+
+
+		<tr>
+						
+						<td colspan="5"><label><strong>Age:</strong></label></td>
+						<td colspan="5"><label><strong>Gender:</strong></label></td>
+						<td colspan="5"><label><strong>Phone NO:</strong></label></td>
+						<td colspan="5"><label><strong>REPORT ON:</strong></label></td>
+						
+						</tr>
+						
+						<tr>				
+						<td colspan="5"><input type="text" name="page" required value="<?php echo $pa;?>" readonly/></td>  
+             		
+					 <td colspan="5"><input type="text" name="psex" required value="<?php echo $ps;?>" readonly/></td>
+					 <td colspan="5"><input type="text" name="pphone" required value="<?php echo $pp;?>" readonly/></td>  
+
+
+					 <td colspan="5"><input type="text" name="ptemp" value="<?php echo $pr;?>" readonly/></td>  
+					 </tr>
+
+					 
+					 <tr><td colspan="20"><label><strong>Procedure Name:</strong></label></td>  </tr>
+		<tr><td colspan="20"><input list="tname" name="tname" class="form-control" value="<?php echo $type;?>" autocomplete="off">
+	
+	<datalist id="tname">
+
+						<option value=''>-Select Procedure-</option>
+				<?php 
+			$sql9 = "select * from `mma1`";
+			$res9 = mysqli_query($con, $sql9);
+			if(mysqli_num_rows($res9) > 0) {
+				while($row9 = mysqli_fetch_object($res9)) {
+					echo "<option value='".$row9->Proname."'>".$row9->Proname."</option>";
+				}
+			}
+			?> </datalist>
+</td></tr>
+
+<tr>
+<td colspan="20" align="left" style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold"><a target="_blank" href="photo333?pmrn=<?php echo $pm; ?>&eid=<?php echo $eid;  ?>"><img src="addphoto.png" title="test" width="100" height="120" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' href="postmediendo?pmrn=<?php echo $pm; ?>&eid=<?php echo $eid;?>"><img src="medicine1.jpg" title="test" width="130" height="90" /></a></td></tr>
+
+</tr>
+<tr>
+						 <tr><td colspan="20"><label><strong>Patient's Details Report:</strong></label></td>  </tr>
+						 <tr><td colspan="20"><textarea class="form-control" id="exampleTextarea" name="cdetails" rows="40" ><?php echo $row["report"];?></textarea></td>  </tr>
+						
+						 <tr><td colspan="20"><label><strong>Findings / Observestion / Remarks:</strong></label></td>  </tr>
+						 <tr><td colspan="20"><textarea class="form-control" id="exampleTextarea" name="find" rows="5" ><?php echo $row["find"];?></textarea></td>  </tr>
+						 
+						 <tr><td colspan="20"><label><strong>Charge:</strong></label></td>  </tr>
+						 <tr><td colspan="20"><input class="form-control" id="exampleTextarea" name="charge"  value="<?php echo $rows["room"];?>"></td>  </tr>
+				
+														
+
+
+<tr>
+		<td colspan="10"><button type="submit" name="Submit">Edit Confirm</button></td>
+	  <td colspan="5"><a target='_blank' href="endopdf1eidt.php?id=<?php echo "$id"; ?>"><img src="print.png" title="Print Report" width="150" height="60" /></a></td>	
+	  <td colspan="5"><a target='_blank' href="endopdf1eidturo.php?id=<?php echo "$id"; ?>">PRINT UROFLOMITRY REPORT</a></td>	
+	  				
+</tr>
+
+<tr>
+      <td colspan="1" align="center"><strong>S.No</strong></td>
+      <td colspan="1" align="center"><strong>MRN</strong></td>
+      <td colspan="4" align="center"><strong>Note By</strong></td>
+      <td colspan="1" align="center"><strong>Date </strong></td>
+      
+      <td colspan="3" align="center"><strong>Procedure Name</strong></td>
+	  <td colspan="10" align="center"><strong>Surgery Note</strong></td>
+	  
+
+	   </tr>
+ <?php
+	
+$user=$_SESSION["sess_username"];
+//$pmrn=$data["pmrn"];
+//$id=$_REQUEST["id"];
+//$episode=$data["eid"];
+
+$count=1;
+$sel_query="Select * from endoreport where pmrn= '$pm' and eid='$eid'order by `id` DESC;";
+
+$result = mysqli_query($con,$sel_query);
+
+while($row = mysqli_fetch_assoc($result)) 
+{ ?>    <tr>
+
+      <td align="center" colspan="1"><?php echo $count; ?></td>
+      <td align="center"colspan="1"><?php echo $row["pmrn"]; ?></td>
+      <td align="center"colspan="4"><?php echo $row["dname"]; ?></td>
+	  <td align="center"colspan="1"><?php echo $row["r1date"]; ?></td>  
+      
+	  <td align="center"colspan="3"><?php echo $row["type"]; ?></td>
+	  <td align="center"colspan="10"><?php echo $row["report"]; ?></td>
+      
+	  
+  	  
+
+	  
+      </tr>
+    <?php $count++; } ?>
+
+
+</body>
+
+</html>

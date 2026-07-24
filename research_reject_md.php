@@ -1,0 +1,473 @@
+<?php
+include_once 'dbconfig.php';
+?>
+
+<?php 
+    session_start();
+    $role = $_SESSION['sess_userrole'];
+    if(!isset($_SESSION['sess_username']) || $role!="mng"){
+      header('Location: login2?err=2');
+    }
+?>
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+//include("auth.php"); 
+require('db1.php');
+
+$user=$_SESSION["sess_username"];
+
+$id=$_REQUEST['id'];
+
+
+$query139 = "SELECT * FROM user where uname= '$user'"; 
+	 
+$result139 = mysqli_query($con, $query139) or die(mysqli_error());
+
+// Print out result
+$row139 = mysqli_fetch_array($result139);
+$fname=$row139['fullname'];
+
+
+
+$query1 = "SELECT * FROM research where id= '$id'"; 
+	 
+$result1 = mysqli_query($con, $query1) or die(mysqli_error());
+
+// Print out result
+$data = mysqli_fetch_array($result1);
+$pname5=$data['pname'];
+
+
+
+$ortime = date('d/m/Y H:i:s');
+$pp=$data2['Proname'];
+//include("auth.php");
+//echo $count1;
+
+  
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+ 
+require('db1.php');
+
+if(isset($_POST['Submit']))
+{
+
+
+$mname = $_REQUEST['mname'];
+$remarks = $_REQUEST['remarks'];
+$charge = $_REQUEST['charge'];
+$dis=$_REQUEST['dis'];
+$sformat=$_REQUEST['sformat'];
+$porder=$_REQUEST['porder'];
+$md_comment=$_REQUEST['md_comment'];
+//$adate=$_REQUEST['adate'];
+
+//$padd=$_REQUEST['padd'];
+
+$adate= date('d/m/Y H:i:s');
+
+$adate1= date('Y-m-d');
+
+
+
+$url = "research_approval.php";
+
+$ins_query1="update research set status='Rejected',atime='$ortime',aby='$user',dis='$dis',pname='$mname',md_comment='$md_comment' where id='$id';";
+mysqli_query($con,$ins_query1) or die(mysql_error());
+
+
+//if ($con->query($ins_query) == TRUE) 
+//{
+
+    echo '<script language="javascript">';
+    echo 'alert("Entry Successful"); ';
+    echo '</script>';
+ header("Refresh: .1; URL=$url");
+
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up Form</title>
+  
+    <link rel="stylesheet" href="jsnew/normalize.min.css">
+
+  
+      <style>
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      /* Stephonce R. MOrris | 2014 */
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito',sans-serif;
+  color: #384047;
+  background: #A085C6;
+}
+
+form {
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  border: 1px solid #8265B0;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2)
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+  width: 25%;
+}
+textarea {
+  padding: 2px;
+  
+  border-radius: 2px;
+  width: 100%;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 16px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+
+  width: 100%;
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 3px;
+}
+
+
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 0px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #A085C6;
+  /*#5fcf80*/
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+abbr[title] {
+	border-bottom-width: 0;
+}
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 750px;
+  }
+
+}
+      </style>
+
+    <script src="jsnew/pprefixfree.min.js"></script>
+
+
+
+<link rel="stylesheet" href="jsnew/jquery-ui.css">
+<script src="jsnew/jquery.min.js"></script>
+<script src="jsnew/jquery-ui.min.js"></script>
+
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+  
+  
+  
+  <link rel="stylesheet" href="styles.css">
+  <script type="text/javascript" src="jquery-1.4.1.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#loding1").hide();
+	$("#loding2").hide();
+	$(".country").change(function()
+	{
+		$("#loding1").show();
+		var id=$(this).val();
+		var dataString = 'id='+ id;
+		$(".state").find('option').remove();
+		$(".city").find('option').remove();
+		$.ajax
+		({
+			type: "POST",
+			url: "get_state.php",
+			data: dataString,
+			cache: false,
+			success: function(html)
+			{
+				$("#loding1").hide();
+				$(".state").html(html);
+			} 
+		});
+	});
+	
+	
+	$(".state").change(function()
+	{
+		$("#loding2").show();
+		var id=$(this).val();
+		var dataString = 'id='+ id;
+	
+		$.ajax
+		({
+			type: "POST",
+			url: "get_city.php",
+			data: dataString,
+			cache: false,
+			success: function(html)
+			{
+				$("#loding2").hide();
+				$(".city").html(html);
+			} 
+		});
+	});
+	
+});
+</script>
+<script src="ckeditor_new/ckeditor.js"></script>
+</head>
+
+<body>
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='edischarge3'><span>Home</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Patients</span></a>
+      <ul>
+         <li class='has-sub'><a href='esearch'><span>Patient Search By MRN</span></a>         </li>
+         <li class='has-sub'><a href='eadm'><span>New Patient</span></a>         </li>
+      </ul>
+   </li>
+   
+   
+   
+   <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+<!-- Google Font -->
+		<link href='jsnew/fonts' rel='stylesheet' type='text/css'>
+
+<form action="" method="post">
+
+<!-- Form Title -->
+		<h1>REQUSET FOR PRIVILEGE</h1>
+
+
+        <fieldset>
+
+			<legend></legend>
+            <!-- Name Input -->
+			
+	  
+	  
+	  
+	  
+	  <label for="age"><strong>Privilege Request By :</strong></label>
+      
+	  
+<input list="browsers111" name="dddname"  size="80"  style="text-transform:uppercase"readonly value='<?php echo $data['dname'];?>'>
+  <datalist id="browsers111">
+
+						<option value='<?php echo $data['dname'];?>'></option>
+				 </datalist>
+	  
+	  	 
+	  <br><br>
+	  
+	  
+	  
+	  <label for="age"><strong>Privilege Name :</strong></label>
+      
+	  
+<input list="browsers111" name="mname"  size="80"  style="text-transform:uppercase"required value='<?php echo $data['pname'];?>'>
+  <datalist id="browsers111">
+
+						<option value='<?php echo $data['pname'];?>'></option>
+				 </datalist>
+	  
+	  	 
+	  <br><br>
+	  
+	  <label for="age"><strong>Discipline Name :</strong></label>
+	  <input list="browsers45" name="dis"  size="80"  style="text-transform:uppercase" value='<?php echo $data['discipline'];?>'required>
+  <datalist id="browsers45">
+
+						
+				<?php 
+			$sql = "select distinct discipline from `mma5`";
+			$res = mysqli_query($con, $sql);
+			if(mysqli_num_rows($res) > 0) {
+				while($row = mysqli_fetch_object($res)) {
+					echo "<option value='".$row->discipline." "."'>".$row->discipline."</option>";
+				}
+			}
+			?>  </datalist>
+			<br><br>
+
+  </fieldset>
+
+<label for="age"><strong>Details:</strong></label>
+
+									
+                                    <div>
+                                           <textarea name="details" class="form-control" placeholder="Details"rows="5"cols="25"readonly>
+										   
+										   <?php echo $data['comments'];?>
+										   </textarea>
+                                               
+										 
+                                    </div>
+                                </div>
+								
+								
+  
+  <script>
+ CKEDITOR.replace( 'details', {
+  height: 200,
+  
+  
+  extraPlugins : 'filebrowser',
+    filebrowserBrowseUrl:'browser.php?type=Images',
+    filebrowserUploadMethod:"form",
+    filebrowserUploadUrl: "upload_topic.php"
+ });
+</script>
+
+
+<label for="age"><strong>MD Comment:</strong></label>
+
+									
+                                    <div>
+                                           <textarea name="md_comment" class="form-control" placeholder="Details"rows="5"cols="25"required>
+										   
+										  
+										   </textarea>
+                                               
+										 
+                                    </div>
+                                </div>
+								
+								
+  
+  <script>
+ CKEDITOR.replace( 'md_comment', {
+  height: 200,
+  
+  
+  extraPlugins : 'filebrowser',
+    filebrowserBrowseUrl:'browser.php?type=Images',
+    filebrowserUploadMethod:"form",
+    filebrowserUploadUrl: "upload_topic.php"
+ });
+</script>
+
+
+<table><tr><td colspan="15">		<button type="submit" name="Submit">Approve</button></td>
+</table>
+
+</form>
+  
+
+
+</body>
+
+</html>

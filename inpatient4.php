@@ -1,0 +1,560 @@
+<?php 
+    session_start();
+    $role = $_SESSION['sess_userrole'];
+    if(!isset($_SESSION['sess_username']) || $role!="pharmacy"){
+      header('Location: login2?err=2');
+    }
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+//include("auth.php"); 
+require('db1.php');
+
+$user=$_SESSION["sess_username"];
+
+//include("auth.php");
+$pmrn=$_REQUEST['pmrn'];
+$db = mysqli_connect('localhost','root','Godiloveu16');
+mysqli_select_db($db,'sfmmkpjnew');
+$query4 = mysqli_query($db,"select * from inpatient where pmrn='$pmrn' and discharge=''");
+$data = mysqli_fetch_assoc($query4);
+
+$query5 = mysqli_query($db,"select * from ipres where pmrn='$pmrn' and discharge=''");
+$data1 = mysqli_fetch_assoc($query5);
+
+  
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+ 
+require('db1.php');
+
+if(isset($_POST['Submit']))
+{
+
+$diagnosis=$_REQUEST['diagnosis'];
+$cdetails=$_REQUEST['cdetails'];
+$pdiet=$_REQUEST['pdiet'];
+$reffer=$_REQUEST['reffer'];
+$discharge=$_REQUEST['discharge'];
+
+
+$update="update ipres set cdetails='$cdetails',diagnosis='$diagnosis' where `pmrn`='$pmrn'";
+mysqli_query($con,$update) or die(mysql_error());
+
+$update1="update inpatient set discharge='$discharge' where `pmrn`='$pmrn'";
+mysqli_query($con,$update1) or die(mysql_error());
+}
+?>
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up Form</title>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  
+      <style>
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      /* Stephonce R. MOrris | 2014 */
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito',sans-serif;
+  color: #384047;
+  background: #A085C6;
+}
+
+form {
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  border: 1px solid #8265B0;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2)
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  width: 100%;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 10px;
+}
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #A085C6;
+  /*#5fcf80*/
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+abbr[title] {
+	border-bottom-width: 0;
+}
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 1200px;
+  }
+
+}
+      </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+
+
+
+
+
+  <style type="text/css">
+<!--
+.style1 {font-weight: bold}
+-->
+  </style>
+  
+  <head>
+    <title>PHP - Dynamically Add or Remove input fields using JQuery</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />  
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="./jquery.multiselect.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="./jquery.multiselect.js"></script>
+
+
+ <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+
+  <link rel="stylesheet" href="styles.css">
+
+   <script src="script.js"></script>
+
+</head>
+</head>
+
+<body>
+<div id='cssmenu'>
+<ul>
+   <li><a href='tes'><span>Home</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Prescription</span></a>
+      <ul>
+         <li class='has-sub'><a href='tes'><span>OPD Prescription</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='pharinview'><span>IPD Prescription</span></a>
+            
+         </li>
+      </ul>
+   </li>
+   
+      <li class='active has-sub'><a href='#'><span>Reports</span></a>
+      <ul>
+         <li class='has-sub'><a href='preview'><span>Print Previous Prescription</span></a>
+            
+         </li>
+		 <li class='has-sub'><a href='tes5'><span>Prescription Status Wise Report </span></a>
+            
+         </li>
+         <li class='has-sub'><a href='tes6'><span>Consultant Wise Report</span></a>
+            
+         </li>
+      </ul>
+   </li>
+  
+      <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+
+<h1 align="center">INPATIENT RECORD </h1>
+
+  <!-- Stephonce R. MOrris | 2014 -->
+
+<!-- Google Font -->
+		<link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+
+<form action="" method="post">
+
+<!-- Form Title -->
+        <table align="center" class="table table-bordered" id="dynamic_field">  
+				<tr><td colspan="20"><label><strong>Doctors's Name :</strong></label></td></tr>
+				<tr>	  
+				<td colspan="20"> <?php echo $data["adoc"]; ?></td></tr>
+				
+						
+						
+				
+					<input type="hidden" name="new" value="1" />
+
+						</select></td></tr>
+						
+												<tr>
+						
+						
+						<td colspan="10"><label><strong>Patient's MRN:</strong></label></td>
+						<td colspan="10"><label><strong>Patient's Name:</strong></label></td>
+						
+						
+						</tr>
+
+<tr>				<td colspan="10"><?php echo $data["pmrn"]; ?> </td>
+					 <td colspan="10"><?php echo $data["pname"]; ?> </td>
+
+					 
+</tr>
+
+						
+						
+<tr><td colspan="20"><label><strong>Patient's Address :</strong></label></td></tr>
+<tr><td colspan="20"><?php echo $data["padd"]; ?></td></tr>
+
+
+		<tr>
+						
+						<td colspan="5"><label><strong>Age:</strong></label></td>
+						<td colspan="5"><label><strong>Admission Date:</strong></label></td>
+						<td colspan="2"><label><strong>Gender:</strong></label></td>
+						<td colspan="4"><label><strong>Phone NO:</strong></label></td>
+						<td colspan="2"><label><strong>Room Type:</strong></label></td>
+						<td colspan="2"><label><strong>Bed No:</strong></label></td>		
+						</tr>
+						
+						<tr>				
+						<td colspan="5"><?php echo $data["age"]; ?> </td>  
+             		<td colspan="5"> <?php echo $data["adate"]; ?> </td>					 	
+					 <td colspan="2"><?php echo $data["gender"]; ?></td>
+					 <td colspan="4"><?php echo $data["pphone"]; ?></td>  
+
+			    	 <td colspan="2"><?php echo $data["room"]; ?></td>  
+					 <td colspan="2"><?php echo $data["room"]; ?></td>  
+					 </tr>
+
+									
+														
+
+<tr><td colspan="10"><label><strong>Medication Advised:</strong></label></td>
+<td colspan="5"><label><strong>Dosages:</strong></label></td>
+<td colspan="5"><label><strong>Instruction:</strong></label></td>  
+  </tr>
+
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m1"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d1"]; ?></td>
+<td colspan="5"><?php echo $data1["i1"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m2"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d2"]; ?></td>
+<td colspan="5"><?php echo $data1["i2"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m3"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d3"]; ?></td>
+<td colspan="5"><?php echo $data1["i3"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m4"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d4"]; ?></td>
+<td colspan="5"><?php echo $data1["i4"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m5"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d5"]; ?></td>
+<td colspan="5"><?php echo $data1["i5"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m6"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d6"]; ?></td>
+<td colspan="5"><?php echo $data1["i6"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m7"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d7"]; ?></td>
+<td colspan="5"><?php echo $data1["i7"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m8"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d8"]; ?></td>
+<td colspan="5"><?php echo $data1["i8"]; ?></td>
+</tr>
+<tr> 
+ <td colspan="10"><?php echo $data1["m9"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d9"]; ?></td>
+<td colspan="5"><?php echo $data1["i9"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m10"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d10"]; ?></td>
+<td colspan="5"><?php echo $data1["i10"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m11"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d11"]; ?></td>
+<td colspan="5"><?php echo $data1["i11"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m12"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d12"]; ?></td>
+<td colspan="5"><?php echo $data1["i12"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m13"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d13"]; ?></td>
+<td colspan="5"><?php echo $data1["i13"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m14"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d14"]; ?></td>
+<td colspan="5"><?php echo $data1["i14"]; ?></td>
+</tr>
+<tr> 
+ <td colspan="10"><?php echo $data1["m15"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d15"]; ?></td>
+<td colspan="5"><?php echo $data1["i15"]; ?></td>
+</tr>
+<tr> 
+ <td colspan="10"><?php echo $data1["m16"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d16"]; ?></td>
+<td colspan="5"><?php echo $data1["i16"]; ?></td>
+</tr>
+<tr> 
+ <td colspan="10"><?php echo $data1["m17"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d17"]; ?></td>
+<td colspan="5"><?php echo $data1["i17"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m18"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d18"]; ?></td>
+<td colspan="5"><?php echo $data1["i18"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m19"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d19"]; ?></td>
+<td colspan="5"><?php echo $data1["i19"]; ?></td>
+</tr>
+
+<tr> 
+ <td colspan="10"><?php echo $data1["m20"]; ?></td> 
+
+
+
+<td  colspan="5"><?php echo $data1["d20"]; ?></td>
+<td colspan="5"><?php echo $data1["i20"]; ?></td>
+</tr>
+
+
+<tr><td colspan="20"><label for="age"><strong>Patient's Diet</strong></label></td></tr>
+<tr><td colspan="20"><?php echo $data1["pdiet"]; ?> </td></tr>
+
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+</tr>
+
+</body>
+
+</html>

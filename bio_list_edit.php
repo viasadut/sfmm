@@ -1,0 +1,584 @@
+<?php 
+    session_start();
+    require('db1.php');
+	$role = $_SESSION['sess_userrole'];
+	
+	$queryc = "SELECT COUNT(utype) FROM user where '$role' in ('store','staff','ot','nurse','imo','mofficer','emergency','mng','lab','rad')"; 
+$resultc = mysqli_query($con, $queryc) or die(mysqli_error());
+$rowc = mysqli_fetch_array($resultc);
+$c1=$rowc['COUNT(utype)'];
+	
+    if(!isset($_SESSION['sess_username']) || $c1==0){
+      header('Location: login2?err=2');
+    }
+?>
+<?php
+$url1=$_SERVER['REQUEST_URI'];
+header("Refresh: 20; URL=$url1");
+
+?>
+
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+//session_start();
+require('db1.php');
+//include("auth.php");
+$fullname = $_SESSION['sess_username'];
+$query39 = "SELECT * FROM user where uname= '$fullname'"; 
+	 
+$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+
+// Print out result
+$row39 = mysqli_fetch_array($result39);
+$full = $row39['fullname'];
+
+$query3 = "SELECT * FROM staff3 where sid= '$fullname'"; 
+	 
+$result3 = mysqli_query($con, $query3) or die(mysqli_error());
+
+// Print out result
+$row3 = mysqli_fetch_array($result3);
+$dept=$row3['dept'];
+$cat=$row3['cat'];
+$dd=$row3['dept'];
+$dd1=$row3['subdept'];
+//$staff=$row3['sid'];
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>View Reports</title>
+<link rel="stylesheet" href="css/style2.css">
+<style type="text/css">
+<!--
+.style1 {
+	font-size: x-large;
+	font-weight: bold;
+	font-style: italic;
+}
+-->
+
+div1 {
+    height: 40px;
+    width: 30%;
+    background-color: powderblue;
+}
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  height: 5%
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 10px;
+}
+</style>
+
+
+   <link rel="stylesheet" href="styles.css">
+   <script src="jsnew/jquery-latest.min.js" type="text/javascript"></script>
+   <script src="script.js"></script>
+
+<script type="text/javascript">
+function confirm_click()
+{
+return confirm("Are you Sure to Delete ?");
+}
+
+</script>
+
+
+
+</head>
+
+
+<body>
+
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='histohome'><span>Home</span></a></li>
+      
+		  		  
+      <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+<p align="center" class="style1">!! WELCOME !! <?php echo $fullname; ?>'s Dash Board </p> 
+<form action="" method="Post">
+
+								
+					
+<table width="100%" height ="100%" border="1" align="center" bgcolor="#FFFF99" style="border-collapse:collapse;">
+
+
+    
+    <tr>
+      <th width="4%"><strong>S.No</strong></th>
+      <th width="17%"><strong>MSNO</strong></th>
+	  <th width="17%"><strong>ID</strong></th>
+      <th width="10%"><strong>Equipment Name</strong></th>
+	  <th width="17%"><strong>VA</strong></th>
+	  <th width="10%"><strong>Chargeable Name</strong></th>
+	  <th width="17%"><strong>Add BY</strong></th>
+	  <th width="17%"><strong>Serial No</strong></th>
+      <th width="15%"><strong>Current Location</strong>
+	  <th width="15%"><strong>Stakeholder</strong>
+      <th width="14%"><strong>Asset TAG</strong> 
+      <th width="14%"><strong>Vendor</strong>
+      <th width="14%"><strong>Transfer</strong>  
+      
+	  <th width="14%"><strong>Edit</strong>
+	  <th width="14%"><strong>Send For Servecing</strong>
+	  <th width="14%"><strong>Feedback</strong>
+	  <th width="14%"><strong>Maintenance Note</strong>
+	  
+	  
+	  
+	  
+	  
+	        
+	  
+
+
+
+	   </tr>
+  </thead>
+  <tbody>
+  
+    
+	
+	
+	
+		<?php
+	
+$user=$_SESSION["sess_username"];
+//$start=$_REQUEST["stdate"];
+//$end=$_REQUEST["endate"];
+//$bt=$_REQUEST["bt"];
+	
+	
+	
+
+//$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+$count=1;
+
+$sel_query="Select * from storenew where trans_to in ('$dd') and etype='Asset' ORDER BY id asc;";
+
+$result = mysqli_query($con,$sel_query);
+//echo   $bt;
+echo "Today's Unseen Patients";
+
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+      <td align="center"><?php echo $count; ?></td>
+	  <td align="center"><?php echo $row["msno"]; ?></td>
+     <td align="center"><a target='_blank' href="materialhistory1.php?eid=<?php echo $row['id']; ?>"><?php echo $row["id"]; ?></a> </td>
+      <td align="center"><a target='_blank' href="transfer_his.php?eid=<?php echo $row['id']; ?>"><?php echo $row["ename1"]; ?></a> </td>
+	  <td align="center"><a target='_blank' href="all_asset_list_indu.php?ename1=<?php echo $row['ename1']; ?>"><img src="eye.png" title="Print Report" width="30" height="15" /></a></td>
+	  
+      <td align="center"><?php echo $row["ename"]; ?></td>
+	  <?php
+	   $dn = $row['aby'];
+$query40 = "SELECT * FROM staff3 where sid= '$dn'"; 
+	 
+$result40 = mysqli_query($con, $query40) or die(mysqli_error());
+
+// Print out result
+$row40 = mysqli_fetch_array($result40);
+$ss=$row40['sname'];
+
+   ?>
+	  
+	  <td align="center"><?php echo $ss; ?></td>
+	  <td align="center"><?php echo $row["serialno"]; ?></td>
+	  
+      <td align="center"><?php echo $row["c_loc"]; ?>
+      
+	  <td align="center"><?php echo $row["supplier"]; ?>
+	  <td align="center"><?php echo $row["warrenty"]; ?>
+	  <td align="center"><?php echo $row["p_by"]; ?>
+	  	  
+
+		  <?php		 
+				 
+		$id=$row["id"];
+		//$status=$row["status"];
+		$tt=$row['trans_to'];
+		$es=$row['elocation_s'];
+		$c_loc=$row['c_loc'];
+		
+		$url = "transfer_to?id=$id"; 
+		$url2 = "dmsend?id=$id"; 
+		$url3 = "dmsendbio1?id=$id"; 
+		$url4 = "dmsendbio12?id=$id"; 
+		$url5 = "asset_edit?id=$id"; 
+				 
+				 
+				 ?>
+		  
+	        <td align="center">
+			<?php if($c_loc==$dd || $c_loc==$dd1)
+			
+		
+			{ 
+echo "<a href='$url'>Transfer</a>";
+
+	}
+	
+	/*else if($tt=='')
+			
+		
+			{ 
+echo "<a href='$url'>Transfer</a>";
+
+	}*/
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+			
+			
+			
+			</td>	
+				        
+<td align="center">
+<?php if($es==$dd || $dn==$fullname)
+			
+		
+			{ 
+echo "<a href='$url5'>Edit</a>";
+
+	}
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+
+
+
+</td>  
+
+	       
+ <td align="center">
+ 
+ 		<?php if($c_loc==$dd or $c_loc=$dd1)
+			
+		
+			{ 
+echo "<a href='$url2'>Send For Servecing</a>";
+
+	}
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+ 
+ 
+ 
+ 
+ 
+ 
+ </td>	
+
+<td align="center">
+
+
+<?php if($es==$dd or $es==$dd1 and $row['status']=='Not Functioning')
+			
+		
+			{ 
+echo "<a href='$url3'>Give Feedback</a>";
+
+	}
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+
+
+
+
+
+
+
+</td>	
+
+ <td>
+ 
+ 
+ <?php if($es==$dd or $es=$dd1)
+			
+		
+			{ 
+echo "<a href='$url4'>Maintenance Note</a>";
+
+
+
+	}
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+ 
+
+ 
+ 
+ 
+ 
+ </td>	
+
+	  
+      </tr>
+    <?php $count++; } ?>
+
+	
+	
+	
+			<?php
+	
+$user=$_SESSION["sess_username"];
+//$start=$_REQUEST["stdate"];
+//$end=$_REQUEST["endate"];
+//$bt=$_REQUEST["bt"];
+	
+	
+	
+
+//$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+$count=1;
+
+$sel_query="Select * from storenew where aby='$fullname' and etype in('Asset'and 'Lilen') and estatus !='Deleted' and status='' ORDER BY id asc;";
+
+$result = mysqli_query($con,$sel_query);
+//echo   $bt;
+echo "Today's Unseen Patients";
+
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+      <td align="center"><?php echo $count; ?></td>
+	  <td align="center"><?php echo $row["msno"]; ?></td>
+     <td align="center"><a target='_blank' href="materialhistory1.php?eid=<?php echo $row['id']; ?>"><?php echo $row["id"]; ?></a> </td>
+      <td align="center"><a target='_blank' href="transfer_his.php?eid=<?php echo $row['id']; ?>"><?php echo $row["ename1"]; ?></a> </td>
+	  <td align="center"><a target='_blank' href="all_asset_list_indu.php?ename1=<?php echo $row['ename1']; ?>"><img src="eye.png" title="Print Report" width="30" height="15" /></a></td>
+	  
+      <td align="center"><?php echo $row["ename"]; ?></td>
+	  <?php
+	   $dn = $row['aby'];
+$query40 = "SELECT * FROM staff3 where sid= '$dn'"; 
+	 
+$result40 = mysqli_query($con, $query40) or die(mysqli_error());
+
+// Print out result
+$row40 = mysqli_fetch_array($result40);
+$ss=$row40['sname'];
+
+   ?>
+	  
+	  <td align="center"><?php echo $ss; ?></td>
+	  <td align="center"><?php echo $row["serialno"]; ?></td>
+	  
+      <td align="center"><?php if($row['trans_to']==''){echo $row['elocation_s'];} else {echo $row["trans_to"];} ?>
+      
+	  <td align="center"><?php echo $row["supplier"]; ?>
+	  <td align="center"><?php echo $row["warrenty"]; ?>
+	  <td align="center"><?php echo $row["p_by"]; ?>
+	  	  
+
+		  <?php		 
+				 
+		$id=$row["id"];
+		//$status=$row["status"];
+		$tt=$row['trans_to'];
+		$es=$row['elocation_s'];
+		$c_loc=$row['c_loc'];
+		
+		$url = "transfer_to?id=$id"; 
+		$url2 = "dmsend?id=$id"; 
+		$url3 = "dmsendbio1?id=$id"; 
+		$url4 = "dmsendbio12?id=$id"; 
+		$url5 = "asset_edit?id=$id"; 
+				 
+				 
+				 ?>
+		  
+	        <td align="center">
+			<?php if($c_loc==$dd || $c_loc==$dd1)
+			
+		
+			{ 
+echo "<a href='$url'>Transfer</a>";
+
+	}
+	
+	/*else if($tt=='')
+			
+		
+			{ 
+echo "<a href='$url'>Transfer</a>";
+
+	}*/
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+			
+			
+			
+			</td>	
+				        
+<td align="center">
+<?php if($es==$dd || $dn==$fullname)
+			
+		
+			{ 
+echo "<a href='$url5'>Edit</a>";
+
+	}
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+
+
+
+</td>  
+
+	       
+ <td align="center">
+ 
+ 		<?php if($c_loc==$dd or $c_loc=$dd1)
+			
+		
+			{ 
+echo "<a href='$url2'>Send For Servecing</a>";
+
+	}
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+ 
+ 
+ 
+ 
+ 
+ 
+ </td>	
+
+<td align="center">
+
+
+<?php if($es==$dd or $es==$dd1 and $row['status']=='Not Functioning')
+			
+		
+			{ 
+echo "<a href='$url3'>Give Feedback</a>";
+
+	}
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+
+
+
+
+
+
+
+</td>	
+
+ <td>
+ 
+ 
+ <?php if($es==$dd or $es=$dd1)
+			
+		
+			{ 
+echo "<a href='$url4'>Maintenance Note</a>";
+
+
+
+	}
+	
+	else
+	{ 
+echo "";	
+
+	}
+?>
+ 
+
+ 
+ 
+ 
+ 
+ </td>	
+
+	  
+      </tr>
+    <?php $count++; } ?>
+
+  </tbody>
+</table>
+
+<br><br>
+
+
+</form>
+
+
+</body>
+
+</html>

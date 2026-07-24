@@ -1,0 +1,26 @@
+<?php  
+ //fetch.php  
+ $connect = mysqli_connect("localhost", "root", "Godiloveu16", "sfmmkpjnew");  
+ if(isset($_POST["employee_id"]))  
+ {  
+      $query = "SELECT * FROM medicine WHERE mname = '".$_POST["employee_id"]."'";  
+      $result = mysqli_query($connect, $query);  
+      $row = mysqli_fetch_array($result);  
+      echo json_encode($row);  
+	  
+	  //$sel_query="Select * from iinves where pmrn= '$pmrn' and eid='$eid' and type='lab' and rstatus IN ('RECEIVED','REJECTED') and status IN ('RECEIVED','REJECTED')   order by `id` DESC;";
+	  //$name = $row['medi'];   
+	  
+	  
+	  
+	  
+	  
+//$query59 = mysqli_query($connect,='medi'");
+//$data59 = mysqli_fetch_assoc($query59);
+//echo json_encode($data59);
+//$mname=$data59['qty'];
+	
+
+  
+ }  
+ ?>

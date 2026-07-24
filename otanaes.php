@@ -1,0 +1,1036 @@
+<?php
+
+    session_start();
+    $role = $_SESSION['sess_userrole'];
+    if(!isset($_SESSION['sess_username']) || $role!="doctor"){
+      header('Location: login2?err=2');
+    }
+?>
+<?php
+require('db1.php');
+ $fullname = $_SESSION['sess_username'];
+ 
+$query39 = "SELECT * FROM user where uname= '$fullname'"; 
+	 
+$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+
+// Print out result
+$row39 = mysqli_fetch_array($result39)
+?>
+<?php
+$full = $row39['fullname'];
+$date=date('m/d/Y');
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+//include("auth.php"); 
+require('db1.php');
+
+$user=$_SESSION['sess_username'];
+
+//include("auth.php");
+$id=$_REQUEST['id'];
+$pmrn=$_REQUEST['pmrn'];
+//$pname=$_REQUEST['pname'];
+$query = "SELECT * from ot where pmrn='$pmrn' and id='$id'"; 
+$result = mysqli_query($con, $query) or die ( mysqli_error());
+$row = mysqli_fetch_assoc($result);
+$pn= $row['pname'];
+$pm= $row['pmrn'];
+$pp= $row['pphone'];  
+$pa= $row['page'];
+$ps= $row['psex'];
+$ad= $row['adate'];
+  
+?>
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+ 
+require('db1.php');
+
+if(isset($_POST['Submit']))
+{
+
+$pmrn=$_REQUEST['pmrn'];
+$pname=$_REQUEST['pname'];
+$page=$_REQUEST['page'];
+$psex=$_REQUEST['psex'];
+$pphone=$_REQUEST['pphone'];
+$adate=$_REQUEST['adate'];
+$dname=$_REQUEST['dname'];
+$induction=$_REQUEST['induction'];
+
+$intubation=$_REQUEST['intubation'];
+$ecare=$_REQUEST['ecare'];
+$acare=$_REQUEST['acare'];
+$monitoring=$_REQUEST['monitoring'];
+$pposition=$_REQUEST['pposition'];
+$psite=$_REQUEST['psite'];
+$psize=$_REQUEST['psize'];
+$csite=$_REQUEST['csite'];
+$asite=$_REQUEST['asite'];
+$circuit=$_REQUEST['circuit'];
+$ventilation=$_REQUEST['ventilation'];
+$rapid=$_REQUEST['rapid'];
+//$rtechnique=$_REQUEST['rtechnique'];
+$lgrading=$_REQUEST['lgrading'];
+$cevents=$_REQUEST['cevents'];
+//$eby=$_REQUEST['eby'];
+
+
+
+
+$ga=$_REQUEST['dropdown'];
+$gasize=$_REQUEST['gasize'];
+
+$lm=$_REQUEST['dropdown1'];
+$lmsize=$_REQUEST['lmsize'];
+
+$ett=$_REQUEST['dropdown2'];
+$ett1=$_REQUEST['ett'];
+$ett2=$_REQUEST['ett1'];
+
+$trache=$_REQUEST['dropdown3'];
+$trache1=$_REQUEST['trache'];
+
+
+$ng=$_REQUEST['dropdown4'];
+$ng1=$_REQUEST['ng'];
+$ng2=$_REQUEST['ng1'];
+
+
+
+
+$etime= date('m/d/Y h:i:s');
+
+
+
+//$x4=$_REQUEST['xl4'];
+//$lx4= implode(",",$x4);
+
+$rtechnique=$_REQUEST['rtechnique'];
+$rtechnique1= implode(",",$rtechnique);
+
+$rlevel=$_REQUEST['rlevel'];
+$rdrugs=$_REQUEST['rdrugs'];
+$rothers=$_REQUEST['rothers'];
+$inmax=$_REQUEST['inmax'];
+$f=$_REQUEST['f'];
+$v=$_REQUEST['v'];
+$vt=$_REQUEST['vt'];
+$ppv=$_REQUEST['ppv'];
+$spontaneous=$_REQUEST['spontaneous'];
+$gasflow=$_REQUEST['gasflow'];
+$co2a=$_REQUEST['co2a'];
+$hme=$_REQUEST['hme'];
+$peroxy=$_REQUEST['peroxy'];
+
+
+
+
+
+$insert="insert into otpac (`pname`,`pmrn`,`eid`,`page`,`psex`,`pphone`,`adate`,`dname`,`induction`,`intubation`,`ecare`,`acare`,`monitoring`,`pposition`,`psite`,`psize`,`csite`,`asite`,`circuit`,`ventilation`,`rapid`,`rtechnique`,`lgrading`,`cevents`,`eby`,`etime`,`status`,`ga`,`gasize`,`lm`,`lmsize`,`ett`,`ett1`,`ett2`,`trache`,`trache1`,`ng`,`ng1`,`ng2`,`rlevel`,`rdrugs`,`rothers`,`inmax`,`f`,`v`,`vt`,`ppv`,`spontaneous`,`gasflow`,`co2a`,`hme`,`peroxy`)
+ values ('$pname', '$pmrn','$id','$page','$psex','$pphone','$adate','$dname','$induction','$intubation','$ecare','$acare','$monitoring','$pposition','$psite','$psize','$csite','$asite','$circuit','$ventilation','$rapid','$rtechnique1','$lgrading','$cevents','$full','$etime','DONE','$ga','$gasize','$lm','$lmsize','$ett','$ett1','$ett2','$trache','$trache1','$ng','$ng1','$ng2','$rlevel','$rdrugs','$rothers','$inmax','$f','$v','$vt','$ppv','$spontaneous','$gasflow','$co2a','$hme','$peroxy')";
+
+mysqli_query($con,$insert);
+
+//header("Location:$url");
+$url = "otanaesedit?pmrn=$pmrn&id=$id";
+header("Location: $url");
+}
+?>
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Surgical Note</title>
+  
+    <link rel="stylesheet" href="jsnew/normalize.min.css">
+
+  
+      <style>
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      /* Stephonce R. MOrris | 2014 */
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito',sans-serif;
+  color: #384047;
+  background: #A085C6;
+}
+
+form {
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  border: 1px solid #8265B0;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2)
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  width: 100%;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 10px;
+}
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #A085C6;
+  /*#5fcf80*/
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+abbr[title] {
+	border-bottom-width: 0;
+}
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 1200px;
+  }
+
+}
+      </style>
+
+    <script src="jsnew/pprefixfree.min.js"></script>
+
+
+
+<link rel="stylesheet" href="jsnew/jquery-ui.css">
+<script src="jsnew/jquery.min.js"></script>
+<script src="jsnew/jquery-ui.min.js"></script>
+
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+
+ <script>
+  $(document).ready(function() {
+    $("#datepicker1").datepicker();
+  });
+  </script>
+
+ <script>
+  $(document).ready(function() {
+    $("#datepicker2").datepicker();
+  });
+  </script>
+
+  <style type="text/css">
+<!--
+.style1 {font-weight: bold}
+-->
+  </style>
+  
+  <head>
+    <title>PHP - Dynamically Add or Remove input fields using JQuery</title>
+    <link rel="stylesheet" href="jsnew/bootstrap.min.css" />  
+    <script src="jsnew/jjquery.min.js"></script>
+    <script src="jsnew/bootstrap.min.js"></script>
+
+    <link href="jsnew/jquery-ui.css" rel="stylesheet" />
+    <link href="./jquery.multiselect.css" rel="stylesheet" />
+    <script src="jsnew/jquery-1.12.4.js"></script>
+    <script src="jsnew/jquery-ui.js"></script>
+    <script src="./jquery.multiselect.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+
+   <script src="script.js"></script>
+   
+   
+   
+   
+   <script>
+$(document).ready(function(){
+  $('#dropdown').change(function() {
+    if( $(this).val() == 'YES') {
+        $('#gasize').prop( "disabled", false );
+		$('#gasize').show();
+    } else {       
+        
+		$('#gasize').hide();
+		
+    }
+});
+});
+</script>
+
+
+<script>
+$(document).ready(function(){
+  $('#dropdown1').change(function() {
+    if( $(this).val() == 'YES') {
+        $('#lmsize').prop( "disabled", false );
+		$('#lmsize').show();
+    } else {       
+        
+		$('#lmsize').hide();
+		
+    }
+});
+});
+</script>
+
+
+
+<script>
+$(document).ready(function(){
+  $('#dropdown2').change(function() {
+    if( $(this).val() == 'YES') {
+        $('#ett').prop( "disabled", false );
+		$('#ett').show();
+		$('#ett1').prop( "disabled", false );
+		$('#ett1').show();
+    } else {       
+        
+		$('#ett').hide();
+		
+		$('#ett1').hide();
+		
+    }
+});
+});
+</script>
+
+
+
+<script>
+$(document).ready(function(){
+  $('#dropdown3').change(function() {
+    if( $(this).val() == 'YES') {
+        $('#trache').prop( "disabled", false );
+		$('#trache').show();
+		
+    } else {       
+        
+		$('#trache').hide();
+		
+		
+    }
+});
+});
+
+</script>
+
+
+
+<script>
+$(document).ready(function(){
+  $('#dropdown4').change(function() {
+    if( $(this).val() == 'YES') {
+        $('#ng').prop( "disabled", false );
+		$('#ng').show();
+		$('#ng1').prop( "disabled", false );
+		$('#ng1').show();
+    } else {       
+        
+		$('#ng').hide();
+		
+		$('#ng1').hide();
+		
+    }
+});
+});
+</script>
+
+
+<script>
+$(document).ready(function(){
+  $('#ventilation').change(function() {
+    if( $(this).val() == 'PPV') {
+        $('#ppv').prop( "disabled", false );
+		$('#ppv').show();
+		$('#vt').prop( "disabled", false );
+		$('#vt').show();
+		$('#v').prop( "disabled", false );
+		$('#v').show();
+		$('#f').prop( "disabled", false );
+		$('#f').show();
+		$('#inmax').prop( "disabled", false );
+		$('#inmax').show();
+		$('#spontaneous').prop( "disabled", true );
+		$('#spontaneous').hide();
+    } else {       
+        
+		$('#ppv').hide();
+		$('#vt').hide();
+		$('#v').hide();
+		$('#f').hide();
+		$('#inmax').hide();
+		
+    }
+});
+
+
+});
+</script>
+   
+   <script>
+    $(function () {
+        $('select[multiple].active.3col').multiselect({
+            columns: 6,
+            placeholder: 'Select Regional Technique',
+            search: true,
+            searchOptions: {
+                'default': 'Select Regional Technique'
+            },
+            selectAll: true
+        });
+
+    });
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='otdash'><span>Home</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Patients</span></a>
+      <ul>
+         <li class='has-sub'><a href='viewnew'><span>OPD Patients</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='iview'><span>In-Patients</span></a>
+            
+         </li>
+      </ul>
+   </li>
+   <li class='active has-sub'><a href='#'><span>Appointment</span></a>
+      <ul>
+         <li class='has-sub'><a href='cggtttt'><span>Set Doctor's Appointment</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='ami2'><span>Set Restrictions on Appointment Time</span></a>
+            
+         </li>
+      </ul>
+	  
+   </li>
+
+   <li class='last'><a href='ot'><span>OT BOOKING</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Reports</span></a>
+      <ul>
+         <li class='has-sub'><a href='view3new'><span>OPD Prescription</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='con1'><span>Outpatient Stats</span></a>
+            
+         </li>
+		          <li class='has-sub'><a href='con2'><span>OT Stats</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='con3'><span>In-Patient Stats</span></a>
+            
+         </li>
+		   <li class='has-sub'><a href='con11'><span>Medicine Stats</span></a>
+            
+         </li>
+
+      </ul>
+   </li>
+   <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+<h1 align="center">SURGERY / PROCEDURE NOTE </h1>
+
+  <!-- Stephonce R. MOrris | 2014 -->
+
+<!-- Google Font -->
+		<link href='jsnew/fonts' rel='stylesheet' type='text/css'>
+
+<form action="" method="post" onsubmit='return confirm("Do You Want To Proceed??");'">
+
+
+<!-- Form Title -->
+        <table align="center" class="table table-bordered" id="dynamic_field">  
+				<tr><td colspan="20"><label><strong>Surgeon's Name :</strong></label></td></tr>
+				
+				<tr>	  
+				<td colspan="20"><input type="text" name="dname" required value="<?php echo $full; ?>" readonly/>
+				
+						
+						
+				
+					<input type="hidden" name="new" value="1" />
+					<input name="ID" type="hidden" value="<?php echo $row['ID'];?>" />
+						</select></td></tr>
+						
+												<tr>
+						
+				<tr><td colspan="20"><label><strong>Assistant Surgeon's Name :</strong></label></td></tr>		
+				<tr><td colspan="20"><select name="xl4[]" multiple="multiple" class="3col active" placeholder="Select Investigations">
+<option value=""selected>N/A</option>
+<option value="Dr. J.M.H Qausar Alam">Dr. J.M.H Qausar Alam</option>
+<option value="Dr. Razeeb Hassan">Dr. Razeeb Hassan</option>
+<option value="Dr. Md.Rakibul Hassan">Dr. Md. Rakibul Hassan</option>
+<option value="Dr. Ranen Biswas">Dr. Ranen Biswas</option>
+<option value="Dr. Md. Abdur Razzak">Dr. Md. Abdur Razzak</option>
+
+
+
+
+
+       
+    </select></td></tr>
+	
+	
+			
+    <script>
+    $(function () {
+        $('select[multiple].active.3col').multiselect({
+            columns: 6,
+            placeholder: 'Select Regional Technique',
+            search: true,
+            searchOptions: {
+                'default': '-Select Regional Technique-'
+            },
+            selectAll: true
+        });
+
+    });
+</script>
+						<td colspan="2"><label><strong>Patient's MRN:</strong></label></td>
+						<td colspan="18"><label><strong>Patient's Name:</strong></label></td>
+						
+						
+						</tr>
+
+<tr>				<td colspan="2"><input type="text" name="pmrn"  required value="<?php echo $pm;?>" readonly/></td>
+					 <td colspan="18"><input type="text" name="pname" required value="<?php echo $pn;?>" readonly/></td>
+
+					 
+</tr>
+
+						
+						
+
+
+
+		<tr>
+						
+						<td colspan="2"><label><strong>Age:</strong></label></td>
+						<td colspan="3"><label><strong>Admission Date:</strong></label></td>
+						<td colspan="2"><label><strong>Gender:</strong></label></td>
+						<td colspan="2"><label><strong>Phone No:</strong></label></td>
+						<td colspan="2"><label><strong>Date:</strong></label></td>
+						<td colspan="6"><label><strong>Induction TIME:</strong></label></td>		
+						<td colspan="3"><label><strong>Intubation TIME:</strong></label></td>		
+						</tr>
+						
+						
+						<tr>				
+						<td colspan="2"><input type="text" name="page" required value="<?php echo $pa;?>" readonly/></td>  
+             		<td colspan="3"><input type="text" name="adate" value="<?php echo $ad;?>"readonly/></td>					 	
+					 <td colspan="2"><input type="text" name="psex" required value="<?php echo $ps;?>" readonly/></td>
+					 <td colspan="2"><input type="text" name="pphone" required value="<?php echo $pp;?>" readonly/></td>  
+
+			    	 <td colspan="2"><input type="text" name="date" value=""></td>  
+					 <td colspan="6"><select name="induction">
+        
+						<option value=''>-Select Time-</option>
+						<option value='9:00AM'>9:00AM</option>
+						<option value='10:00AM'>10:00AM</option>
+						<option value='11:00AM'>11:00AM</option>
+						<option value='12:00PM'>12:00PM</option>
+						<option value='1:00PM'>1:00PM</option>
+						<option value='2:00PM'>2:00PM</option>
+						<option value='3:00PM'>3:00PM</option>
+						<option value='4:00PM'>4:00PM</option>
+						<option value='5:00PM'>5:00PM</option>
+						<option value='6:00PM'>6:00PM</option>
+						<option value='7:00PM'>7:00PM</option>
+						<option value='8:00PM'>8:00PM</option>
+						<option value='9:00PM'>9:00PM</option>
+						<option value='10:00PM'>10:00PM</option>
+						<option value='11:00PM'>11:00PM</option>
+						<option value='12:00AM'>12:00AM</option>
+				
+</select></td>  
+
+
+
+<td colspan="3"><select name="intubation">
+        
+						<option value=''>-Select Time-</option>
+						<option value='9:00AM'>9:00AM</option>
+						<option value='10:00AM'>10:00AM</option>
+						<option value='11:00AM'>11:00AM</option>
+						<option value='12:00PM'>12:00PM</option>
+						<option value='1:00PM'>1:00PM</option>
+						<option value='2:00PM'>2:00PM</option>
+						<option value='3:00PM'>3:00PM</option>
+						<option value='4:00PM'>4:00PM</option>
+						<option value='5:00PM'>5:00PM</option>
+						<option value='6:00PM'>6:00PM</option>
+						<option value='7:00PM'>7:00PM</option>
+						<option value='8:00PM'>8:00PM</option>
+						<option value='9:00PM'>9:00PM</option>
+						<option value='10:00PM'>10:00PM</option>
+						<option value='11:00PM'>11:00PM</option>
+						<option value='12:00AM'>12:00AM</option>
+				
+</select></td>  
+				
+					 </tr>
+					 
+					 
+		
+		<tr>
+							<td colspan="5"><label><strong>Eye Care:</strong></label></td>
+						<td colspan="5"><label><strong>Pressure Area Care:</strong></label></td>
+						<td colspan="5"><label><strong>Monitoring:</strong></label></td>
+						<td colspan="5"><label><strong>Patient Position:</strong></label></td>
+						
+						
+						</tr>
+						
+						<tr>				
+						
+					 <td colspan="5"><input type="text" name="ecare" value="" ></td> 
+					 <td colspan="5"><input type="text" name="acare" value="" ></td> 
+
+						<td colspan="5"><input type="text" name="monitoring" value="" ></td> 
+						
+						<td colspan="5"><select name="pposition">
+        
+						
+						<option value='Supine'>Supine</option>
+						<option value='Lithotomy'>Lithotomy</option>
+						<option value='Trendelenburgh'>Trendelenburgh</option>
+						<option value='Reverse Trendelenburgh'>Reverse Trendelenburgh</option>
+						<option value='Kidney Position'>Kidney Position</option>
+				
+</select></td>  </tr>
+             		
+ <tr><td colspan="20"><label><strong>Vascular Access</strong></label></td>  </tr>
+ <tr><td colspan="20"><label><strong>Peripheral</strong></label></td>  </tr>
+ <tr><td colspan="10"><label><strong>Site</strong></label></td>
+
+<td colspan="10"><label><strong>Size</strong></label></td> </tr>
+						  <tr><td colspan="10"><select name="psite">
+        
+						<option value='N/A'>N/A</option>
+						<option value='Wrist'>Wrist</option>
+						<option value='Cubital'>Cubital</option>
+						<option value='Mid Forearm'>Mid Forearm</option>
+						<option value='Arm'>Arm</option>
+						
+				
+</select></td>
+
+<td colspan="10"><select name="psize">
+        
+						<option value='N/A'>N/A</option>
+						<option value='16 Fr'>16 Fr</option>
+						<option value='18 Fr'>18 Fr</option>
+						<option value='20 Fr'>20 Fr</option>
+						<option value='22 Fr'>22 Fr</option>
+						<option value='24 Fr'>24 Fr</option>
+						
+				
+</select></td>
+
+</tr>
+						
+						
+						
+						
+						
+<tr><td colspan="20"><label><strong>Central</strong></label></td>  </tr>
+ <tr><td colspan="20"><label><strong>Site</strong></label></td>
+
+
+						  <tr><td colspan="20"><select name="csite">
+        
+						<option value='N/A'>N/A</option>
+						<option value='IJV'>IJV</option>
+						<option value='SC'>SC</option>
+						<option value='Femoral'>Femoral</option>
+						
+						
+				
+</select></td>
+
+
+</tr>
+
+
+<tr><td colspan="20"><label><strong>Arterial Line</strong></label></td>  </tr>
+ <tr><td colspan="20"><label><strong>Site</strong></label></td>
+
+
+						  <tr><td colspan="20"><select name="asite">
+        
+						<option value='N/A'>N/A</option>
+						<option value='Radial'>Radial</option>
+						<option value='Femoral'>Femoral</option>
+						
+						
+				
+</select></td>
+
+
+</tr>
+
+
+<tr><td colspan="20"><label><strong>Respiratory Management</strong></label></td>  </tr>
+<tr><td colspan="20"><label><strong>Guedal Airways</strong></label></td></tr>	
+<tr><td colspan="10"><select id='dropdown' name='dropdown'>
+  
+  <option value="YES">YES</option>
+  <option value="NO">NO</option>
+  
+</select></td>
+<td colspan="10"><input type="text" id="gasize"  name="gasize" value="" placeholder="Guedal Airway Size" /></td>
+
+<tr>
+
+
+<tr><td colspan="20"><label><strong>LM</strong></label></td></tr>	
+<tr><td colspan="10"><select id='dropdown1' name='dropdown1'>
+  
+  <option value="YES">YES</option>
+  <option value="NO">NO</option>
+  
+</select></td>
+<td colspan="10"><input type="text" id="lmsize" name="lmsize" placeholder="LM Size" /></td>
+
+<tr>
+
+
+<tr><td colspan="20"><label><strong>ETT</strong></label></td></tr>	
+<tr><td colspan="10"><select id='dropdown2' name='dropdown2'>
+  
+  <option value="YES">YES</option>
+  <option value="NO">NO</option>
+  
+</select></td>
+<td colspan="5"><input type="text" id="ett" name="ett" placeholder="ETT Type" /></td>
+<td colspan="5"><input type="text" id="ett1"  name="ett1" placeholder="ETT Size" /></td>
+
+<tr>
+
+<tr><td colspan="20"><label><strong>Tracheostomy</strong></label></td></tr>	
+<tr><td colspan="10"><select id='dropdown3' name='dropdown3'>
+  
+  <option value="YES">YES</option>
+  <option value="NO">NO</option>
+  
+</select></td>
+<td colspan="10"><input type="text" id="trache" name="trache" placeholder="Tracheostomy Type" /></td>
+
+
+<tr>
+
+
+<tr><td colspan="20"><label><strong>NG Tube</strong></label></td></tr>	
+<tr><td colspan="10"><select id='dropdown4' name='dropdown4'>
+  
+  <option value="YES">YES</option>
+  <option value="NO">NO</option>
+  
+</select></td>
+<td colspan="5"><input type="text" id="ng" name="ng"placeholder="NG Type" /></td>
+<td colspan="5"><input type="text" id="ng1" name="ng1" placeholder="NG Size" /></td>
+
+<tr>
+
+
+
+
+
+<tr><td colspan="5"><label><strong>Circuit</strong></label></td>
+<td colspan="5"><label><strong>CO2 Absroption</strong></label></td>
+<td colspan="5"><label><strong>HME</strong></label></td>
+<td colspan="5"><label><strong>Preoxygenation</strong></label></td><tr>
+
+
+<tr>
+
+<td colspan="5"><input type="text" id="circuit" name="circuit"placeholder="circuit" /></td>
+
+
+		<td colspan="5"><select name="co2a">
+        
+						
+						<option value='ON'>ON</option>
+						<option value='OFF'>OFF</option>
+						</select></td>
+						
+						<td colspan="5"><select name="hme">
+        
+						
+						<option value='USED'>USED</option>
+						<option value='NOT USED'>NOT USED</option>
+						</select></td>
+						
+						<td colspan="5"><select name="peroxy">
+        
+						
+						<option value='DONE'>DONE</option>
+						<option value='NOT DONE'>NOT DONE</option>
+						</select></td>
+
+
+</tr>
+
+
+
+<tr><td colspan="20"><label><strong>Ventilation</strong></label></td>
+
+
+						  <tr><td colspan="20"><select name="ventilation" id='ventilation' required>
+        
+						<option value=''>-Select-</option>
+						<option value='PPV'>PPV</option>
+						<option value='Spontaneous Respiration'>Spontaneous Respiration</option>
+						
+						
+						
+						
+						
+						
+				
+</select></td>
+
+
+</tr>
+
+
+<tr><td colspan="20"><label><strong>Gsa Flow</strong></label></td>
+<tr><td colspan="20"><input type="text" name="gasflow" value="" id='gasflow'></td>
+
+<tr><td colspan="20"><label><strong>Spontaneous Respiration </strong></label></td>
+<tr><td colspan="20"><input type="text" name="spontaneous" value="" id='spontaneous'></td>
+
+<tr><td colspan="20"><label><strong>PPV</strong></label></td>
+<tr><td colspan="20"><input type="text" name="ppv" value="" id='ppv' ></td>
+
+<tr><td colspan="20"><label><strong>VT</strong></label></td>
+<tr><td colspan="20"><input type="text" name="vt" value="" id='vt' ></td>
+
+<tr><td colspan="20"><label><strong>V</strong></label></td>
+<tr><td colspan="20"><input type="text" name="v" value="" id='v'></td>
+
+<tr><td colspan="20"><label><strong>F</strong></label></td>
+<tr><td colspan="20"><input type="text" name="f" value="" id='f'></td>
+
+<tr><td colspan="20"><label><strong>Inmax</strong></label></td>
+<tr><td colspan="20"><input type="text" name="inmax" value="" id='inmax'></td>
+
+
+
+
+
+<tr><td colspan="20"><label><strong>Rapid Sequence Intubation</strong></label></td>
+
+
+						  <tr><td colspan="20"><select name="rapid">
+        
+						
+						<option value='YES'>YES</option>
+						<option value='NO'>NO</option>
+						
+						
+						
+						
+				
+</select></td>
+
+
+</tr>
+
+
+
+
+
+
+
+<tr><td colspan="20"><label><strong>Laryngoscopy Garden</strong></label></td>
+
+
+						  <tr><td colspan="20"><input type="text" name="lgrading" value="" ></td>
+
+
+</tr>
+
+<tr><td colspan="20"><label><strong>Regional Technique</strong></label></td>
+
+
+						  <tr><td colspan="20">
+        
+						<select name="rtechnique[]" multiple="multiple" class="3col active" placeholder="Select Regional Technique"required>
+       
+						
+						<option value=''selected>-Select-</option>
+						<option value='Epidural'>Epidural</option>
+						<option value='SAB'>SAB</option>
+						<option value='Caudal'>Caudal</option>
+						<option value='Plexus Block'>Plexus Block</option>
+						<option value='Nerve Block'>Nerve Block</option>
+						
+						
+				
+</select>
+						</td>
+
+
+</tr>
+
+
+
+<tr><td colspan="20"><label><strong>Level</strong></label></td>
+<tr><td colspan="20"><input type="text" name="rlevel" value="" ></td>
+
+<tr><td colspan="20"><label><strong>Drugs</strong></label></td>
+<tr><td colspan="20"><input type="text" name="rdrugs" value="" ></td>
+
+<tr><td colspan="20"><label><strong>Others</strong></label></td>
+<tr><td colspan="20"><input type="text" name="rothers" value="" ></td>
+
+
+
+<tr><td colspan="20"><label><strong>Difficulities / Critical Events</strong></label></td></tr>
+
+
+						  <tr><td colspan="20"><input type="text" name="cevents" value="" ></td>
+
+
+</tr>
+
+
+
+<tr><td colspan="20"><label><strong><a target='_blank'href="otanaesmedi?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Medication</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank' href="otanaesinfusion?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Infusion</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank' href="otanaesn2o?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">N20/Air</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank' href="otanaesagent?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Volatile Agent</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank' href="otanaesvitals?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Vitals</strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank'href="otanaesbsugar?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Blood Sugar</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank' href="otanaesbloss?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Blood Loss</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank'href="otanaesurine?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Urine Output</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank' href="otanaesinves?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Peroperative Investigation</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank' href="otanaesbtrans?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Blood Transfsion Order</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank' href="otanaesother?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Other Fluid Loss</a></strong>&nbsp;&nbsp;&nbsp;<strong><a target='_blank'href="otanaestour?pmrn=<?php echo "$pmrn"; ?>&id=<?php echo "$id"; ?>">Tourniquite</a></strong></label></td></tr>
+		
+
+	
+
+<tr>
+		<td colspan="10"><button type="submit" name="Submit">Confirm</button></td>
+	  <td colspan="10"><a target='_blank' href="anaes?id=<?php echo "$id"; ?>"><img src="print.png" title="Print Report" width="150" height="60" /></a></td>	
+	  				
+</tr>
+
+</body>
+
+</html>

@@ -1,0 +1,522 @@
+<?php 
+    session_start();
+    require('db1.php');
+	$role = $_SESSION['sess_userrole'];
+	
+	$queryc = "SELECT COUNT(utype) FROM user where '$role' in ('doctor','rad','mng')"; 
+$resultc = mysqli_query($con, $queryc) or die(mysqli_error());
+$rowc = mysqli_fetch_array($resultc);
+$c1=$rowc['COUNT(utype)'];
+	
+    if(!isset($_SESSION['sess_username']) || $c1==0){
+      header('Location: login2?err=2');
+    }
+?>
+<?php
+require('db1.php');
+if(isset($_POST['bsearch'])){
+$user=$_SESSION["sess_username"];
+$start=date('Y-m-d',strtotime($_REQUEST["stdate"]));
+$end=date('Y-m-d',strtotime($_REQUEST["endate"]));
+$bt=$_REQUEST["bt"];
+
+$query43 = "SELECT COUNT(dname) FROM radreport where dname='$bt' and rdate BETWEEN '$start' and '$end';"; 
+	 
+$result43 = mysqli_query($con, $query43) or die(mysqli_error());
+$row43 = mysqli_fetch_assoc($result43);
+
+
+
+$queryx = "SELECT COUNT(dname) FROM radreport where dname='$bt' and rdate BETWEEN '$start' and '$end' and type1 in ('DX','DX1','CR','DX2','DX3','OPG');"; 
+	 
+$resultx = mysqli_query($con, $queryx) or die(mysqli_error());
+$rowx = mysqli_fetch_assoc($resultx);
+
+
+$queryu = "SELECT COUNT(dname) FROM radreport where dname='$bt' and rdate BETWEEN '$start' and '$end' and type1 in ('US','US1','US2','US3');"; 
+	 
+$resultu = mysqli_query($con, $queryu) or die(mysqli_error());
+$rowu = mysqli_fetch_assoc($resultu);
+
+
+$querym = "SELECT COUNT(dname) FROM radreport where dname='$bt' and rdate BETWEEN '$start' and '$end' and type1 in ('MR');"; 
+	 
+$resultm = mysqli_query($con, $querym) or die(mysqli_error());
+$rowm = mysqli_fetch_assoc($resultm);
+
+
+$queryc = "SELECT COUNT(dname) FROM radreport where dname='$bt' and rdate BETWEEN '$start' and '$end' and type1 in ('CT');"; 
+	 
+$resultc = mysqli_query($con, $queryc) or die(mysqli_error());
+$rowc = mysqli_fetch_assoc($resultc);
+
+
+$queryb = "SELECT COUNT(dname) FROM radreport where dname='$bt' and rdate BETWEEN '$start' and '$end' and type1 in ('BMD');"; 
+	 
+$resultb = mysqli_query($con, $queryb) or die(mysqli_error());
+$rowb = mysqli_fetch_assoc($resultb);
+
+
+}
+
+?>
+
+
+
+<?php
+$url1=$_SERVER['REQUEST_URI'];
+//header("Refresh: 5; URL=$url1");
+
+?>
+
+
+
+
+<?php
+/*
+Author: Javed Ur Rehman
+Website: https://www.allphptricks.com/
+*/
+
+require('db1.php');
+//include("auth.php");
+
+/*$query = "SELECT * from pmedi where id='".$id."'"; 
+$result = mysqli_query($con, $query) or die ( mysqli_error());
+$row = mysqli_fetch_assoc($result);
+*/
+
+
+
+
+?>
+
+<!DOCTYPE html>
+<html>
+  <link rel="stylesheet" href="jsnew/normalize.min.css">
+<script src="jsnew/pprefixfree.min.js"></script>
+
+
+
+<link rel="stylesheet" href="jsnew/jquery-ui.css">
+<script src="jsnew/jquery.min.js"></script>
+<script src="jsnew/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+		<link href='jsnew/fjsnwonts' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+ <link rel="stylesheet" href="jsnew/bootstrap.min.css" />  
+    <script src="jsnew/jjquery.min.js"></script>
+    <script src="jsnew/bootstrap.min.js"></script>
+
+    <link href="jsnew/jquery-ui.css" rel="stylesheet" />
+    <link href="./jquery.multiselect.css" rel="stylesheet" />
+    <script src="jsnew/jquery-1.12.4.js"></script>
+    <script src="jsnew/jquery-ui.js"></script>
+    
+    <script src="./jquery.multiselect.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+
+  
+      <style>
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      /* Stephonce R. MOrris | 2014 */
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito',sans-serif;
+  color: #384047;
+  background: #A085C6;
+}
+
+form {
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  border: 1px solid #8265B0;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2)
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  width: 100%;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 50px;
+  border-radius: 2px;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #A085C6;
+  /*#4bc970*/
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #8265B0;
+  /*#3ac162*/
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 10px;
+}
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #A085C6;
+  /*#5fcf80*/
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+abbr[title] {
+	border-bottom-width: 0;
+}
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 1200px;
+  }
+
+}
+      </style>
+
+    
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+
+ <script>
+  $(document).ready(function() {
+    $("#datepicker1").datepicker();
+  });
+  </script>
+
+ <script>
+  $(document).ready(function() {
+    $("#datepicker2").datepicker();
+  });
+  </script>
+
+  <style type="text/css">
+<!--
+.style1 {font-weight: bold}
+-->
+  </style>
+  
+  <head>
+    <title>PHP - Dynamically Add or Remove input fields using JQuery</title>
+    
+
+
+<link rel="stylesheet" href="styles.css">
+
+   <script src="script.js"></script>
+</head>
+
+<body>
+
+
+
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='tesrad'><span>Home</span></a></li>
+      <li><a href='radapp'><span>Appointment</span></a></li>
+      
+      <li class='active has-sub'><a href='#'><span>Reports</span></a>
+      <ul>
+         <li class='last'><a href='todayreport'><span>Today's Report</span></a></li>
+		 <li class='has-sub'><a href='donereport'><span>Search Done Reports</span></a>
+		 <li class='has-sub'><a href='allreport'><span>Datewise All Done Report </span></a>
+            <li class='last'><a href='raddtsearch2'><span>Patients pending Report Search</span></a></li>
+			<li class='last'><a href='radapp22'><span>Patients Appointment Report</span></a></li>
+         </li>
+		 
+      </ul>
+   </li>
+	  <li class='last'><a href='radview1'><span>Pending Reports</span></a></li>
+	  	  <li class='last'><a href='viewnewrad'><span>Search Pervious Patients</span></a></li>
+		  <li class='last'><a href='rpapp22'><span>New Patients</span></a></li>
+		  <li class='last'><a href='raddtsearch'><span>Patients pending request Search</span></a></li>
+		  		  
+      <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+
+<h1 align="center">Consultant Wise Done Reports</h1>
+
+  <!-- Stephonce R. MOrris | 2014 -->
+
+<!-- Google Font -->
+		
+
+<form action="" method="POST">
+
+
+
+<!-- Form Title -->
+        <table align="center" class="table table-bordered" id="dynamic_field">  
+				
+					
+						<td colspan="2"><label><strong>Select Start Date:</strong></label></td>
+						<td colspan="2"><label><strong>Select End Date:</strong></label></td>	
+
+							<td colspan="3"><label><strong> Select Consultant</strong></label></td> 
+			 				<td>	<label><strong>Search:</strong></label></td>
+						</tr>
+						
+						<tr>				
+						
+             		
+					 
+			    	 <td colspan="2"><input type="text" name="stdate" id="datepicker1" placeholder="Select Date" size="15"></td>  
+					 <td colspan="2"><input type="text" name="endate" id="datepicker2" placeholder="Select Date" size="15"></td>  
+					 <td colspan="3"><select name="bt">
+        
+						<option value=''>-Select-</option>
+						<?php 
+			$sql = "select * from `doctor` where status='Active' and tt='radio'";
+			$res = mysqli_query($con, $sql);
+			if(mysqli_num_rows($res) > 0) {
+				while($row = mysqli_fetch_object($res)) {
+					echo "<option value='".$row->dname."'>".$row->dname."</option>";
+				}
+			}
+			?>
+						
+						
+						
+						
+						
+								
+				
+</select></td>  
+					<td>	<button type="submit" name="bsearch">Search</button></td>
+					 </tr>
+					 
+					 
+		
+
+
+<table width="100%" height ="100%" border="1" align="center" bgcolor="#FFFF99" style="border-collapse:collapse;">
+
+
+    
+
+
+
+    <tr>
+      <th width="4%"><strong>S.No</strong></th>
+      <th width="17%"><strong>Patient's Name</strong></th>
+      <th width="10%"><strong>MRN</strong></th>
+      <th width="15%"><strong>Appointment Date </strong>
+      <th width="14%"><strong>Patient Phone</strong>   
+      <th width="14%"><strong>Doctor's Name</strong>
+      <th width="14%"><strong>Refferal</strong>
+	  <th width="14%"><strong>Investigation</strong>
+	  <th width="14%"><strong>Code</strong>
+	  <th width="14%"><strong>Price</strong>
+	  <th width="14%"><strong>Print</strong>
+
+	   </tr>
+  </thead>
+  <tbody>
+
+  
+     <?php
+	if(isset($_POST['bsearch'])){
+$user=$_SESSION["sess_username"];
+$start=date('Y-m-d',strtotime($_REQUEST["stdate"]));
+$end=date('Y-m-d',strtotime($_REQUEST["endate"]));
+$bt=$_REQUEST["bt"];
+//$id=$_REQUEST["id"];
+
+echo "<font color=blue font size=5> Total Record found in the search  -";
+echo   $row43['COUNT(dname)'];
+
+echo "<font color=blue font size=5>( Xray:";
+echo   $rowx['COUNT(dname)'];
+
+echo "<font color=blue font size=5>, USG:";
+echo   $rowu['COUNT(dname)'];
+
+echo "<font color=blue font size=5>, CT:";
+echo   $rowc['COUNT(dname)'];
+
+echo "<font color=blue font size=5>, MRI:";
+echo   $rowm['COUNT(dname)'];
+
+echo "<font color=blue font size=5>, BMD:";
+echo   $rowb['COUNT(dname)'];
+
+echo ") ";
+
+
+
+echo " ,  From  ";
+echo date('d/m/Y',strtotime($start));
+echo "  To  ";
+echo date('d/m/Y',strtotime($end));
+
+
+$username = "root";
+$password = "Godiloveu16";
+$hostname = "localhost"; 
+
+//connection to the database
+$dbhandle = mysqli_connect($hostname, $username, $password) 
+ or die("Unable to connect to MySQL");
+//echo "Connected to MySQL<br>";
+
+//select a database to work with
+$selected = mysqli_select_db($dbhandle, "sfmmkpjnew") 
+  or die("Could not select examples");
+
+	  $query198as = "SELECT SUM(price) FROM radreport where dname= '$bt' and rdate between '$start' and '$end' "; 
+	 
+$result198as = mysqli_query($dbhandle,$query198as) or die(mysqli_error());
+
+// Print out result
+$row198as = mysqli_fetch_array($result198as);
+$test1ai=$row198as['SUM(price)'];
+echo "<font color=red font size=5> Total Amount  -";
+echo   $test1ai;
+
+$count=1;
+$sel_query="Select * from radreport where dname='$bt' and rdate BETWEEN '$start' and '$end' order by type1;";
+
+
+$result = mysqli_query($con,$sel_query);
+
+while($row = mysqli_fetch_assoc($result)) 
+{ ?>    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?>
+      <td align="center"><?php echo $row["r1date"]; ?>
+      <td align="center"><?php echo $row["pphone"]; ?>  
+      <td align="center" style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold"><?php echo $row["dname"];?> 
+      <td align="center"><?php echo $row["dreffer"]; ?>  
+	  <td align="center"><?php echo $row["type"]; ?> 
+<td align="center"><?php echo $row["code"]; ?> 	  
+	  <td align="center"><?php echo $row["price"]; ?>  
+	   
+	   <td colspan="10">
+	   
+	   <?php 
+	   
+	   $rr=date('2022-04-02');
+	   
+	   if($row['rdate']>=$rr)
+	   {echo'
+	   
+	   <td colspan="10"><a target="_blank" href="rad_report_new2_edit.php?pmrn='.$row['pmrn'].'&acno='.$row['ac_no'].'&dname='.$row['dname'].'"><img src="print.png" title="Print Report" width="50" height="40" /></a></td>';
+	   }
+	   
+	   else
+	   {echo'<td colspan="10"><a target="_blank" href="p4new1.php?pmrn='.$row['pmrn'].'&eid='.$row['eid'].'&dname='.$row['dname'].'"><img src="print.png" title="Print Report" width="50" height="40" /></a></td>';}
+	   ?>
+	   
+	   
+</td>
+      </tr>
+
+
+
+	  
+    <?php $count++; } }?>
+
+	  <td colspan ="7" align="right"><a target='_blank' href="rad_con_excel?date=<?php echo "$start"; ?>&date1=<?php echo "$end"; ?>&dname=<?php echo "$bt"; ?>">Download In Excel</a></td>	      
+  </tbody>
+</table>
+
+
+</form>
+</body>
+</html>

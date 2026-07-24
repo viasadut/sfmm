@@ -1,0 +1,70 @@
+24ccratereport1.php	BIOCHEMISTRY	1
+24urinealbuminreport1.php	BIOCHEMISTRY	1
+24urinechloridereport1.php	BIOCHEMISTRY	1
+24urinecorreport1.php	BIOCHEMISTRY	1
+24urinepotassiumreport1.php	BIOCHEMISTRY	1
+24urineproteinreport1.php	FLUIDS & EXCREATIONS	1
+24urinesodiumreport1.php	BIOCHEMISTRY	1
+anareport.php	IMMUNOLOGY/SEROLOGY	1
+antihbcprint1.php	IMMUNOLOGY/SEROLOGY	1
+antihcvreport1.php	IMMUNOLOGY/SEROLOGY	1
+anti_tb_report_opd.php	IMMUNOLOGY/SEROLOGY	1
+bcrossreport.php	BLOOD BANK	1
+bfluidprint.php	BIOCHEMISTRY	1
+bgroupprint1.php	BLOOD BANK	1
+brucellreport1.php	IMMUNOLOGY/SEROLOGY	1
+cbcreport1.php	HAEMATOLOGY	1
+chikunreport1.php	IMMUNOLOGY/SEROLOGY	1
+covid_anti_opd_report.php	IMMUNOLOGY/SEROLOGY	1
+covid_r_report_opd.php	IMMUNOLOGY/SEROLOGY	1
+covid_t_opd_report.php	IMMUNOLOGY/SEROLOGY	1
+denguereport1.php	IMMUNOLOGY/SEROLOGY	1
+denguereport1_1.php	IMMUNOLOGY/SEROLOGY	1
+denguereport1_3.php	IMMUNOLOGY/SEROLOGY	1
+dlcreport1.php	HAEMATOLOGY	1
+egfrreport1.php	FLUIDS & EXCREATIONS	1
+febrilereport.php	IMMUNOLOGY/SEROLOGY	1
+fluid_report_view.php	BACTERIOLOGY|BIOCHEMISTRY\t|BIOCHEMISTRY|BLOOD BANK|Body Fluid|CYTOLOGY|FLUIDS & EXCREATIONS|HAEMATOLOGY|IMMUNOLOGY/SEROLOGY|PROFILE|VIROLOGY	11
+gtolernacereport1.php	BIOCHEMISTRY	1
+hbeaprint.php	HAEMATOLOGY	1
+hbsagreport1.php	IMMUNOLOGY/SEROLOGY	1
+herper_opd_report.php	BACTERIOLOGY|IMMUNOLOGY/SEROLOGY	2
+hiv_elisa_report.php	IMMUNOLOGY/SEROLOGY	1
+hpv_pcr_opd_report.php	BACTERIOLOGY	1
+ironreport1.php	PROFILE	1
+labmicroreport.php	BACTERIOLOGY	1
+labmicroreport11.php	BACTERIOLOGY	1
+labmicroreport_endo.php	BACTERIOLOGY	1
+lab_new_report_view.php	CYTOLOGY|HISTOLOGY	2
+lab_new_report_view.php.php	HISTOLOGY	1
+lipidreport1.php	BIOCHEMISTRY|PROFILE	2
+liverreport1.php	PROFILE	1
+mtb_opd_report.php	BACTERIOLOGY	1
+plastinreport1.php	HAEMATOLOGY	1
+printlabreportopd.php	BACTERIOLOGY|BIOCHEMISTRY\t|BIOCHEMISTRY|BLOOD BANK|FLUIDS & EXCREATIONS|HAEMATOLOGY|IMMUNOLOGY/SEROLOGY|PROFILE|VIROLOGY	9
+printlabreportopdanti.php	IMMUNOLOGY/SEROLOGY	1
+printlabreportopdhigh.php	BACTERIOLOGY	1
+printlabreportopdpbf.php	HAEMATOLOGY	1
+printlabreportopdpcr.php	BACTERIOLOGY|VIROLOGY	2
+prothrombinreport1.php	HAEMATOLOGY	1
+pylorireport.php	IMMUNOLOGY/SEROLOGY	1
+pylorireportopd.php	IMMUNOLOGY/SEROLOGY	1
+pylori_endo_report.php	IMMUNOLOGY/SEROLOGY	1
+renalreport1.php	PROFILE	1
+rhantibodyprint.php	BLOOD BANK	1
+rubella_opd_report.php	IMMUNOLOGY/SEROLOGY	1
+semenreport1.php	FLUIDS & EXCREATIONS	1
+serumreport1.php	PROFILE	1
+serumreport1_gas.php	PROFILE	1
+stoolreport1.php	FLUIDS & EXCREATIONS	1
+test_report_opd.php	BACTERIOLOGY	1
+thyroidreport1.php	IMMUNOLOGY/SEROLOGY	1
+tphareport.php	IMMUNOLOGY/SEROLOGY	1
+urinary24report1.php	BIOCHEMISTRY	1
+urineacratioreport1.php	BIOCHEMISTRY	1
+urineelectroreport1.php	BIOCHEMISTRY	1
+urinepcratioreport1.php	BIOCHEMISTRY	1
+urinephosphatereport1.php	BIOCHEMISTRY	1
+urinereport1.php	FLUIDS & EXCREATIONS	1
+vdrlreport.php	IMMUNOLOGY/SEROLOGY	1
+widalreport1.php	IMMUNOLOGY/SEROLOGY	1

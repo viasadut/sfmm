@@ -1,0 +1,1611 @@
+<?php 
+   session_start();
+    require('db1.php');
+	$role = $_SESSION['sess_userrole'];
+	
+	$queryc = "SELECT COUNT(utype) FROM user where '$role' in ('mng','doctor','lab','rd','imo','mofficer','nurse','rad','moopd','diet','staff','dialysis','histo','physio','outdoc','techbio','endo','gpopd','mrd')"; 
+$resultc = mysqli_query($con, $queryc) or die(mysqli_error());
+$rowc = mysqli_fetch_array($resultc);
+$c1=$rowc['COUNT(utype)'];
+	
+    if(!isset($_SESSION['sess_username']) || $c1==0){
+      header('Location: login2?err=2');
+    }
+?>
+
+<?php
+require('db1.php');
+$tt=$_SERVER['HTTP_HOST']	;
+$pmrn=$_REQUEST['pmrn'];
+ $fullname = $_SESSION['sess_username'];
+$query39 = "SELECT * FROM user where uname= '$fullname'"; 
+	 
+$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+
+// Print out result
+$row39 = mysqli_fetch_array($result39)
+?>
+<?php
+$full = $row39['fullname'];
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>View Records</title>
+<link rel="stylesheet" href="css/style2.css">
+<style type="text/css">
+<!--
+.style1 {
+	font-size: x-large;
+	font-weight: bold;
+	font-style: italic;
+}
+-->
+
+div1 {
+    height: 40px;
+    width: 30%;
+    background-color: powderblue;
+}
+
+
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myInput1 {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
+}
+div1 {
+  height: 50px;
+  width: 20%;
+  border: 1px solid #4CAF50;
+  float: right;
+  
+}
+</style>
+
+
+   <link rel="stylesheet" href="styles.css">
+   <script src="jsnew/jquery-latest.min.js" type="text/javascript"></script>
+   <script src="script.js"></script>
+
+<script type="text/javascript">
+function confirm_click()
+{
+return confirm("Are you Sure to Confirm?");
+}
+
+</script>
+
+
+</head>
+
+
+<body>
+
+
+
+<div id='cssmenu'>
+<ul>
+   <li><a href='viewnew1'><span>Home</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Patients</span></a>
+      <ul>
+         <li class='has-sub'><a href='prescription/prescription/viewnew'><span>OPD Patients</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='iview'><span>In-Patients</span></a>
+            
+         </li>
+      </ul>
+   </li>
+   <li class='active has-sub'><a href='#'><span>Appointment</span></a>
+      <ul>
+         <li class='has-sub'><a href='cggtttt'><span>Set Doctor's Appointment</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='ami2'><span>Set Restrictions on Appointment Time</span></a>
+            
+         </li>
+      </ul>
+	  
+   </li>
+
+   <li class='last'><a href='ot'><span>OT BOOKING</span></a></li>
+   <li class='active has-sub'><a href='#'><span>Reports</span></a>
+      <ul>
+         <li class='has-sub'><a href='view3new'><span>OPD Prescription</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='con1'><span>Outpatient Stats</span></a>
+            
+         </li>
+		          <li class='has-sub'><a href='con2'><span>OT Stats</span></a>
+            
+         </li>
+         <li class='has-sub'><a href='con3'><span>In-Patient Stats</span></a>
+            
+         </li>
+		   <li class='has-sub'><a href='con11'><span>Medicine Stats</span></a>
+            
+         </li>
+
+      </ul>
+   </li>
+   <li class='last'><a href='logout'><span>LOGOUT</span></a></li>
+</ul>
+</div>
+
+<p align="center" class="style1">PATIENTS RECORD </p> 
+
+
+<p><div1><input style="background-color: lightgreen;" type="text" id="myInput1" onkeyup="myFunction1()" placeholder="Search by Investigation Name" title="Type in a Discipline">
+</div1>
+<?php if
+($tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="PatientID" value="'.$pmrn.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="PatientID" value="'.$pmrn.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+?>
+</p>
+
+<table width="100%" height ="100%" border="1" align="center" bgcolor="#FFFF99" style="border-collapse:collapse;" id="myTable"> 
+<a  target='_blank' href="deathstatdetailsmng?pmrn=<?php echo $row["pmrn"]; ?>">
+
+  <tr> <td colspan="20" bgcolor="lightbrown"style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold;color:red;"><b>PATIENTS OPD RECORD<b> </td> 
+  
+ 
+
+
+  </tr>
+  
+    
+
+
+
+    <tr>
+      <th width="4%"><strong>S.No</strong></th>
+      <th width="17%"><strong>Patient's Name</strong></th>
+      <th width="10%"><strong>MRN</strong></th>
+      <th width="15%"><strong>Date </strong>
+	  <th width="15%"><strong>Received Date </strong>
+      <th width="14%"><strong>Investigation</strong>   
+      <th width="14%"><strong>Value</strong>
+      <th width="14%"><strong>Referred Doctor</strong>
+<th width="14%"><strong>Print</strong>
+<th width="14%"><strong>Status</strong>
+	   </tr>
+  </thead>
+  <tbody>
+  
+    <?php
+	
+$count=1;
+$sel_query="Select * from alltest where pmrn= '$pmrn' and pstatus='' order by ID desc;";
+
+$result = mysqli_query($con,$sel_query);
+
+while($row = mysqli_fetch_assoc($result)) 
+{ ?>    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?>
+      <td align="center"><?php echo date('d/m/Y', strtotime($row["date1"])); ?>
+	  <?php 
+echo '<br>' .'Lab Code: ('. $row['barcode1'].')';
+?>
+	  <td align="center"><?php echo $row["retime"]; ?>
+      <td align="center"><a target='_blank' href="all_report_indu?pmrn=<?php echo $row["pmrn"]; ?>&test=<?php echo $row["medi"]; ?>"><?php if($row['critical']!=''){echo '<span style="color:red;font-weight:bold">'.$row["medi"].'</span>';} else {echo ''.$row["medi"].'';}?></a>
+	  <td align="center" style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold"><?php echo $row["result"];?> 
+      <td align="center" style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold"><?php echo $row["dname"];?> 
+
+	  <td><?php
+		$type=$row["type"];
+		$report5=$row["report"];
+		$pmrn5=$row["pmrn"];
+		
+		$eid5=$row["eid"];
+		$id5=$row["id"];
+		$sno='O'.$row["id"];
+		$rrr=$row["result"];
+		$rrr55=$row["resultstatus"];
+		$rrr1=$row["status"];
+		$dname5=$row["dname"];
+		$ac_no=$row["id"];
+		$url = "$report5?pmrn=$pmrn&eid=$eid5&id=$id5&sno=$sno"; 
+		$url2 = "p4new1r.php?pmrn=$pmrn&acno=$id5&dname=$dname5"; 
+		$url3 = "popd.php?pmrn=$pmrn&id=$id5"; 
+	 $url_new = "rad_report_new2_1.php?pmrn=$pmrn&acno=$id5&dname=$dname5"; 
+	 $url_spd = "ecg_pdf2?ac_no=$sno&pmrn=$pmrn&id=$id5"; 
+$date_d= date('2022-04-02');
+  
+	  
+	  		 if($type=='lab' || $type=='LAB'  and $rrr55=='Confirmed By Consultant')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else {
+		
+		
+		echo "$rrr55";
+	}
+	
+	if($type=='rad' and $rrr1=='DONE' and $row['date1']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='rad' and $rrr1=='SEEN' and $row['date1']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else if($type=='RAD' and $rrr1=='DONE' and $row['date1']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='SEEN' and $row['date1']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else if($type=='rad' and $rrr1=='DONE' and $row['date1']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+
+	else if($type=='rad' and $rrr1=='SEEN' and $row['date1']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else if($type=='RAD' and $rrr1=='DONE' and $row['date1']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else if($type=='RAD' and $rrr1=='SEEN' and $row['date1']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	else if($type=='spd1' || $type=='spd' and $rstatus='RECEIVED' and $row['status']=='SEEN')
+	{ 
+echo "<a target='_blank' href='$url_spd'>REPORT</a>";
+
+	}
+	
+?>
+	  </td>
+	  
+	  <td>
+	 
+<?php if
+($type=='rad' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='rad' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+
+  else if
+($type=='RAD' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='RAD' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+  else if
+($type=='Rad' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='Rad' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+?>
+	  </td>
+	
+	   
+	  
+	  
+      </tr>
+    <?php $count++; } ?>
+  </tbody>
+ 
+  <tr> <td colspan="20" bgcolor="skyblue"style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold;color:red;"><b>PATIENTS IPD RECORD<b> </td> </tr>
+  
+
+
+  <tr>
+      <th width="4%"><strong>S.No</strong></th>
+      <th width="17%"><strong>Patient's Name</strong></th>
+      <th width="10%"><strong>MRN</strong></th>
+      <th width="15%"><strong>Gender</strong>
+      <th width="14%"><strong>Age</strong>   
+	  <th width="14%"><strong>Receive Date</strong>  
+	        <th width="14%"><strong>Admission Date</strong>   
+			<th width="14%"><strong>Doctor Name</strong>   
+      <th width="14%"><strong>Zone</strong>
+      
+
+	   </tr>
+  </thead>
+  <tbody>
+  
+    <?php
+	
+
+$count=1;
+$sel_query="Select * from iinves where pmrn= '$pmrn' order by id desc;";
+
+$result = mysqli_query($con,$sel_query);
+
+while($row = mysqli_fetch_assoc($result)) 
+{ ?>    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?></td>
+
+      <td align="center"><?php echo $row["rtime"]; ?></td>
+	  <td align="center"><?php echo date('d/m/Y',strtotime($row["ndate"])); ?></td>
+	  <td align="center"><a target='_blank' href="all_report_indu?pmrn=<?php echo $row["pmrn"]; ?>&test=<?php echo $row["infusion"]; ?>">
+    <?php if($row['critical']!=''){echo '<span style="color:red;font-weight:bold">'.$row["infusion"].'</span>';} else {echo ''.$row["infusion"].'';}?>
+  </a></td>
+	  	  <td align="center"><?php echo $row["result"];?></td> 
+		  <td align="center"><?php echo $row["dname"];?></td> 
+		
+
+
+<td><?php
+		$type=$row["type"];
+		$report5=$row["report"];
+		$pmrn5=$row["pmrn"];
+		$id=$row["id"];
+		$eid5=$row["eid"];
+		$id5=$row["id"];
+		$id6='I'.$row["id"];
+		$dname5=$row["dname"];
+		$rrr55=$row["resultstatus"];
+		$url = "$report5?pmrn=$pmrn&eid=$eid5&id=$id5&sno=$id6"; 
+		$url2 = "p4new1r.php?pmrn=$pmrn&acno=$id6&dname=$dname5"; 
+		$url3 = "pipd.php?pmrn=$pmrn&id=$id5"; 
+
+
+		
+	  $rrr=$row["result"];
+		$rrr1=$row["status"];
+		$ac_no='I'.$row["id"];
+		
+		
+$url_new = "rad_report_new2_1.php?pmrn=$pmrn&acno=$id6&dname=$dname5"; 
+$url_spd = "ecg_pdf2?ac_no=$ac_no&pmrn=$pmrn&id=$id"; 
+$date_d= date('2022-04-02');
+	  
+	  		 if($type=='lab' and $rrr55 =='Confirmed By Consultant')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	 else if($type=='LAB' and $rrr55 =='Confirmed By Consultant')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	 else if($type=='Lab' and $rrr55 =='Confirmed By Consultant')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else {
+		
+		
+		echo "$rrr55";
+	}
+	
+	
+	if($type=='rad' and $rrr1=='RECEIVED' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='rad' and $rrr1=='DONE' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='rad' and $rrr1=='SEEN' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else if($type=='RAD' and $rrr1=='RECEIVED' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='DONE' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='SEEN' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	
+	else if($type=='rad' and $rrr1=='RECEIVED' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+
+	else if($type=='rad' and $rrr1=='DONE' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='rad' and $rrr1=='SEEN' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else if($type=='RAD' and $rrr1=='RECEIVED' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='DONE' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='SEEN' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	
+	
+	
+	else if($type=='spd1' || $type=='spd' and $rstatus='RECEIVED' and $row['status']=='SEEN')
+	{ 
+echo "<a target='_blank' href='$url_spd'>REPORT</a>";
+
+	}
+?>
+
+
+	  </td>
+
+ <td>
+	 
+<?php if
+($type=='rad' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='rad' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+
+  else if
+($type=='RAD' or $type=='Rad' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='RAD' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+  else if
+($type=='Rad' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='Rad' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+?>
+	  </td>
+		
+
+    <?php $count++;  }?>
+  </tbody>
+  
+  
+  
+  
+  
+  <tr> <td colspan="20" bgcolor="lightgreen"style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold;color:red;"><b>PATIENTS EMERGENCY RECORD<b> </td> </tr>
+  
+<tr>
+      <th width="4%"><strong>S.No</strong></th>
+      <th width="17%"><strong>Patient's Name</strong></th>
+      <th width="10%"><strong>MRN</strong></th>
+      <th width="15%"><strong>Address</strong>
+	  <th width="14%"><strong>Receive Date</strong>  
+      <th width="14%"><strong>Admission Date</strong>   
+      <th width="14%"><strong>Zone</strong>
+      <th width="14%"><strong>PRINT</strong>
+
+	   </tr>
+  </thead>
+  <tbody>
+  
+    <?php
+	
+$count=1;
+$sel_query="Select * from einves where pmrn= '$pmrn' order by id desc;";
+
+$result = mysqli_query($con,$sel_query);
+
+while($row = mysqli_fetch_assoc($result)) 
+{ ?>    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?>
+     <td align="center"><?php echo $row["rtime"]; ?></td>
+	 <td align="center"><?php echo date('d/m/Y',strtotime($row["ndate"])); ?></td>
+	  <td align="center"><a target='_blank' href="all_report_indu?pmrn=<?php echo $row["pmrn"]; ?>&test=<?php echo $row["infusion"]; ?>">
+    <?php if($row['critical']!=''){echo '<span style="color:red;font-weight:bold">'.$row["infusion"].'</span>';} else {echo ''.$row["infusion"].'';}?>
+  </a></td>
+	  	  <td align="center"><?php echo $row["result"];?></td> 
+		  <td align="center"><?php echo $row["dname"];?></td> 
+		  
+		  
+<td><?php
+		$type=$row["type"];
+		$report5=$row["report"];
+		$pmrn5=$row["pmrn"];
+		
+		$eid5=$row["eid"];
+		$id5=$row["id"];
+		$id6='E'.$row["id"];
+		$dname5=$row["dname"];
+		$url = "$report5?pmrn=$pmrn&eid=$eid5&id=$id5&sno=$id6"; 
+		$url2 = "p4new1r.php?pmrn=$pmrn&acno=$id6&dname=$dname5"; 
+	  $rrr=$row["result"];
+	  $rrr55=$row["resultstatus"];
+		$rrr1=$row["status"];
+		$ac_no='E'.$row["id"];
+		
+		$url_new = "rad_report_new2_1.php?pmrn=$pmrn&acno=$id6&dname=$dname5"; 
+$date_d= date('2022-04-02');
+
+	  //$url3 = "$pemer?pmrn=$pmrn&id=$id5"; 
+	  		 if($type=='lab' and $rrr55 =='Confirmed By Consultant')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	
+	else if($type=='LAB' and $rrr55 =='Confirmed By Consultant')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='Lab' and $rrr55 =='Confirmed By Consultant')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else {
+		
+		echo"$rrr55";
+	}
+	
+	if($type=='rad' and $rrr1=='RECEIVED' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='rad' and $rrr1=='DONE' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='rad' and $rrr1=='SEEN' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else if($type=='RAD' and $rrr1=='RECEIVED' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='DONE' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='SEEN' and $row['ndate']>=$date_d)
+	{ 
+echo "<a target='_blank' href='$url_new'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	
+	else if($type=='rad' and $rrr1=='RECEIVED' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+
+	else if($type=='rad' and $rrr1=='DONE' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='rad' and $rrr1=='SEEN' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	else if($type=='RAD' and $rrr1=='RECEIVED' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='DONE' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+
+	else if($type=='RAD' and $rrr1=='SEEN' and $row['ndate']<$date_d)
+	{ 
+echo "<a target='_blank' href='$url2'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	
+	
+	
+	else if($type=='spd1' || $type=='spd' and $rstatus='RECEIVED' and $row['status']=='SEEN')
+	{ 
+echo "<a target='_blank' href='$url_spd'>REPORT</a>";
+
+	}
+?>
+	  </td>
+
+<td align="center" style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold">
+
+
+</td>  
+		  
+
+<td>
+	 
+<?php if
+($type=='rad' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='rad' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+
+  else if
+($type=='RAD' or $type=='Rad' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='RAD' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+  else if
+($type=='Rad' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($type=='Rad' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="AccessionNumber" value="'.$ac_no.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+?>
+	  </td>
+			  
+      </tr>
+    <?php $count++;  }?>
+  </tbody>
+  
+  
+
+
+
+
+  <tr> <td colspan="20" bgcolor="lightgreen"style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold;color:red;"><b>PATIENTS HISTOPATHOLOGY RECORD<b> </td> </tr>
+  
+								
+					
+
+
+
+    
+    <tr>
+      <th width="4%"><strong>S.No</strong></th>
+      <th width="17%"><strong>Patient's Name</strong></th>
+      <th width="10%"><strong>MRN</strong></th>
+      <th width="15%"><strong>Doctor Name </strong>
+      <th width="14%"><strong>Type</strong> 
+      <th width="14%"><strong>Reffered From</strong>
+      <th width="14%"><strong>Date</strong>  
+      
+	        <th width="14%"><strong>Print</strong>
+	  
+
+
+
+	   </tr>
+	<?php
+	
+$user=$_SESSION["sess_username"];
+//$start=$_REQUEST["stdate"];
+//$end=$_REQUEST["endate"];
+//$bt=$_REQUEST["bt"];
+	
+	
+	
+
+//$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+$count=1;
+
+$sel_query="Select * from histo where pmrn= '$pmrn' and pstatus='' ORDER BY id asc;";
+
+$result = mysqli_query($con,$sel_query);
+//echo   $bt;
+
+
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?>
+      <td align="center"><?php echo $row["dname"]; ?>
+      <td align="center"><?php echo $row["spe"]; ?>  
+	  <td align="center"><?php echo $row["rtime"]; ?>  
+	  	  <td align="center"><?php echo $row["date"]; ?> 
+      
+<td>
+	  <?php 
+	  $st=$row["status"];
+	  $pp=$row["pmrn"];
+	  $ee=$row["eid"];
+	  $dd=$row["dname1"];
+	  
+	  
+	  $url = "historeport?pmrn=$pp&eid=$ee&dname1=$dd"; 
+		
+	  
+	  
+	  		 if($st=='REPORT DONE')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	  
+	  ?></td>
+	        
+
+	 <td align="center">
+
+
+<?php
+
+$re=$row['eid'];
+$sel_queryz="Select * from histo_gallery where pmrn= '$pmrn' and eid='$re';";
+
+$resultz = mysqli_query($con,$sel_queryz);
+
+while($rowz = mysqli_fetch_assoc($resultz)) 
+{ ?>  
+
+      <a target='_blank' class="thumbnail fancybox" rel="ligthbox" href="histopic/<?php echo $rowz['image'] ?>">
+                         
+                        <div class='text-center'>
+                            <small class='text-muted'>
+							
+							<?php echo $rowz['image'] ?></small>
+                        </div> <!-- text-center / end -->
+                    </a>
+      
+    <?php $count++; } ?>
+
+
+</td>
+	       
+
+
+	  
+      </tr>
+    <?php $count++; } ?>
+	
+	
+	
+		<?php
+	
+$user=$_SESSION["sess_username"];
+//$start=$_REQUEST["stdate"];
+//$end=$_REQUEST["endate"];
+//$bt=$_REQUEST["bt"];
+	
+	
+	
+
+//$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+$count=1;
+
+$sel_query="Select * from fnacreport where pmrn= '$pmrn' and pstatus='' ORDER BY id asc;";
+
+$result = mysqli_query($con,$sel_query);
+//echo   $bt;
+
+
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?>
+      <td align="center"><?php echo $row["dname"]; ?>
+      <td align="center"><?php echo $row["find"]; ?>  
+	  <td align="center"><?php echo $row["time"]; ?>  
+	  	  <td align="center"><?php echo $row["date2"]; ?> 
+      
+
+	  <td>
+	  <?php 
+	  $st=$row["status"];
+	  $pp=$row["pmrn"];
+	  $ee=$row["eid"];
+	  $dd=$row["dname"];
+	  
+	  
+	  $url = "p4new1histo?pmrn=$pp&eid=$ee&dname=$dd"; 
+		
+	  
+	  
+	  		 if($st=='SEEN')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	  
+	  ?></td>
+	  
+	  
+
+	  
+
+
+	       
+
+
+	  
+      </tr>
+    <?php $count++; } ?>
+
+	
+  <tr> <td colspan="20" bgcolor="lightgreen"style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold;color:red;"><b>PATIENTS Cardiology RECORD<b> </td> </tr>
+  
+	
+	    <tr>
+      <th width="4%"><strong>S.No</strong></th>
+      <th width="17%"><strong>Patient's Name</strong></th>
+      <th width="10%"><strong>MRN</strong></th>
+      <th width="15%"><strong>Done Date </strong>
+      <th width="14%"><strong>Procedure Name</strong>   
+	        
+      
+      <th width="14%"><strong>PRINT</strong>
+	  <th width="14%"><strong>Flim</strong>
+	  <th width="14%"><strong>Status</strong>
+
+	   </tr>
+  </thead>
+  <tbody>
+  
+  
+   <?php
+	
+$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+//$id =$_GET['id'];
+$count=1;
+$sel_query="Select * from ecg_test where status1 in ('Confirmed','Updated') and pmrn='$pmrn' and con_by!='' order by id;";
+
+$result = mysqli_query($con,$sel_query);
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?></td>
+
+      <td align="center"><?php echo date('d/m/Y',strtotime($row["datenew"])); ?></td>
+	  <td align="center"><?php echo $row["rdate"]; ?></td>
+	  <td align="center"><?php echo $row["ron"]; ?></td>
+	  	   
+	  
+	  
+<td>
+	  <?php 
+	  $st=$row["status1"];
+	  $pp=$row["pmrn"];
+	  $ee=$row["id"];
+	  $dd=$row["lid"];
+	  $inves_spd=$row['ron'];
+	  $yy='1351686';
+	  $url = "ecg_pdf1?pmrn=$pp&id=$ee&ac_no=$dd"; 
+		
+	  
+	  
+	  		 if($st=='Confirmed' || $st='Updated')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	  
+	  ?></td>
+	  
+	  
+	  
+	     <td align="center"><a target='_blank' class="thumbnail fancybox" rel="ligthbox" href="spdpic/<?php echo $row['upload'] ?>">
+                        
+                        <div class='text-center'>
+                            <small class='text-muted'><?php echo $row['upload'] ?></small>
+                        </div> <!-- text-center / end -->
+                    </a>
+                  
+                  
+                  
+                    <?php if
+($inves_spd=='CORONARY ANGIOGRAM' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="PatientID" value="'.$pp.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($inves_spd=='CORONARY ANGIOGRAM' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="http://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="PatientID" value="'.$pp.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+
+
+	if
+($inves_spd=='Coronary angiogram' and $tt=='192.168.100.252:8081')
+	{ 
+	echo '<form target="_blank" action="https://192.168.100.202:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="PatientID" value="'.$pp.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+
+
+else if
+($inves_spd=='Coronary angiogram' and $tt!='192.168.100.252:8081')
+	{ 
+	echo'<form target="_blank" action="https://182.160.124.36:443/PACSAPI/Launch_Viewer?" method="post" id="tt" >
+<input type="hidden" name="PatientID" value="'.$pp.'"</input>
+<input type="hidden" name="Username" value="hisuser"></input>
+<input type="hidden" name="Password" value="hisuser"></input>
+<input type="submit" name="Submit90" value="PACS VIEW" align="right"></input>
+	</form>';}
+?>
+                  
+                  
+                  </td>
+ 
+
+	  
+
+      </tr>
+    <?php $count++; } ?>
+	
+  
+    <?php
+	
+$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+//$id =$_GET['id'];
+//$count=1;
+$sel_query="Select * from ecg where status1='Confirmed' and pmrn='$pmrn' and pstatus='' order by id;";
+
+$result = mysqli_query($con,$sel_query);
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?></td>
+
+      <td align="center"><?php echo $row["date1"]; ?></td>
+	  <td align="center"><?php echo $row["ron"]; ?></td>
+	  	   
+	  
+	  
+<td>
+	  <?php 
+	  $st=$row["status1"];
+	  $pp=$row["pmrn"];
+	  $ee=$row["eid"];
+	  $dd=$row["dname1"];
+	  
+	  
+	  $url = "ecgreport?pmrn=$pp&eid=$ee&dname=$dd"; 
+		
+	  
+	  
+	  		 if($st=='Confirmed')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	  
+	  ?></td>
+	  
+	  
+	  
+	     <td align="center"><a target='_blank' class="thumbnail fancybox" rel="ligthbox" href="spdpic/<?php echo $row['upload'] ?>">
+                        
+                        <div class='text-center'>
+                            <small class='text-muted'><?php echo $row['upload'] ?></small>
+                        </div> <!-- text-center / end -->
+                    </a></td>
+ 
+
+	  
+
+      </tr>
+    <?php $count++; } ?>
+	
+	
+	
+<?php
+	
+$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+//$id =$_GET['id'];
+//$count=1;
+$sel_query="Select * from echo where status1='Confirmed' and pmrn='$pmrn' and pstatus='' order by id;";
+
+$result = mysqli_query($con,$sel_query);
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?></td>
+
+      <td align="center"><?php echo $row["date1"]; ?></td>
+	  <td align="center"><?php echo $row["proname"]; ?></td>
+	  	   
+	  
+	  
+<td>
+	  <?php 
+	  $st=$row["status1"];
+	  $pp=$row["pmrn"];
+	  $ee=$row["eid"];
+	  
+	  	  
+	  
+	  $url = "echoreport?pmrn=$pp&eid=$ee"; 
+		
+	  
+	  
+	  		 if($st=='Confirmed')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	  
+	  ?></td>
+ 
+
+	  
+	  
+	  
+
+      </tr>
+    <?php $count++; } ?>
+
+
+<?php
+	
+$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+//$id =$_GET['id'];
+//$count=1;
+$sel_query="Select * from ett where status1='Confirmed' and pmrn='$pmrn' and pstatus='' order by id;";
+
+$result = mysqli_query($con,$sel_query);
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?></td>
+
+      <td align="center"><?php echo $row["date1"]; ?></td>
+	  <td align="center"><?php echo $row["type"]; ?></td>
+	  	   
+	  
+	  
+
+ 
+
+	  <td colspan="10"><a target='_blank' href="ettreport.php?eid=<?php echo $row["eid"]; ?>&pmrn=<?php echo $row["pmrn"]; ?>"><img src="print.png" title="Print Report" width="150" height="60" /></a></td>	
+
+	  
+      </tr>
+    <?php $count++; } ?>
+	
+	<?php
+	
+$user=$_SESSION["sess_username"];
+$date= date('m/d/Y');
+//$id =$_GET['id'];
+//$count=1;
+$sel_query="Select * from cathreport where status1='Confirmed' and pmrn='$pmrn' and pstatus='' order by id;";
+
+$result = mysqli_query($con,$sel_query);
+while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?></td>
+
+      <td align="center"><?php echo $row["rdate"]; ?></td>
+	  <td align="center"><?php echo $row["type"]; ?></td>
+	  	   
+	  
+	  
+
+ 
+
+	  <td colspan="10"><a target='_blank' href="cathreportpdf.php?eid=<?php echo $row["eid"]; ?>&pmrn=<?php echo $row["pmrn"]; ?>"><img src="print.png" title="Print Report" width="150" height="60" /></a></td>	
+
+      </tr>
+    <?php $count++; } ?>
+	
+	
+	
+  <tr> <td colspan="20" bgcolor="lightgreen"style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold;color:red;"><b>PATIENTS Endoscopy RECORD<b> </td> </tr>
+  
+	
+	<tr>
+      <th width="4%"><strong>S.No</strong></th>
+      <th width="17%"><strong>Patient's Name</strong></th>
+      <th width="10%"><strong>MRN</strong></th>
+      <th width="15%"><strong>Reffer Doctor </strong>
+      <th width="14%"><strong>Type</strong>   
+      <th width="14%"><strong>Report Done By</strong>
+      <th width="14%"><strong>PRINT</strong>
+
+	   </tr>
+  </thead>
+  <tbody>
+  
+    <?php
+	
+$user=$_SESSION["sess_username"];
+$pmrn=$_REQUEST["pmrn"];
+//$id=$_REQUEST["id"];
+
+$count=1;
+$sel_query="Select * from endoreport where pmrn= '$pmrn' and pstatus='' order by id desc;";
+
+$result = mysqli_query($con,$sel_query);
+
+while($row = mysqli_fetch_assoc($result)) 
+{ ?>    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><?php echo $row["pmrn"]; ?>
+      <td align="center"><?php echo $row["dreffer"]; ?>
+	  <td align="center"><?php echo $row["dreffer"]; ?>
+      <td align="center"><?php echo $row["type"]; ?>  
+      <td align="center" style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold"><?php echo $row["dname"];?> 
+<?php	  $date=$row["dname"] ;?>
+
+<td>
+	  <?php 
+	  $st=$row["status"];
+	  $pp=$row["pmrn"];
+	  $ee=$row["eid"];
+	  
+	  
+	  $rr = "SELECT * FROM image_gallery where pmrn= '$pmrn' and eid='$ee'"; 
+	 
+$rr1 = mysqli_query($con, $rr) or die(mysqli_error());
+
+// Print out result
+$qe = mysqli_fetch_array($rr1);
+
+	  
+	  
+	  $url = "endopdf1?pmrn=$pp&eid=$ee"; 
+		
+	  
+	  
+	  		 if($st=='SEEN')
+	{ 
+echo "<a target='_blank' href='$url'><img src='print.png' title='Print Report' width='50' height='40' /></a>";
+	}
+	
+	  
+	  ?></td>
+ 
+
+<td align="center">
+
+
+<?php
+
+$re=$row['eid'];
+$sel_queryz="Select * from image_gallery where pmrn= '$pmrn' and eid='$re';";
+
+$resultz = mysqli_query($con,$sel_queryz);
+
+while($rowz = mysqli_fetch_assoc($resultz)) 
+{ ?>  
+
+      <a target='_blank' class="thumbnail fancybox" rel="ligthbox" href="uploads/<?php echo $rowz['image'] ?>">
+                         
+                        <div class='text-center'>
+                            <small class='text-muted'>
+							
+							<?php echo $rowz['image'] ?></small>
+                        </div> <!-- text-center / end -->
+                    </a>
+      
+    <?php $count++; } ?>
+
+
+</td>
+	  
+
+	  
+	  
+	  
+	  
+      </tr>
+    <?php $count++; } ?>
+	
+	
+		
+<?php
+
+$re=$row['eid'];
+$sel_queryz="Select * from image_gallery where pmrn= '$pmrn' ;";
+
+$resultz = mysqli_query($con,$sel_queryz);
+
+while($rowz = mysqli_fetch_assoc($resultz)) 
+{ ?>  
+<tr>
+<td colspan="5"><?php echo $rowz['titile'] ?></td>
+<td colspan="10">
+      <a target='_blank' class="thumbnail fancybox" rel="ligthbox" href="uploads/<?php echo $rowz['image'] ?>">
+                         
+                        <div class='text-center'>
+                            <small class='text-muted'>
+							
+							<?php echo $rowz['image'] ?></small>
+                        </div> <!-- text-center / end -->
+                    </a>
+</td></tr>      
+    <?php $count++; } ?>
+
+
+	
+	
+	
+  <tr> <td colspan="20" bgcolor="lightgreen"style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold;color:red;"><b>OPD Procedure RECORD<b> </td> </tr>
+  
+	
+	<?php
+	 
+	
+//$id=$_REQUEST["id"];
+
+
+
+$sel_query="Select * from procedure1 where  pmrn='$pmrn'";
+$count=1;
+//$sel_query="Select * from presnew where dname='$bt' and date BETWEEN '$start' and '$end'";
+
+
+$result = mysqli_query($con,$sel_query);
+
+while($row = mysqli_fetch_assoc($result)) 
+{ ?>    <tr>
+
+      <td align="center"><?php echo $count; ?></td>
+      <td align="center"><?php echo $row["pname"]; ?></td>
+      <td align="center"><a target='_blank' href="deathstatdetailsmng.php?pmrn=<?php echo $row["pmrn"]; ?>"><?php echo $row["pmrn"]; ?></a></td>
+      <td align="center"><?php echo date('d/m/Y',strtotime($row["date1"])); ?></td>
+      <td align="center"><?php echo $row["pphone"]; ?>  </td>
+      <td align="center"><?php echo $row["proname"]; ?>  </td>
+	  <td align="center" style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold"><?php echo $row["dname"];?> </td>
+	  
+      <td align="center"><?php echo $row["ustatus"]; ?>  </td>
+	  
+	  <td align="left" ><a target='_blank' href="opdbill_mng?pmrn=<?php echo $row["pmrn"]; ?>&dname=<?php echo $row["dname"]; ?>&eid=<?php echo $row["eid"]; ?>&id=<?php echo $row["id"]; ?>">Details</a></td>
+	  
+	  <td colspan="5"><a target='_blank' href="proreport.php?pmrn=<?php echo $row["pmrn"]; ?>&dname=<?php echo $row["dname"]; ?>&eid=<?php echo $row["eid"]; ?>&id=<?php echo $row["id"]; ?>"><img src="print.png" title="Print Report" width="150" height="60" /></a></td>						
+      </tr>
+	  
+    <?php $count++;  }?>
+
+	
+	
+  <tr> <td colspan="20" bgcolor="lightgreen"style="font:Verdana, Arial, Helvetica, sans-serif large" style="font-weight:bold;color:red;"><b>Patient Clinical Image<b> </td> </tr>
+ 
+	
+	
+	
+	<?php
+	 
+	
+//$id=$_REQUEST["id"];
+
+
+
+$sel_query="Select * from patient_pic where pmrn='$pmrn' ORDER BY id Desc";
+$count=1;
+//$sel_query="Select * from presnew where dname='$bt' and date BETWEEN '$start' and '$end'";
+
+
+$result = mysqli_query($con,$sel_query);
+
+while($row = mysqli_fetch_assoc($result)) 
+{ ?>    <tr>
+                                        <td><?php echo $row['pmrn']; ?></td>
+                                        
+                                        <td><?php echo $row['cat']; ?></td>
+                                        <td><?php echo $row['remarks']; ?></td>
+
+                                       
+                                        <td><?php echo $row['add_by']; ?></td>
+										<td><?php echo $row['add_time']; ?></td>
+										
+										<td><a target='_BLANK' href="cam_test/upload/<?php echo $row['image']; ?>"><img alt="" src="cam_test/upload/<?php echo $row['image'] ?>" class="img-flex-rounded" width="150"  height="150" align="center"/></a>
+										
+										
+										</td>
+                                        
+                                        
+										
+                                    </tr>
+	  
+    <?php $count++;  }?>
+	
+	
+  </tbody>
+</table>
+
+<br><br>
+
+
+
+
+<script>
+function myFunction1() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput1");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    
+	td = tr[i].getElementsByTagName("td")[5];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+
+
+</body>
+
+</html>
