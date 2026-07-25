@@ -13,7 +13,7 @@ echo $pid = $_SESSION['id'];
 
     session_start();
 
-	$role = $_SESSION['sess_userrole'];
+	$role = isset($_SESSION['sess_userrole']) ? $_SESSION['sess_userrole'] : '';
 	
 /*$queryc = "SELECT COUNT(utype) FROM user where '$role' in ('staff','nurse','imo')"; 
 $resultc = mysqli_query($con, $queryc) or die(mysqli_error());
@@ -70,6 +70,7 @@ th {text-align: left;}
 
 require('db1.php');
 //$conn = new mysqli("localhost","root","Godiloveu16","sfmmkpjnew");
+$user = isset($_SESSION['sess_username']) ? $_SESSION['sess_username'] : '';
 $sql2="SELECT * FROM noti where status='1' and user in ('$user','all')";
 $result=mysqli_query($con, $sql2);
 $count4=mysqli_num_rows($result);
@@ -78,9 +79,8 @@ $count4=mysqli_num_rows($result);
 
 
 
-$user=$_SESSION["sess_username"];
-$q1 = $_GET['q'];
-$q=date('Y-m-d', strtotime($q1));
+$q1 = isset($_GET['q']) ? $_GET['q'] : '';
+$q = ($q1 !== '') ? date('Y-m-d', strtotime($q1)) : date('Y-m-d');
 //$con = mysqli_connect('localhost','root','Godiloveu16','sfmmkpjnew');
 
 
@@ -100,8 +100,8 @@ $sel3="Select * from ot where date5= '$test' and status !='Cancel' ORDER BY id a
 
 $resu3 = mysqli_query($con,$sel3);
 $rw3 = mysqli_fetch_assoc($resu3);
-$tt3=$rw3['pmrn'];
-$tt4=$rw3['pname'];
+$tt3 = $rw3 ? $rw3['pmrn'] : '';
+$tt4 = $rw3 ? $rw3['pname'] : '';
 
 
 
