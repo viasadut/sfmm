@@ -1,0 +1,974 @@
+<?php 
+    session_start();
+    require('db1.php');
+	$role = $_SESSION['sess_userrole'];
+	
+	$queryc = "SELECT COUNT(utype) FROM user where '$role' in ('doctor','moopd')"; 
+$resultc = mysqli_query($con, $queryc) or die(mysqli_error());
+$rowc = mysqli_fetch_array($resultc);
+$c1=$rowc['COUNT(utype)'];
+	
+    if(!isset($_SESSION['sess_username']) || $c1==0){
+      header('Location: login2?err=2');
+    }
+?>
+
+
+<?php
+
+require('db1.php');
+
+$user=$_SESSION['sess_username'];
+$date4=date('Y-m-d');
+
+
+$id=$_REQUEST['ID'];
+$pmrn=$_REQUEST['pmrn'];
+
+
+//$id='304066';
+//$pmrn='123456';
+
+
+
+$query43 = "SELECT COUNT(pmrn) FROM presnew where pmrn= '$pmrn';"; 
+$result43 = mysqli_query($con, $query43) or die(mysqli_error());
+$row43 = mysqli_fetch_assoc($result43);
+$count =$row43['COUNT(pmrn)'];
+$count1 = $count+1;
+$query = "SELECT * from pappnew where ID='$id'"; 
+$result = mysqli_query($con, $query) or die ( mysqli_error());
+$row = mysqli_fetch_assoc($result);
+$pn= $row['pname'];
+$pm= $row['pmrn'];
+$pg= $row['page'];
+$pp= $row['pphone'];  
+$pd= $row['dname'];
+$pdate= $row['adate'];
+$pa= $row['padd'];
+$ps= $row['psex'];
+$ph= $row['height'];
+$pw= $row['weight'];
+$pt= $row['temp'];
+$pty= $row['yage'];
+//$pa= $row['padd'];
+
+$dd =$row['dname'];
+
+$pbmi=("$pw" / "$ph"/"$ph") *10000;
+
+  
+$query5 = "SELECT * from pmedi where pmrn='$pmrn' and dname='$pd' order by id desc limit 1"; 
+$result5 = mysqli_query($con, $query5) or die ( mysqli_error());
+$row5 = mysqli_fetch_assoc($result5);
+// $oeid=$row5["eid"];
+$oeid=1;
+//echo $oeid;
+
+
+$sel="SELECT * FROM presnew WHERE `pmrn`='$pmrn' and dname='$pd' and date='$pdate';";
+$result = mysqli_query($con,$sel);  
+
+$queryp = "SELECT * from patient where `pmrn`='$pmrn' "; 
+$resultp = mysqli_query($con, $queryp) or die ( mysqli_error());
+$rowp = mysqli_fetch_assoc($resultp);
+$pic=$rowp['pic'];
+  ?>
+
+
+<?php
+ 
+require('db1.php');
+$stime=date("h:i:sa");
+if(isset($_POST['Submit']))
+{
+
+//$dname =$_REQUEST['dname'];
+//$pname = $_REQUEST['pname'];
+$pmrn = $_REQUEST['pmrn'];
+//$pphone=$_REQUEST['pphone'];
+//$pg=$_REQUEST['page'];
+//$xl=$_REQUEST['xl'];
+//$lx= implode(",",$xl);
+
+//$x2=$_REQUEST['x2'];
+//$lx2= implode(",",$x2);
+
+
+$other=$_REQUEST['other'];
+$other_b=$_REQUEST['other_b'];
+$diagnosis=$_REQUEST['diagnosis'];
+$cdetails=$_REQUEST['cdetails'];
+
+$pdiet=$_REQUEST['pdiet'];
+/*$page=$_REQUEST['page'];
+
+$ref1=$_REQUEST['ref1'];
+$ref2=$_REQUEST['ref2'];
+$ref3=$_REQUEST['ref3'];
+$ref4=$_REQUEST['ref4'];
+$ref5=$_REQUEST['ref5'];
+$ref6=$_REQUEST['ref6'];
+$reffer=$_REQUEST['reffer'];
+$reffer2=$_REQUEST['reffer2'];
+$reffer3=$_REQUEST['reffer3'];
+$reffer4=$_REQUEST['reffer4'];
+$reffer5=$_REQUEST['reffer5'];
+$reffer6=$_REQUEST['reffer6'];
+$psex=$_REQUEST['psex'];
+$pheight=$_REQUEST['pheight'];
+$pweight=$_REQUEST['pweight'];
+$ptemp=$_REQUEST['ptemp'];
+//$padm=$_REQUEST['padm'];
+$pbp=$_REQUEST['pbp'];
+$pbmi=$_REQUEST['pbmi'];
+$phyper=$_REQUEST['phyper'];
+$ppluse=$_REQUEST['ppluse'];
+$pheart=$_REQUEST['pheart'];
+$pdm=$_REQUEST['pdm'];
+$pkid=$_REQUEST['pkid'];
+$ptb=$_REQUEST['ptb'];
+$pasthma =$_REQUEST['pasthma'];
+$pthyroid =$_REQUEST['pthyroid'];
+$pneuro =$_REQUEST['pneuro'];
+$psurgery =$_REQUEST['psurgery'];
+$pperiod =$_REQUEST['pperiod'];
+$plmp =$_REQUEST['plmp'];
+$pnochild =$_REQUEST['pnochild'];
+$plchild =$_REQUEST['plchild'];
+//$pmenopause =$_REQUEST['pmanopause'];
+$palcohol =$_REQUEST['palcohol'];
+$psmoking =$_REQUEST['psmoking'];
+$pfamily =$_REQUEST['pfamily'];
+$pasthma =$_REQUEST['pasthma'];
+$pdrug =$_REQUEST['pdrug'];
+$pmstatus =$_REQUEST['pmstatus'];
+$poccupation =$_REQUEST['poccupation'];
+$spo2 =$_REQUEST['spo2'];
+$rr =$_REQUEST['rr'];
+$pperiod1=$_REQUEST['pperiod1'];
+$plmp1=$_REQUEST['plmp1'];
+$pnochild1=$_REQUEST['pnochild1'];
+$plchild1=$_REQUEST['plchild1'];
+//$pmanopause1=$_REQUEST['pmanopause1'];
+$psurgery1=$_REQUEST['psurgery1'];
+$palcohol1=$_REQUEST['palcohol1'];
+$psmoking1=$_REQUEST['psmoking1'];
+$pfamily1=$_REQUEST['pfamily1'];
+$pdrug1=$_REQUEST['pdrug1'];
+$phyper1=$_REQUEST['phyper1'];
+$pheart1=$_REQUEST['pheart1'];
+$pdm1=$_REQUEST['pdm1'];
+$pkid1=$_REQUEST['pkid1'];
+$ptb1=$_REQUEST['ptb1'];
+$pasthma1=$_REQUEST['pasthma1'];
+$pthyroid1=$_REQUEST['pthyroid1'];
+$pneuro1=$_REQUEST['pneuro1'];
+$liver=$_REQUEST['liver'];
+$liver1=$_REQUEST['liver1'];
+$para=$_REQUEST['para'];
+$para1=$_REQUEST['para1'];
+$gravida=$_REQUEST['gravida'];
+$gravida1=$_REQUEST['gravida1'];
+$clist=$_REQUEST['clist'];
+$clist1=$_REQUEST['clist1'];
+$
+*/
+$fdate1=$_REQUEST['fdate'];
+$fdate=date('Y-m-d',strtotime($fdate1));
+
+
+
+if($res=mysqli_num_rows($result)>0)
+{
+ 	
+       echo '<script language="javascript">';
+    echo 'alert("Unsuccessful !!Today you have already issued prescription for the Patient... Kindly go back and edit the prescription if need to modify"); ';
+    echo '</script>';
+    }
+
+	
+	
+	
+	else{
+$ins_query="insert into presnew (`dname`,`pname`,`pmrn`,`pphone`,`cdetails`,`diagnosis`,`other`,`other_b`,`date`,`page`,`pdiet`,`psex`,`eid`,`dstatus`,`date1`,`fdate`) values 
+('$dd', '$pn','$pm','$pp','$cdetails','$diagnosis','$other','$other_b','$pdate','$pg','$pdiet','$ps','$count1','SEEN','$date4','$fdate')";
+mysqli_query($con,$ins_query) or die("Please avoid Apostrophe in your prescription");
+
+//$gg= $_REQUEST['pname'];
+$update33="update pappnew set `eid`='$count1', `status`='SEEN',`stime`='$stime',`adate1`='$date4',pbmi='$pbmi' where `ID`='$id'";
+mysqli_query($con,$update33) or die("Problem in Update pappnew");
+
+
+
+
+
+
+
+$url = "historynewview?pmrn=$pm&eid=$count1&date=$pdate&dname=$pd" ;
+header("Location:$url");
+}
+}
+?>
+<?php
+require('db1.php');
+ $fullname = $_SESSION['sess_username'];
+$query39 = "SELECT * FROM user where uname= '$fullname'"; 
+	 
+$result39 = mysqli_query($con, $query39) or die(mysqli_error());
+
+// Print out result
+$row39 = mysqli_fetch_array($result39)
+?>
+<?php
+$full = $row39['fullname'];
+
+?>
+
+
+
+
+<?php include '../template/header.php';?>
+
+    
+ <!DOCTYPE html>
+<html lang="en" >
+
+<head>   
+  
+  <script>
+  $(document).ready(function() {
+    $("#datepicker").datepicker();
+  });
+  </script>
+
+
+
+
+
+  
+  
+
+    
+    
+
+	
+	
+	
+	
+	
+
+
+
+   
+   
+
+	<script language="Javascript" src="jquery-1.3.2.min.js" type="text/javascript"></script>
+	<script language="Javascript" src="htmlbox.min.js" type="text/javascript"></script>	
+   
+   		
+		
+
+
+
+
+
+
+    <div class="preloader flex-column justify-content-center align-items-center">
+        <h1>Prescription</h1>
+    </div>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Prescription</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                        <li class="breadcrumb-item active">Prescription</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- patient info -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+            
+                <div class="col-md-7">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Patient Information</h3>
+                            <i class="fa fa-user float-right fa-lg"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b>Name:</b><strong class="text-danger h5 font-weight-bold"><?php echo $row['pname'];?></strong> <br>
+                                    <b>PMRN:</b><strong class="text-danger h5 font-weight-bold"> <?php echo $row['pmrn'];?></strong><br>
+                                    <b>Age:</b> <?php echo $row['page'];?> <br>
+                                    <b>Gender:</b> <?php echo $row['psex'];?>  <br>
+                                    <b>Phone:</b> <?php echo $row['pphone'];?>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>Occupation:</b> <?php echo $row['occupation'];?> <br>
+                                    <b>Marital Status:</b> <?php echo $row['mstatus'];?> <br>
+                                    <b>Height (CM):</b> <?php echo $row['height'];?> <br>
+                                    <b>Weight (KG):</b> <?php echo $row['weight'];?>  <br>
+                                    <b>BMI:</b> <?php if ($pbmi=='<br /'){echo '';} else {echo $pbmi;}?><br>
+									
+									<b>Past Surgery:</b> <?php echo $row['psurgery'];?> <br>
+                                    <b>Alcohol:</b> <?php if ($row['palcohol']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['palcohol'];}?> <br>
+                                    <b>Smoking:</b> <?php if ($row['psmoking']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['psmoking'];}?> <br>
+                                    <b>Family History:</b> <?php echo $row['pfamily'];?>  <br>
+                                    <b>Drug History:</b> <?php if ($row['pdrug']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['pdrug'];}?>
+                                </div>
+                                <div class="col-md-2">
+                                   <img alt="" src="upload/<?php echo $rowp['pic'] ?>" class="img-flex-rounded" width="100"  height="100" align="center"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title"><input type="button" name="edit" value="Vitals Information" id="<?php echo $id; ?>" class="btn btn-info btn-xs edit_data" /></h3>
+                            <i class="fa fa-heartbeat float-right fa-lg"></i>
+                        </div>
+                        <div class="card-body">
+						
+						
+                            <b>Pulse:</b> <?php echo $row['ppluse'];?> <br>
+                            <b>Blood Pressure:</b> <?php echo $row['pbp'];?> <br>
+                            <b>Temperature:</b> <?php echo $row['temp'];?> <br>
+                            <b>SPO2:</b> <?php echo $row['spo2'];?>  <br>
+                            <b>RR:</b> <?php echo $row['rr'];?>
+														<b></b> <br>
+                            <b></b> <br>
+                                    <b></b> <br>
+                                    <b></b> <br>
+                                    <b></b> <br>
+									<b></b> <br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card card-info">
+                        <div class="card-header">
+                             <h3 class="card-title"><input type="button" name="edit_co" value="Comorbidities" id="<?php echo $id; ?>" class="btn btn-info btn-xs edit_data_co" /></h3>
+							
+                            <i class="fa fa-stethoscope float-right fa-lg"></i>
+                        </div>
+                        <div class="card-body">
+                            <b>Hypertension:</b> <?php if ($row['phyper']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['phyper'];}?> <br>
+							
+							
+							
+                            <b>Heart Disease:</b> <?php if ($row['pheart']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['pheart'];}?> <br>
+							
+                            <b>DM:</b> <?php if ($row['pdm']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['pdm'];}?> <br>
+                            <b>Kidney Disease</b> <?php if ($row['pkid']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['pkid'];}?>  <br>
+							<b>TB</b> <?php if ($row['ptb']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['ptb'];}?>  <br>
+                            <b>Asthma:</b> <?php if ($row['pasthma']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['pasthma'];}?><br>
+                            <b>Thyriod Disease:</b> <?php if ($row['pthyroid']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['pthyroid'];}?><br>
+                            <b>Neuro Disorder:</b> <?php if ($row['pneuro']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['pneuro'];}?><br>
+                            <b>Liver Disease:</b> <?php if ($row['liver']=='YES'){echo '<strong class="text-danger h5 font-weight-bold">YES</strong>';} else {echo $row['liver'];}?>
+							<b></b> <br>
+							<b></b> <br>
+							
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">History</h3>
+                            <i class="fas fa-hospital-user float-right fa-lg"></i>
+                        </div>
+                        <div class="card-body">
+                             <button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fa fa-stethoscope float-left fa-2x"></i> Record of Previous Visits</button>
+                            <button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fas fa-notes-medical float-left fa-2x"></i> Template Of Previous Visits</button>
+                            <button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fas fa-microscope float-left fa-2x"></i><a target='_blank' href="http://192.168.100.254?pmrn=<?php echo "$pmrn"; ?>"style="color:white">LAB REPORT</a></button>
+                            <button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fa fa-user-md float-left fa-2x"></i> SURGERY NOTE</button>
+                            <button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fas fa-lungs-virus float-left fa-2x"></i> COVID Record</button>
+                            <button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fas fa-notes-medical float-left fa-2x"></i> OPD PROCEDURE NOTE </button>
+                        </div>
+                        <div class="card-footer">
+                            Patient History
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title">Prescription</h3>
+                            <i class="fas fa-prescription float-right fa-lg"></i>
+                        </div>
+                        
+						<form  class="form-horizontal" action="" method="post" onsubmit='return confirm("Do You Want To Proceed??");'id="prescrip" name="prescrip" />
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    
+                                    <div class="col-sm-12">
+                                        <textarea class="form-control" name="cdetails" id="ha" rows="2" placeholder="Patient's Clinical Details"></textarea>
+										 
+                                    </div>
+                                </div>
+								
+								<script language="Javascript" type="text/javascript">
+$("#ha").css("height","100%").css("width","100%").htmlbox({
+    toolbars:[
+	    [
+		// Cut, Copy, Paste
+		"separator","cut","copy","paste",
+		// Undo, Redo
+		"separator","undo","redo",
+		// Bold, Italic, Underline, Strikethrough, Sup, Sub
+		"separator","bold","italic","underline","strike","sup","sub",
+		// Left, Right, Center, Justify
+		"separator","justify","left","center","right",
+		// Ordered List, Unordered List, Indent, Outdent
+		"separator","ol","ul","indent","outdent",
+		// Hyperlink, Remove Hyperlink, Image
+		"separator","link","unlink","image"
+		
+		],
+		[// Show code
+		"separator","code",
+        // Formats, Font size, Font family, Font color, Font, Background
+        "separator","formats","fontsize","fontfamily",
+		"separator","fontcolor","highlight",
+		],
+		[
+		//Strip tags
+		"separator","removeformat","striptags","hr","paragraph",
+		// Styles, Source code syntax buttons
+		"separator","quote","styles","syntax"
+		]
+	],
+	skin:"blue"
+});
+</script>
+
+                                <div class="form-group row">
+                                    
+                                    <div class="col-sm-12">
+                                        <textarea class="form-control" name="diagnosis" id="ha1" rows="3" placeholder="Patient's Diagnosis"></textarea>
+                                    </div>
+                                </div>
+								
+																<script language="Javascript" type="text/javascript">
+$("#ha1").css("height","100%").css("width","100%").htmlbox({
+    toolbars:[
+	    [
+		// Cut, Copy, Paste
+		"separator","cut","copy","paste",
+		// Undo, Redo
+		"separator","undo","redo",
+		// Bold, Italic, Underline, Strikethrough, Sup, Sub
+		"separator","bold","italic","underline","strike","sup","sub",
+		// Left, Right, Center, Justify
+		"separator","justify","left","center","right",
+		// Ordered List, Unordered List, Indent, Outdent
+		"separator","ol","ul","indent","outdent",
+		// Hyperlink, Remove Hyperlink, Image
+		"separator","link","unlink","image"
+		
+		],
+		[// Show code
+		"separator","code",
+        // Formats, Font size, Font family, Font color, Font, Background
+        "separator","formats","fontsize","fontfamily",
+		"separator","fontcolor","highlight",
+		],
+		[
+		//Strip tags
+		"separator","removeformat","striptags","hr","paragraph",
+		// Styles, Source code syntax buttons
+		"separator","quote","styles","syntax"
+		]
+	],
+	skin:"blue"
+});
+</script>
+
+
+                                <div class="form-group row">
+                                    
+                                    <div class="col-sm-12">
+                                         <input list=diet1 name="pdiet" placeholder="Select Diet" class="form-control" >
+					<datalist id="diet1">	
+						
+						<option value=''>-Select Diet-</option>
+				 <?php 
+			$sql = "select * from `diet`";
+			$res = mysqli_query($con, $sql);
+			if(mysqli_num_rows($res) > 0) {
+				while($row = mysqli_fetch_object($res)) {
+					echo "<option value='".$row->dietn."'>".$row->dietn."</option>";
+				}
+			}
+			?>	
+						
+						</datalist>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                   
+                                    <div class="col-sm-12">
+                                        <textarea class="form-control" name="other" id="ha2" rows="3" placeholder="Other Instructions (In English)"></textarea>
+                                    </div>
+									
+									
+							
+                                </div>
+																<script language="Javascript" type="text/javascript">
+$("#ha2").css("height","100%").css("width","100%").htmlbox({
+    toolbars:[
+	    [
+		// Cut, Copy, Paste
+		"separator","cut","copy","paste",
+		// Undo, Redo
+		"separator","undo","redo",
+		// Bold, Italic, Underline, Strikethrough, Sup, Sub
+		"separator","bold","italic","underline","strike","sup","sub",
+		// Left, Right, Center, Justify
+		"separator","justify","left","center","right",
+		// Ordered List, Unordered List, Indent, Outdent
+		"separator","ol","ul","indent","outdent",
+		// Hyperlink, Remove Hyperlink, Image
+		"separator","link","unlink","image"
+		
+		],
+		[// Show code
+		"separator","code",
+        // Formats, Font size, Font family, Font color, Font, Background
+        "separator","formats","fontsize","fontfamily",
+		"separator","fontcolor","highlight",
+		],
+		[
+		//Strip tags
+		"separator","removeformat","striptags","hr","paragraph",
+		// Styles, Source code syntax buttons
+		"separator","quote","styles","syntax"
+		]
+	],
+	skin:"blue"
+});
+</script>
+
+								
+								
+								<div class="form-group row">
+                                    
+                                    <div class="col-sm-12">
+                                        <textarea class="form-control" name="other_b" id="ha" rows="3" placeholder="Other Instructions (In Bangla)"></textarea>
+                                    </div>
+									
+									
+									
+									
+							
+                                </div>
+								
+								
+								<div class="form-group row">
+                                    
+                                    <div class="col-sm-12">
+                                        
+										<input type="text1" class="form-control" name="fdate" id="datepicker" placeholder="Next Follow Up Date" value="">
+                                    </div>
+								</div>
+                            </div>
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+									
+                                
+                            <div class="card-footer">
+                                
+								<button type="submit" class="btn btn-info" name="Submit">Confirm</button>
+								
+                                <button type="submit" class="btn btn-default float-right">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title">Medication & Investigation</h3>
+                            <i class="fas fa-notes-medical float-right fa-lg"></i>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fas fa-pills float-left fa-2x"></i> <a target='_blank' href="newtest5?pmrn=<?php echo "$pmrn"; ?>&dname=<?php echo "$pd"?>&ID=<?php echo "$id"?>&eid=<?php echo "$count1"?>"style="color:white">Medication</a></button>
+                            <button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fas fa-vials float-left fa-2x"></i> <a target='_blank' href="newtest2?pmrn=<?php echo "$pmrn"; ?>&dname=<?php echo "$pd"?>&ID=<?php echo "$id"?>&eid=<?php echo "$count1"?>"style="color:white">Investigation</a></button>
+							<button type="button" class="btn btn-block btn-info font-weight-bold"><i class="fas fa-id-card-alt float-left fa-2x"></i> <a target='_blank' href="opd_referral?pmrn=<?php echo "$pmrn"; ?>&dname=<?php echo "$pd"?>&ID=<?php echo "$id"?>&eid=<?php echo "$count1"?>"style="color:white">Referral</a></button>
+							<?php
+
+
+		
+$url = "obs_history?pmrn=$pmrn&ID=$id&dname=$pd"; 
+
+if($ps=='F')
+	
+	{
+		echo
+		
+		"<button type='button' class='btn btn-block btn-info font-weight-bold'><i class='fas fa-venus float-left fa-2x'></i><a target='_blank' href='$url' style='color:white'>Obstetrical History</a></button>
+		
+	";}
+?>
+
+							
+                            <button type="button" class="btn btn-block btn-warning font-weight-bold"><i class="fa fa-pills float-left fa-2x"></i><a target='_blank' href="newtest5test?pmrn=<?php echo "$pm"; ?>&dname=<?php echo "$pd"?>&eid=<?php echo "$count1"?>&eido=<?php echo "$oeid"?>"style="color:white"><b>Load Last Medicine<b></a></button>
+
+							
+							
+                        </div>
+                        <div class="card-footer">
+                            Patient History
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+<?php include '../template/footer.php';?>
+
+
+<div id="dataModal" class="modal fade">  
+      <div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>  
+                     <h4 class="modal-title"></h4>  
+                </div>  
+                <div class="modal-body" id="employee_detail">  
+                </div>  
+                <div class="modal-footer">  
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+                </div>  
+           </div>  
+      </div>  
+ </div>  
+ <div id="add_data_Modal" class="modal fade">  
+      <div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>  
+                     <h4 class="modal-title"align='center'>Patient Vitals Edit Form</h4>  
+                </div>  
+                <div class="modal-body">  
+                     <form method="post" id="insert_form" name="frmMain2">  
+                          <label>Patient MRN</label>  
+                          <input type="text" name="pmrn" id="pmrn" class="form-control" size="15" readonly/>  
+                          
+                          <label>Pulse</label>  
+                          <input type="text" name="ppluse" id="ppluse" class="form-control"  size="15"readonly/>  
+                          
+                          <label>BP</label>  
+                          <input type="text" name="pbp" id="pbp" class="form-control" />  
+						  
+						  
+						  <label>Temp</label>                          
+                          <input type="text" name="temp" id="temp" class="form-control"/>
+<label>SPO2</label>  						  
+						  <input type="text" name="spo2" id="spo2" class="form-control"/> 
+<label>RR</label>  						  
+						  <input type="text" name="rr" id="rr" class="form-control"/>  
+						  
+						  
+                          
+                          <input type="hidden" name="employee_id" id="employee_id" />  
+                          <input type="submit" name="insert" id="insert45" value="Insert" class="btn btn-success" />  
+                     </form>  
+                </div>  
+                <div class="modal-footer">  
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+                </div>  
+           </div>  
+      </div>  
+ </div>  
+</html>
+<script>  
+ $(document).ready(function(){  
+      $('#add').click(function(){  
+           $('#insert').val("Insert");  
+           $('#insert_form')[0].reset();  
+      });  
+      $(document).on('click', '.edit_data', function(){  
+           var employee_id = $(this).attr("id");  
+           $.ajax({  
+                url:"select_vitals.php",  
+                method:"POST",  
+                data:{employee_id:employee_id},  
+				
+                dataType:"json",  
+                success:function(data){  
+                     $('#pmrn').val(data.pmrn);  
+                     $('#ppluse').val(data.ppluse);  
+                     $('#pbp').val(data.pbp); 
+					 $('#temp').val(data.temp); 
+					 $('#spo2').val(data.spo2); 
+					 $('#rr').val(data.rr); 
+					 
+					 
+					
+					  
+                     
+					 
+                     $('#employee_id').val(data.ID);  
+                     $('#insert45').val("Update");  
+                     $('#add_data_Modal').modal('show');  
+                }  
+				 
+				 
+				 
+				
+				
+           });  
+      });  
+      $('#insert_form').on("submit", function(event){  
+           event.preventDefault();  
+           if($('#pmrn').val() == "")  
+           {  
+                alert("MRN is required");  
+           }  
+           else if($('#ppluse').val() == '')  
+           {  
+                alert("Medicine is required");  
+           }  
+           
+           else  
+           {  
+                $.ajax({  
+                     url:"edit_vitals.php",  
+                     method:"POST",  
+                     data:$('#insert_form').serialize(),  
+                     beforeSend:function(){  
+                          $('#insert').val("Inserting");  
+                     },  
+                     success:function(data){  
+                          $('#insert_form')[0].reset();  
+                          $('#add_data_Modal').modal('hide');  
+                          $('#employee_table').html(data);  
+						  
+						  
+						  
+						  parent.location.reload();
+                     }  
+                });  
+           }  
+      });  
+      
+ });  
+ 
+  
+ </script>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <div id="dataModal7" class="modal fade">  
+      <div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>  
+                     <h4 class="modal-title"></h4>  
+                </div>  
+                <div class="modal-body" id="employee_detail">  
+                </div>  
+                <div class="modal-footer">  
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+                </div>  
+           </div>  
+      </div>  
+ </div>  
+ <div id="add_data_Modal7" class="modal fade">  
+      <div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>  
+                     <h4 class="modal-title">Edit Comorbidities</h4>  
+                </div>  
+                <div class="modal-body">  
+                     <form method="post" id="insert_form7">  
+                         <label>Patient MRN</label>  
+                          <input type="text" name="pmrn1" id="pmrn1" class="form-control" size="15" readonly/>  
+                          
+                          <label>Hypertension</label>  
+                          <input type="text" name="phyper" id="phyper" class="form-control"  size="15">  
+                          
+                          <label>Heart Disease</label>  
+                          <input type="text" name="pheart" id="pheart" class="form-control" />  
+						  
+						  
+						  <label>DM</label>                          
+                          <input type="text" name="pdm" id="pdm" class="form-control"/>
+<label>Kidney Disease</label>  						  
+						  <input type="text" name="pkid" id="pkid" class="form-control"/> 
+<label>TB</label>  						  
+						  <input type="text" name="ptb" id="ptb" class="form-control"/>  
+						  
+						  <label>Asthma</label>  						  
+						  <input type="text" name="pasthma" id="pasthma" class="form-control"/>  
+						  
+						  <label>Thyriod Disease</label>  						  
+						  <input type="text" name="pthyroid" id="pthyroid" class="form-control"/>  
+						  
+						  <label>Neuro Disorder</label>  						  
+						  <input type="text" name="pneuro" id="pneuro" class="form-control"/>  
+						  
+						  <label>Liver Disease</label>  						  
+						  <input type="text" name="liver" id="liver" class="form-control"/>  
+						  
+						
+						  
+                          
+                          <input type="hidden" name="employee_id2" id="employee_id2" />  
+                         <input type="submit" name="insert" id="insert450" value="Insert" class="btn btn-success" />  
+													
+													
+                           
+                     </form>  
+                </div>  
+                <div class="modal-footer">  
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+                </div>  
+           </div>  
+      </div>  
+ </div>  
+
+<script>  
+ $(document).ready(function(){  
+      $('#add').click(function(){  
+           $('#insert').val("Insert");  
+           $('#insert_form7')[0].reset();  
+      });  
+      $(document).on('click', '.edit_data_co', function(){  
+           var employee_id2 = $(this).attr("id");  
+           $.ajax({  
+                url:"select_vitals_co.php",  
+                method:"POST",  
+                data:{employee_id2:employee_id2},  
+				
+                dataType:"json",  
+                success:function(data){  
+                     $('#pmrn1').val(data.pmrn);  
+                     $('#phyper').val(data.phyper);  
+                     $('#pheart').val(data.pheart); 
+					 $('#pdm').val(data.pdm); 
+					 $('#pkid').val(data.pkid); 
+					 $('#ptb').val(data.ptb); 
+					 $('#pasthma').val(data.pasthma); 
+					 $('#pthyroid').val(data.pthyroid); 
+					 $('#pneuro').val(data.pneuro); 
+					 $('#liver').val(data.liver); 
+
+							  
+                     
+					 
+                     $('#employee_id2').val(data.ID);  
+                     $('#insert450').val("Update");  
+                     $('#add_data_Modal7').modal('show');  
+					  
+                     
+					 
+          
+
+		  
+                }  
+				 
+				 
+				 
+				
+				
+           });  
+      });  
+      $('#insert_form7').on("submit", function(event){  
+           event.preventDefault();  
+           if($('#pkid').val() == "")  
+           {  
+                alert("Name is required");  
+           }  
+           else if($('#pheart').val() == '')  
+           {  
+                alert("Address is required");  
+           }  
+           
+           else  
+           {  
+          $.ajax({  
+                     url:"edit_vitals_co.php",  
+                     method:"POST",  
+                     data:$('#insert_form7').serialize(),  
+                     beforeSend:function(){  
+                          $('#insert').val("Inserting");  
+                     },  
+                     success:function(data){  
+                          $('#insert_form7')[0].reset();  
+                          $('#add_data_Modal7').modal('hide');  
+                          $('#employee_table').html(data);  
+						  
+						  
+						  
+						  parent.location.reload();
+                     }  
+                });  
+           }  
+      });   
+     
+ });  
+ </script>
+ 
+ 
+<script type="text/javascript">
+	jQuery(function() {		
+		var date = new Date();
+		var currentMonth = date.getMonth();
+		var currentDate = date.getDate();
+		var currentYear = date.getFullYear();
+		
+		$('#datepicker').datepicker({
+			minDate: new Date(currentYear, currentMonth, currentDate),
+			maxDate: new Date(currentYear, currentMonth, currentDate+365)
+		});
+	});
+</script>
+
+

@@ -1,0 +1,139 @@
+===========================================================================
+ SPEED UP DOCTOR APPOINTMENT BOOKING  -  pappnew index fix
+ Database: sfmmkpjnew   Table: pappnew (~1.1 million rows)
+ Prepared: 2026-07-25
+===========================================================================
+
+WHAT THIS FIXES
+---------------
+On busy Saturdays the doctor appointment booking becomes very slow.
+Cause: the `pappnew` appointments table has NO indexes except its primary
+key (ID). Every appointment query (doctor's daily list, patient lookup,
+lab report pages) scans all 1.1 million rows (~3 seconds each). Many users
+at once = the scans pile up and booking feels frozen.
+
+Fix: add 3 indexes so the database can jump straight to the rows it needs.
+- NO application code changes.
+- NO data is changed or deleted (indexes only).
+- Queries become ~1000x faster (about 3 seconds -> a few milliseconds).
+
+This was already applied and verified on the LOCAL laptop database.
+This file is for running the SAME fix on the PRODUCTION (KPJ) server.
+
+IMPORTANT: run this on the PRODUCTION server's database, once.
+Best done in a low-traffic window (e.g. late night). It stays usable while
+running, but building the index adds some disk load for a few minutes.
+
+
+===========================================================================
+ STEP 1  -  BACK UP FIRST (recommended, quick)
+===========================================================================
+Even though indexes don't change data, take a quick backup of the table.
+
+Option A - command line (adjust the path/password for the server):
+  cd C:\xampp\mysql\bin
+  mysqldump -u root -p sfmmkpjnew pappnew > C:\pappnew_backup.sql
+
+Option B - phpMyAdmin:
+  Open phpMyAdmin -> select database "sfmmkpjnew" -> click table "pappnew"
+  -> "Export" tab -> Go -> save the .sql file somewhere safe.
+
+
+===========================================================================
+ STEP 2  -  CHECK THE "BEFORE" STATE  (optional, to compare)
+===========================================================================
+In phpMyAdmin: select database "sfmmkpjnew" -> "SQL" tab -> paste & run:
+
+  EXPLAIN SELECT * FROM pappnew WHERE adate = '2026-05-13';
+
+Look at the result: column "type" = ALL and "key" = NULL and "rows" is
+around 1,100,000. That means a full-table scan (slow). Good - that is what
+we are about to fix.
+
+
+===========================================================================
+ STEP 3  -  APPLY THE FIX  (the actual change)
+===========================================================================
+In phpMyAdmin: database "sfmmkpjnew" -> "SQL" tab -> paste ALL of this and
+click "Go". It may take a few minutes to finish - that is normal.
+
+-----------------------------  COPY BELOW  --------------------------------
+ALTER TABLE pappnew
+  ADD INDEX idx_pmrn_eid (pmrn, eid),
+  ADD INDEX idx_adate_dname (adate, dname),
+  ADD INDEX idx_status_adate1 (status, adate1),
+  ALGORITHM=INPLACE, LOCK=NONE;
+-----------------------------  COPY ABOVE  --------------------------------
+
+What each index does:
+  idx_pmrn_eid       -> speeds up patient lookups and every lab-report page
+                        (WHERE pmrn=... and WHERE pmrn=... AND eid=...)
+  idx_adate_dname    -> speeds up the date lists and each doctor's daily
+                        appointment list (WHERE adate=... [AND dname=...])
+  idx_status_adate1  -> speeds up the statistics/report pages
+                        (WHERE status='SEEN' AND adate1 BETWEEN ... )
+
+Note: "ALGORITHM=INPLACE, LOCK=NONE" lets staff keep using the system while
+the index builds. If your MySQL/MariaDB version rejects that line with an
+error, remove the last line and run this simpler version instead:
+
+  ALTER TABLE pappnew
+    ADD INDEX idx_pmrn_eid (pmrn, eid),
+    ADD INDEX idx_adate_dname (adate, dname),
+    ADD INDEX idx_status_adate1 (status, adate1);
+
+(This simpler version may briefly lock the table during the build, so run
+it when few people are using the system.)
+
+
+===========================================================================
+ STEP 4  -  CHECK THE "AFTER" STATE  (confirm it worked)
+===========================================================================
+In phpMyAdmin -> "SQL" tab, run the same EXPLAIN again:
+
+  EXPLAIN SELECT * FROM pappnew WHERE adate = '2026-05-13';
+
+Now "type" should be "ref", "key" should be "idx_adate_dname", and "rows"
+should be a small number (not a million). That means it is using the index.
+
+Also confirm all indexes exist:
+
+  SHOW INDEX FROM pappnew;
+
+You should see: PRIMARY, idx_pmrn_eid, idx_adate_dname, idx_status_adate1.
+
+Then just use the appointment booking normally - it should feel fast, even
+on Saturday.
+
+
+===========================================================================
+ RESULT MEASURED ON THE LOCAL LAPTOP (for reference)
+===========================================================================
+  Query type                 BEFORE            AFTER
+  ------------------------    --------------    ----------------
+  appointments by date        ~3.0 seconds      ~0.002 seconds
+  doctor's daily list         ~3.0 seconds      ~0.001 seconds
+  patient history (pmrn)      ~3.0 seconds      ~0.0003 seconds
+  Index build time: ~13 seconds. Extra disk used: ~105 MB. Data unchanged.
+
+
+===========================================================================
+ IF YOU EVER NEED TO UNDO IT  (rollback)
+===========================================================================
+Removing the indexes returns to the old (slow) behaviour. Data is safe.
+
+  ALTER TABLE pappnew
+    DROP INDEX idx_pmrn_eid,
+    DROP INDEX idx_adate_dname,
+    DROP INDEX idx_status_adate1;
+
+
+===========================================================================
+ NOTES
+===========================================================================
+- Run this ONCE per database (already done on the local laptop; do it on
+  the production/KPJ server too - that is the one your client uses).
+- If booking is still slow after this, the next things to check are the
+  server's RAM/disk and MySQL's innodb_buffer_pool_size setting - tell me
+  and I can look. But the missing indexes were the main cause.
+===========================================================================
