@@ -19,10 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'update') {
         $id     = (int)$_POST['id'];
         $status = in_array($_POST['status'], $statuses, true) ? $_POST['status'] : 'In OT';
-        $stmt = mysqli_prepare($con, "UPDATE ot_board_status SET status = ? WHERE id = ?");
-        mysqli_stmt_bind_param($stmt, 'si', $status, $id);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+
+        $cur = mysqli_prepare($con, "SELECT pname, mrn, status FROM ot_board_status WHERE id = ?");
+        mysqli_stmt_bind_param($cur, 'i', $id);
+        mysqli_stmt_execute($cur);
+        $curRes = mysqli_stmt_get_result($cur);
+        $curRow = mysqli_fetch_assoc($curRes);
+        mysqli_stmt_close($cur);
+
+        if ($curRow && $curRow['status'] !== $status) {
+            $log = mysqli_prepare($con, "INSERT INTO ot_board_log (board_id, pname, mrn, old_status, new_status) VALUES (?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($log, 'issss', $id, $curRow['pname'], $curRow['mrn'], $curRow['status'], $status);
+            mysqli_stmt_execute($log);
+            mysqli_stmt_close($log);
+
+            $stmt = mysqli_prepare($con, "UPDATE ot_board_status SET status = ? WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, 'si', $status, $id);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        }
     } elseif ($action === 'delete') {
         $id = (int)$_POST['id'];
         $stmt = mysqli_prepare($con, "DELETE FROM ot_board_status WHERE id = ?");
@@ -73,7 +88,7 @@ $result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_
 </head>
 <body>
 
-<div class="bar">OT Board - Manage Patients <a href="board.php" target="_blank">Open Display Board &raquo;</a></div>
+<div class="bar">OT Board - Manage Patients <a href="board.php" target="_blank">Open Display Board &raquo;</a><a href="log.php" target="_blank" style="margin-right:16px;">Status Log &raquo;</a></div>
 
 <div class="wrap">
 

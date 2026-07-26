@@ -1,21 +1,28 @@
+<?php
+$lang = (isset($_GET['lang']) && $_GET['lang'] === 'en') ? 'en' : 'bn';
+$title = $lang === 'en' ? 'Operation Theater - Patient Status' : 'অপারেশন থিয়েটার - রোগীর অবস্থা';
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $lang; ?>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Operation Theater - Patient Status</title>
+<title><?php echo htmlspecialchars($title); ?></title>
 <style>
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; background: #0b1f33; color: #12263a; font-family: "Segoe UI", Arial, sans-serif; }
+    html, body { margin: 0; padding: 0; background: #0b1f33; color: #12263a; font-family: "Nirmala UI", "Noto Sans Bengali", "SolaimanLipi", "Segoe UI", Arial, sans-serif; }
     .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 28px; background: #0d3b66; color: #fff; border-bottom: 4px solid #f4a259; }
     .topbar h1 { margin: 0; font-size: 30px; font-weight: 700; letter-spacing: .5px; }
+    .right { display: flex; align-items: center; gap: 18px; }
+    .lang a { color: #cfe0f0; text-decoration: none; font-size: 18px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+    .lang a.active { background: #f4a259; color: #0b1f33; }
     #span { font-size: 26px; font-weight: 700; white-space: nowrap; }
     .wrap { padding: 18px 28px 28px; }
     table.board { border-collapse: collapse; width: 100%; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,.35); }
     table.board th, table.board td { padding: 16px 20px; font-size: 30px; text-align: left; border-bottom: 1px solid #dbe4ec; }
-    table.board thead th { background: #14507f; color: #fff; font-size: 22px; text-transform: uppercase; letter-spacing: .5px; }
+    table.board thead th { background: #14507f; color: #fff; font-size: 22px; letter-spacing: .5px; }
     table.board tbody tr:nth-child(even) { background: #f2f7fb; }
-    .col-no { width: 70px; text-align: center; color: #6b7c8d; }
+    .col-no { width: 90px; text-align: center; color: #6b7c8d; }
     td.col-no { text-align: center; }
     .col-name { font-weight: 700; }
     .col-mrn { white-space: nowrap; }
@@ -28,6 +35,7 @@
     #txtHint .loading { color: #cdd9e5; font-size: 26px; padding: 40px 0; }
 </style>
 <script>
+    var BOARD_LANG = "<?php echo $lang; ?>";
     function showUser() {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
@@ -35,7 +43,7 @@
                 document.getElementById("txtHint").innerHTML = this.responseText;
             }
         };
-        xmlhttp.open("GET", "board_data.php?t=" + new Date().getTime(), true);
+        xmlhttp.open("GET", "board_data.php?lang=" + BOARD_LANG + "&t=" + new Date().getTime(), true);
         xmlhttp.send();
     }
     showUser();
@@ -45,12 +53,18 @@
 <body>
 
 <div class="topbar">
-    <h1>Operation Theater &ndash; Patient Status</h1>
-    <div id="span"></div>
+    <h1><?php echo htmlspecialchars($title); ?></h1>
+    <div class="right">
+        <div class="lang">
+            <a href="board.php?lang=bn" class="<?php echo $lang === 'bn' ? 'active' : ''; ?>">বাংলা</a>
+            <a href="board.php?lang=en" class="<?php echo $lang === 'en' ? 'active' : ''; ?>">English</a>
+        </div>
+        <div id="span"></div>
+    </div>
 </div>
 
 <div class="wrap">
-    <div id="txtHint"><div class="loading">Loading patient list&hellip;</div></div>
+    <div id="txtHint"><div class="loading">&hellip;</div></div>
 </div>
 
 <script>
