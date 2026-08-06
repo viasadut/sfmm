@@ -21,7 +21,7 @@ $data2 = mysqli_fetch_array($query2);
 
 
 
-$query3 = mysqli_query($db,"select * from einves where pmrn='$pmrn' and eid='$eid'and id='$id1");
+$query3 = mysqli_query($db,"select * from einves where pmrn='$pmrn' and eid='$eid' and id='$id1'");
 $data3 = mysqli_fetch_array($query3);
 $sdate=date('d/m/Y H:i:s',strtotime($data3["rtime"]));
 
@@ -159,7 +159,7 @@ $pdf->ln(15);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'BIOCHEMISTRY', (isset($data3['resultby'])?$data3['resultby']:''));
+lab_render_approval_footer($pdf, $db1, 'BIOCHEMISTRY', (isset($data3['resultby'])?$data3['resultby']:''), '', (isset($data3['conby'])?$data3['conby']:''));
 $pdf->Ln(10);
 
 $pdf->Output();

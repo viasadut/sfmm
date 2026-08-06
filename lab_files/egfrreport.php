@@ -25,7 +25,9 @@ $data3 = mysqli_fetch_array($query3);
 
 $barcode=$data3['barcode'];
 
-
+$tt1=$data3['code'];
+$queryc = $db1->query("SELECT * FROM radio where code= '$tt1'");
+$resultc = $queryc->Fetch(PDO::FETCH_OBJ);
 
 //$db = new PDO('mysql:host=localhost;dbname=sfmmkpj','root','');
 
@@ -120,7 +122,7 @@ $pdf->MultiCell('180',5,$resultc->interpretation);
 $pdf->Ln(30);
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'FLUIDS & EXCREATIONS', (isset($data3['resultby'])?$data3['resultby']:''));
+lab_render_approval_footer($pdf, $db1, 'FLUIDS & EXCREATIONS', (isset($data3['resultby'])?$data3['resultby']:''), (isset($data3['cby'])?$data3['cby']:''), (isset($data3['conby'])?$data3['conby']:''));
 $pdf->Ln(10);
 
 $pdf->Output();

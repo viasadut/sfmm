@@ -16,7 +16,6 @@ $data = $query8->Fetch(PDO::FETCH_OBJ);
 //$dname=$data['dname'];
 $query2 = $db->query("select * from inpatient where pmrn='$pmrn' and eid='$eid'");
 $data2 = $query2->Fetch(PDO::FETCH_OBJ);
-$dname2=$data->adoc;
 
 $tt1=$data->code;
 $code=$data->barcode;
@@ -211,7 +210,7 @@ $pdf->Ln(50);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'BACTERIOLOGY', (isset($data->resultby)?$data->resultby:''));
+lab_render_approval_footer($pdf, $db, 'BACTERIOLOGY', (isset($data->resultby)?$data->resultby:''), (isset($data->cby)?$data->cby:''), (isset($data->conby)?$data->conby:''));
 $pdf->Ln(10);
 
 $pdf->Output();

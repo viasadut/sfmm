@@ -86,7 +86,7 @@ $pdf->Cell('50',5,'MRN: '.$data->pmrn,0,1,'L');
 
 $pdf->Cell('110',5,'Gender: '.$data->pgender,0,0,'L');
 $pdf->Cell('50',5,'Age: '.$data->page,0,1,'L');
-$pdf->Cell('110',5,'Sample Date: '.$data->retime,0,0,'L');	
+$pdf->Cell('110',5,'Sample Date: '.$data->rtime,0,0,'L');	
 $pdf->Cell('50',5,'Result Time: '.$data->resulttime,0,1,'L');
 
 $pdf->Cell('110',5,'',0,0,'L');
@@ -195,7 +195,7 @@ $pdf->ln(15);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, '', (isset($data->resultby)?$data->resultby:''));
+lab_render_approval_footer($pdf, $db, '', (isset($data->resultby)?$data->resultby:''), (isset($data->cby)?$data->cby:''), (isset($data->conby)?$data->conby:''));
 $pdf->Ln(10);
 
 $pdf->Output();

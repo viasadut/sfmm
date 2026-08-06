@@ -29,8 +29,8 @@ $code=$data3['code'];
 
 $query5 = mysqli_query($db,"select * from radio where code='$code'");
 $data5 = mysqli_fetch_array($query5);
-$remarks=$data3['remarks'];
-$unit=$data3['unit'];
+$remarks=$data5['remarks'];
+$unit=$data5['unit'];
 
 
 //$db = new PDO('mysql:host=localhost;dbname=sfmmkpj','root','');
@@ -129,7 +129,7 @@ $pdf->Ln(55);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'IMMUNOLOGY/SEROLOGY', (isset($data3['resultby'])?$data3['resultby']:''));
+lab_render_approval_footer($pdf, $db1, 'IMMUNOLOGY/SEROLOGY', (isset($data3['resultby'])?$data3['resultby']:''), '', (isset($data3['conby'])?$data3['conby']:''));
 $pdf->Ln(10);
 
 $pdf->Output();

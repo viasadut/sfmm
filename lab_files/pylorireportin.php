@@ -73,7 +73,7 @@ $pdf->ln(2);
 //$pdf->SetFont('Arial','B',);
 $pdf->ln(1);
 $pdf->SetFont('Times', 'bu',14);
-$pdf->Cell('182',6,$data3->medi.' Report',0,1,'C');
+$pdf->Cell('182',6,$data3->infusion.' Report',0,1,'C');
 $pdf->Ln(2);
 
 $pdf->SetFont('Times', 'b',14);
@@ -82,7 +82,7 @@ $pdf->Cell('30',5,'_____________________________________________________________
 $pdf->Ln(4);
 $pdf->SetFont('Times', 'b',12);
 
-$pdf->Cell('60',5,'Referring Consultant Name: '. $data3->adoc,0,1,'L');
+$pdf->Cell('60',5,'Referring Consultant Name: '. $data2->adoc,0,1,'L');
 
 $pdf->Ln(4);
 $pdf->SetFont('Times', 'b',10);
@@ -91,7 +91,7 @@ $pdf->Cell('50',5,'MRN: '.$data3->pmrn,0,1,'L');
 
 $pdf->Cell('110',5,'Gender: '.$data3->pgender,0,0,'L');
 $pdf->Cell('50',5,'Age: '.$data3->page,0,1,'L');
-$pdf->Cell('110',5,'Sample Date: '.$data3->retime,0,0,'L');	
+$pdf->Cell('110',5,'Sample Date: '.$data3->rtime,0,0,'L');
 $pdf->Cell('50',5,'Result Time: '.$data3->resulttime,0,1,'L');
 
 $pdf->Cell('110',5,'',0,0,'L');
@@ -144,7 +144,7 @@ $pdf->Ln(15);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'IMMUNOLOGY/SEROLOGY', (isset($data3->resultby)?$data3->resultby:''));
+lab_render_approval_footer($pdf, $db1, 'IMMUNOLOGY/SEROLOGY', (isset($data3->resultby)?$data3->resultby:''), (isset($data3->cby)?$data3->cby:''), (isset($data3->conby)?$data3->conby:''));
 $pdf->Ln(10);
 
 $pdf->Output();

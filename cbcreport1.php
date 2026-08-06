@@ -683,7 +683,7 @@ else
 
 // -------------------- Approval-flow footer (Updated By / Checked By / Consultant) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'HAEMATOLOGY', $data3['resultby'] ?? '');
+lab_render_approval_footer($pdf, $db1, 'HAEMATOLOGY', $data3['resultby'] ?? '', (isset($data3['cby'])?$data3['cby']:''), '');
 
 $pdf->Ln(15);
 

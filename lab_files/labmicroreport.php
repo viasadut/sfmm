@@ -153,7 +153,7 @@ class MyPDF extends PDF_Code128
         );*/
     }
 
-    function CheckPageBreak(float $h): void
+    function CheckPageBreak($h)
     {
         if ($this->GetY() + $h > $this->PageBreakTrigger) {
             $this->AddPage($this->CurOrientation);
@@ -376,7 +376,7 @@ $pdf->SetFont('Times', 'B', 8);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'BACTERIOLOGY', (isset($data['resultby'])?$data['resultby']:''));
+lab_render_approval_footer($pdf, $db, 'BACTERIOLOGY', (isset($data['resultby'])?$data['resultby']:''), (isset($data['cby'])?$data['cby']:''), '');
 $pdf->Ln(10);
 
 // -------------------- OUTPUT (FIXED ORDER) --------------------

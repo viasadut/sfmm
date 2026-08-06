@@ -198,7 +198,7 @@ $pdf->writeHTML($tbl, '',0,'L',false, 0, false, false, 0);
 //Close and output PDF document
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $con, (isset($data4['subtype'])?$data4['subtype']:''), (isset($data4['resultby'])?$data4['resultby']:''));
+lab_render_approval_footer($pdf, $con, (isset($data4['subtype'])?$data4['subtype']:''), (isset($data4['resultby'])?$data4['resultby']:''), (isset($data4['cby'])?$data4['cby']:''), (isset($data4['conby'])?$data4['conby']:''));
 
 $pdf->Output('example_048.pdf', 'I');
 

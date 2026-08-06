@@ -21,8 +21,8 @@ $query3 = mysqli_query($db,"select * from iinves where pmrn='$pmrn' and eid='$ei
 $data3 = mysqli_fetch_array($query3);
 
 
-$tt1=$data->code;
-$code=$data->barcode;
+$tt1=$data3['code'];
+$code=$data3['barcode'];
 
 $queryc = $db1->query("SELECT * FROM radio where code= '$tt1'"); 
 	 
@@ -76,7 +76,7 @@ $pdf->ln(2);
 //$pdf->SetFont('Arial','B',);
 $pdf->ln(1);
 $pdf->SetFont('Times', 'bu',14);
-$pdf->Cell('182',6,$data->medi.' Report',0,1,'C');
+$pdf->Cell('182',6,$data3['infusion'].' Report',0,1,'C');
 $pdf->Ln(2);
 
 $pdf->SetFont('Times', 'b',14);
@@ -85,15 +85,15 @@ $pdf->Cell('30',5,'_____________________________________________________________
 $pdf->Ln(4);
 $pdf->SetFont('Times', 'b',12);
 
-$pdf->Cell('60',5,'Referring Consultant Name: '. $data2['adoc'],0,1,'L');
+$pdf->Cell('60',5,'Referring Consultant Name: '. $data2->adoc,0,1,'L');
 
 $pdf->Ln(4);
 $pdf->SetFont('Times', 'b',10);
-$pdf->Cell('110',5,'Patient Name: '. $data2['pname'],0,0,'L');
-$pdf->Cell('50',5,'MRN: '.$data2['pmrn'],0,1,'L');
+$pdf->Cell('110',5,'Patient Name: '. $data2->pname,0,0,'L');
+$pdf->Cell('50',5,'MRN: '.$data2->pmrn,0,1,'L');
 
-$pdf->Cell('110',5,'Gender: '.$data2['gender'],0,0,'L');
-$pdf->Cell('50',5,'Age: '.$data2['age'],0,1,'L');
+$pdf->Cell('110',5,'Gender: '.$data2->gender,0,0,'L');
+$pdf->Cell('50',5,'Age: '.$data2->age,0,1,'L');
 $pdf->Cell('110',5,'Sample Date: '.$data3['rtime'],0,0,'L');	
 $pdf->Cell('50',5,'Result Time: '.$data3['resulttime'],0,1,'L');
 
@@ -225,7 +225,7 @@ $pdf->Ln(45);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'IMMUNOLOGY/SEROLOGY', (isset($data3['resultby'])?$data3['resultby']:''));
+lab_render_approval_footer($pdf, $db1, 'IMMUNOLOGY/SEROLOGY', (isset($data3['resultby'])?$data3['resultby']:''), (isset($data3['cby'])?$data3['cby']:''), (isset($data3['conby'])?$data3['conby']:''));
 $pdf->Ln(10);
 
 $pdf->Output();

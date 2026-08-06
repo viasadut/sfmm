@@ -209,7 +209,7 @@ $pdf->Ln(30);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, '', (isset($data->resultby)?$data->resultby:''));
+lab_render_approval_footer($pdf, $db, '', (isset($data->resultby)?$data->resultby:''), '', (isset($data->conby)?$data->conby:''));
 $pdf->Ln(10);
 
 $pdf->Output();

@@ -77,7 +77,7 @@ $pdf->ln(2);
 //$pdf->SetFont('Arial','B',);
 $pdf->ln(1);
 $pdf->SetFont('Times', 'bu',14);
-$pdf->Cell('182',6,$data3['medi'].' Report',0,1,'C');
+$pdf->Cell('182',6,$data3['infusion'].' Report',0,1,'C');
 $pdf->Ln(2);
 
 $pdf->SetFont('Times', 'b',14);
@@ -215,7 +215,7 @@ $pdf->Ln(55);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'IMMUNOLOGY/SEROLOGY', (isset($data3['resultby'])?$data3['resultby']:''));
+lab_render_approval_footer($pdf, $db1, 'IMMUNOLOGY/SEROLOGY', (isset($data3['resultby'])?$data3['resultby']:''), '', (isset($data3['conby'])?$data3['conby']:''));
 $pdf->Ln(10);
 
 $pdf->Output();

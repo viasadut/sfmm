@@ -2,7 +2,7 @@
 //require('force_justify.php');
 //require('fpdf/fpdf.php');
 
-$db1 = new PDO('mysql:host=localhost;dbname=sfmmkpjnew', 'root', 'Godiloveu16');
+$db1 = new PDO('mysql:host=localhost;dbname=sfmmkpjnew', 'root', '');
 require('force_justify1.php');
 $pmrn = $_REQUEST['pmrn'];
 $id = 'I' . $_REQUEST['id'];
@@ -10,7 +10,7 @@ $id1 = $_REQUEST['id'];
 //$date=$_REQUEST['date'];
 $eid = $_REQUEST['eid'];
 
-$db = mysqli_connect('localhost', 'root', 'Godiloveu16');
+$db = mysqli_connect('localhost', 'root', '');
 mysqli_select_db($db, 'sfmmkpjnew');
 $query = mysqli_query($db, "select * from prothrombin where pmrn='$pmrn' and eid='$eid' and sno='$id'");
 $data = mysqli_fetch_array($query);
@@ -141,7 +141,7 @@ $pdf->Ln(55);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'HAEMATOLOGY', (isset($data3['resultby'])?$data3['resultby']:''));
+lab_render_approval_footer($pdf, $db1, 'HAEMATOLOGY', (isset($data3['resultby']) ? $data3['resultby'] : ''), (isset($data3['cby'])?$data3['cby']:''), (isset($data3['conby'])?$data3['conby']:''));
 $pdf->Ln(10);
 
 $pdf->Output();

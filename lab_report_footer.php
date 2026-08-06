@@ -12,12 +12,19 @@
 
    Usage inside any FPDF-based lab report page (unit = mm):
         require_once('lab_report_footer.php');
-        lab_render_approval_footer($pdf, $conn, $subtype, $resultby);
+        lab_render_approval_footer($pdf, $conn, $subtype, $resultby, $checkedByActual, $consultByActual);
 
    $conn may be a PDO or a mysqli connection (both supported).
    $resultby is the staff login id stored in alltest/iinves/einves.resultby.
    $subtype  is the category. If '' it is looked up from radio by the
              calling script's filename (works for 1:1 report files).
+   $checkedByActual / $consultByActual are the report row's own cby / conby
+   values (alltest.cby; iinves.cby + iinves.conby; einves.conby — alltest has
+   no consultant column, einves has no checked-by column). A Checked By /
+   Consultant block is only drawn when that value matches an active
+   lab_approval_flow entry for the subtype — i.e. only when this specific
+   report was actually signed off, not merely because someone is configured
+   as a possible approver for the category.
    ===================================================================== */
 
 if(!function_exists('lab_footer_rows')){
@@ -91,9 +98,11 @@ if(!function_exists('lab_footer_rows')){
      * @param PDO|mysqli   $conn      db connection
      * @param string       $subtype   category; '' => auto lookup by filename
      * @param string       $resultby  staff login id (alltest/iinves/einves.resultby)
+     * @param string       $checkedByActual  report row's own cby (alltest/iinves)
+     * @param string       $consultByActual  report row's own conby (iinves/einves)
      * @param array        $opts      optional: cols (default 3), startY (default current Y)
      */
-    function lab_render_approval_footer($pdf, $conn, $subtype = '', $resultby = '', $opts = array()){
+    function lab_render_approval_footer($pdf, $conn, $subtype = '', $resultby = '', $checkedByActual = '', $consultByActual = '', $opts = array()){
 
         if($subtype === ''){
             $self    = basename($_SERVER['SCRIPT_FILENAME']);
@@ -108,10 +117,13 @@ if(!function_exists('lab_footer_rows')){
             if($srow){ $upName = $srow[0]['sname']; $upDesig = $srow[0]['desig']; }
         }
 
-        /* ---- Checked-by & Consultant from the approval flow ---- */
+        /* ---- Checked-by & Consultant: only the person who actually signed off THIS report ---- */
         $checked = array(); $consult = array();
-        if($subtype !== ''){
-            $se   = lab_footer_esc($conn, $subtype);
+        if($subtype !== '' && ($checkedByActual !== '' || $consultByActual !== '')){
+            $se    = lab_footer_esc($conn, $subtype);
+            $conds = array();
+            if($checkedByActual !== '') $conds[] = "(f.role='checked' AND TRIM(f.uname)=TRIM('".lab_footer_esc($conn, $checkedByActual)."'))";
+            if($consultByActual !== '') $conds[] = "(f.role='consultant' AND TRIM(f.uname)=TRIM('".lab_footer_esc($conn, $consultByActual)."'))";
             $rows = lab_footer_rows($conn,
                 "SELECT f.role, f.uname,
                         COALESCE(NULLIF(s.fullname,''), f.uname)  AS nm,
@@ -119,7 +131,7 @@ if(!function_exists('lab_footer_rows')){
                         COALESCE(s.signature,'')                  AS sg
                  FROM lab_approval_flow f
                  LEFT JOIN lab_signature s ON s.uname = f.uname
-                 WHERE f.subtype='$se' AND f.status='active'
+                 WHERE f.subtype='$se' AND f.status='active' AND (".implode(' OR ', $conds).")
                  ORDER BY f.role, f.sort_order, f.id");
             foreach($rows as $r){
                 if($r['role'] === 'checked')    $checked[] = $r;

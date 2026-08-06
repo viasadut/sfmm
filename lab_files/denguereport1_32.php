@@ -14,7 +14,7 @@ $query8= $db->query("select * from iinves where id='$id'");
 $data = $query8->Fetch(PDO::FETCH_OBJ);
 
 //$dname=$data['dname'];
-$query2 = $db->query("select * from inpatient pmrn='$pmrn' and eid='$eid'");
+$query2 = $db->query("select * from inpatient where pmrn='$pmrn' and eid='$eid'");
 $data2 = $query2->Fetch(PDO::FETCH_OBJ);
 $dname2=$data->dname;
 
@@ -82,7 +82,7 @@ $pdf->ln(2);
 //$pdf->SetFont('Arial','B',);
 $pdf->ln(1);
 $pdf->SetFont('Times', 'bu',14);
-$pdf->Cell('182',6,$data->medi.' Report',0,1,'C');
+$pdf->Cell('182',6,$data->infusion.' Report',0,1,'C');
 $pdf->Ln(2);
 
 $pdf->SetFont('Times', 'b',14);
@@ -241,7 +241,7 @@ $pdf->Ln(30);
 $pdf->SetFont('Times', 'B', 12);
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'IMMUNOLOGY/SEROLOGY', (isset($data->resultby)?$data->resultby:''));
+lab_render_approval_footer($pdf, $db, 'IMMUNOLOGY/SEROLOGY', (isset($data->resultby)?$data->resultby:''), (isset($data->cby)?$data->cby:''), (isset($data->conby)?$data->conby:''));
 $pdf->Ln(10);
 
 $pdf->Output();

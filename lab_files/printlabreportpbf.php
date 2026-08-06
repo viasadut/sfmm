@@ -32,10 +32,6 @@ $unit=$resultc->unit;
 
 
 
-$query23 = $db->query("select * from user where uname='$dname2'");
-$data23 = $query23->Fetch(PDO::FETCH_OBJ);
-$dname23=$data23->fullname;
-
 
 
 require('force_justify1.php');
@@ -192,7 +188,7 @@ $pdf->ln(100);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'HAEMATOLOGY', (isset($data->resultby)?$data->resultby:''));
+lab_render_approval_footer($pdf, $db, 'HAEMATOLOGY', (isset($data->resultby)?$data->resultby:''), (isset($data->cby)?$data->cby:''), (isset($data->conby)?$data->conby:''));
 $pdf->Ln(10);
 
 $pdf->Output();

@@ -111,7 +111,7 @@ $pdf->Ln(15);
 $pdf->SetFont('Arial' , 'b' , 10);
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'BLOOD BANK', (isset($data3['resultby'])?$data3['resultby']:(isset($data['resultby'])?$data['resultby']:'')));
+lab_render_approval_footer($pdf, $db, 'BLOOD BANK', (isset($Tdata['resultby'])?$Tdata['resultby']:''), (isset($Tdata['cby'])?$Tdata['cby']:''), (isset($Tdata['conby'])?$Tdata['conby']:''));
 $pdf->Ln(10);
 
 $pdf->Output('Rh Antibody Identification & Titration Analysis-Report-'.$Tdata['pmrn'].'.pdf', 'I');

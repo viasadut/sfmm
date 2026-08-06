@@ -88,9 +88,11 @@ if (!function_exists('lab_footer_rows')) {
      * @param PDO|mysqli   $conn      db connection
      * @param string       $subtype   category; '' => auto lookup by filename
      * @param string       $resultby  staff login id (alltest/iinves/einves.resultby)
+     * @param string       $checkedByActual  report row's own cby (alltest/iinves)
+     * @param string       $consultByActual  report row's own conby (iinves/einves)
      * @param array        $opts      optional: cols (default 3), startY (default current Y)
      */
-    function lab_render_approval_footer($pdf, $conn, $subtype = '', $resultby = '', $opts = array())
+    function lab_render_approval_footer($pdf, $conn, $subtype = '', $resultby = '', $checkedByActual = '', $consultByActual = '', $opts = array())
     {
 
         if ($subtype === '') {
@@ -110,11 +112,14 @@ if (!function_exists('lab_footer_rows')) {
             }
         }
 
-        /* ---- Checked-by & Consultant from the approval flow ---- */
+        /* ---- Checked-by & Consultant: only the person who actually signed off THIS report ---- */
         $checked = array();
         $consult = array();
-        if ($subtype !== '') {
-            $se   = lab_footer_esc($conn, $subtype);
+        if ($subtype !== '' && ($checkedByActual !== '' || $consultByActual !== '')) {
+            $se    = lab_footer_esc($conn, $subtype);
+            $conds = array();
+            if ($checkedByActual !== '') $conds[] = "(f.role='checked' AND TRIM(f.uname)=TRIM('" . lab_footer_esc($conn, $checkedByActual) . "'))";
+            if ($consultByActual !== '') $conds[] = "(f.role='consultant' AND TRIM(f.uname)=TRIM('" . lab_footer_esc($conn, $consultByActual) . "'))";
             $rows = lab_footer_rows(
                 $conn,
                 "SELECT f.role, f.uname,
@@ -123,7 +128,7 @@ if (!function_exists('lab_footer_rows')) {
                         COALESCE(s.signature,'')                  AS sg
                  FROM lab_approval_flow f
                  LEFT JOIN lab_signature s ON s.uname = f.uname
-                 WHERE f.subtype='$se' AND f.status='active'
+                 WHERE f.subtype='$se' AND f.status='active' AND (" . implode(' OR ', $conds) . ")
                  ORDER BY f.role, f.sort_order, f.id"
             );
             foreach ($rows as $r) {
@@ -145,18 +150,39 @@ if (!function_exists('lab_footer_rows')) {
         /* ---- layout ---- */
         $cols   = isset($opts['cols']) ? (int)$opts['cols'] : 3;
         if ($cols < 1) $cols = 1;
-        $usableW = $pdf->w - $pdf->lMargin - $pdf->rMargin;
+
+        // page width + margins, defensively (works for FPDF public props and TCPDF getters)
+        if (method_exists($pdf, 'getPageWidth'))      $pageW = $pdf->getPageWidth();
+        elseif (isset($pdf->w))                       $pageW = $pdf->w;
+        else                                         $pageW = 210;
+        if (method_exists($pdf, 'getMargins')) {
+            $mg = $pdf->getMargins();
+            $lm = $mg['left'];
+            $rm = $mg['right'];
+        } elseif (isset($pdf->lMargin)) {
+            $lm = $pdf->lMargin;
+            $rm = $pdf->rMargin;
+        } else {
+            $lm = 17;
+            $rm = 10;
+        }
+
+        $usableW = $pageW - $lm - $rm;
         $blockW  = $usableW / $cols;
-        $startX  = $pdf->lMargin;
+        $startX  = $lm;
         $rowH    = 29;                       // per-row height (mm)
 
         $startY = isset($opts['startY']) ? $opts['startY'] : $pdf->GetY() + 6;
 
         // page-break guard if the block set won't fit
         $rowsNeeded = (int)ceil(count($blocks) / $cols);
-        if (method_exists($pdf, 'CheckPageBreak')) {
-            @$pdf->CheckPageBreak($rowsNeeded * $rowH);
-            $startY = $pdf->GetY();
+        if (method_exists($pdf, 'CheckPageBreak') && is_callable([$pdf, 'CheckPageBreak'])) {
+            try {
+                @$pdf->CheckPageBreak($rowsNeeded * $rowH);
+                $startY = $pdf->GetY();
+            } catch (\Throwable $e) {
+                // CheckPageBreak exists but isn't publicly callable (e.g. TCPDF); skip the guard.
+            }
         }
 
         $i = 0;

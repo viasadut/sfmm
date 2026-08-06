@@ -161,7 +161,7 @@ $pdf->ln(50);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'IMMUNOLOGY/SEROLOGY', (isset($data3->resultby)?$data3->resultby:''));
+lab_render_approval_footer($pdf, $db, 'IMMUNOLOGY/SEROLOGY', (isset($data3->resultby)?$data3->resultby:''), (isset($data3->cby)?$data3->cby:''), (isset($data3->conby)?$data3->conby:''));
 $pdf->Ln(10);
 
 $pdf->Output();
