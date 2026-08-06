@@ -152,7 +152,7 @@ $pdf->Cell('100',5,$data6['culture'],0,1,'L');
 
 $pdf->Cell('30',5,'Analysis Time:',0,0,'L');
 
-if($data['medi']=='Anaerobic C/S'){
+if($data['infusion']=='Anaerobic C/S'){
 $pdf->Cell('100',5,$data6['atime'].' Hours',0,1,'L');
 }
 else{
@@ -167,7 +167,7 @@ $pdf->Cell('90',5,'Growth:',0,1,'L');
 if($cul=='Negative')
 {
 
-if($data['medi']=='Blood C/S- Aerobic')
+if($data['infusion']=='Blood C/S- Aerobic')
 
 {
 $pdf->SetFont('Arial' , 'b' , 10);
@@ -175,28 +175,28 @@ $pdf->Cell('180',5,'No pathogen is isolated at 37 degree centigrade after '.' '.
 }
 
 
-else if($data['medi']=='Urine C/S- Aerobic')
+else if($data['infusion']=='Urine C/S- Aerobic')
 
 {
 $pdf->SetFont('Arial' , 'b' , 10);
 $pdf->Cell('180',5,'No pathogen is isolated at 37 degree centigrade after'.' '.$data6['atime'].' Hours '. ' of aerobic incubation.',0,1,'L');	
 }
 
-else if($data['medi']=='Blood C/S- Aerobic & Anaerobic')
+else if($data['infusion']=='Blood C/S- Aerobic & Anaerobic')
 
 {
 $pdf->SetFont('Arial' , 'b' , 10);
 $pdf->Cell('180',5,'No pathogen is isolated at 37 degree centigrade after '.' '.$data6['atime'].' Hours '. ' of aerobic incubation.',0,1,'L');	
 }
 
-else if($data['medi']=='Anaerobic Blood C/S')
+else if($data['infusion']=='Anaerobic Blood C/S')
 
 {
 $pdf->SetFont('Arial' , 'b' , 10);
 $pdf->Cell('180',5,'No pathogen is isolated at 37 degree centrigad after '.' '.$data6['atime'].' Hours'. ' of anaerobic incubation.',0,1,'L');	
 }
 
-else if($data['medi']=='Anaerobic C/S')
+else if($data['infusion']=='Anaerobic C/S')
 
 {
 $pdf->SetFont('Arial' , 'b' , 10);

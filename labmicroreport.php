@@ -153,7 +153,7 @@ class MyPDF extends PDF_Code128
         );*/
     }
 
-    function CheckPageBreak(float $h): void
+    function CheckPageBreak($h)
     {
         if ($this->GetY() + $h > $this->PageBreakTrigger) {
             $this->AddPage($this->CurOrientation);

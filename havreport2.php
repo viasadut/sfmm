@@ -29,8 +29,8 @@ $code=$data3['code'];
 
 $query5 = mysqli_query($db,"select * from radio where code='$code'");
 $data5 = mysqli_fetch_array($query5);
-$remarks=$data3['remarks'];
-$unit=$data3['unit'];
+$remarks=$data5['remarks'];
+$unit=$data5['unit'];
 
 
 //$db = new PDO('mysql:host=localhost;dbname=sfmmkpj','root','');

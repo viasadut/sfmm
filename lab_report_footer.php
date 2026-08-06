@@ -156,9 +156,13 @@ if(!function_exists('lab_footer_rows')){
 
         // page-break guard if the block set won't fit
         $rowsNeeded = (int)ceil(count($blocks) / $cols);
-        if(method_exists($pdf, 'CheckPageBreak')){
-            @$pdf->CheckPageBreak($rowsNeeded * $rowH);
-            $startY = $pdf->GetY();
+        if(method_exists($pdf, 'CheckPageBreak') && is_callable([$pdf, 'CheckPageBreak'])){
+            try {
+                @$pdf->CheckPageBreak($rowsNeeded * $rowH);
+                $startY = $pdf->GetY();
+            } catch (\Throwable $e) {
+                // CheckPageBreak exists but isn't publicly callable (e.g. TCPDF); skip the guard.
+            }
         }
 
         $i = 0;

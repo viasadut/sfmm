@@ -36,7 +36,7 @@ $unit=$resultc->unit;
 //require('code128.php');
 
 
-$dname2=$data3['user'];
+$dname2=$data3->user;
 
 
 
@@ -81,7 +81,7 @@ $pdf->ln(2);
 //$pdf->SetFont('Arial','B',);
 $pdf->ln(1);
 $pdf->SetFont('Times', 'bu',14);
-$pdf->Cell('182',6,$data3->medi.' Report',0,1,'C');
+$pdf->Cell('182',6,$data3->infusion.' Report',0,1,'C');
 $pdf->Ln(2);
 
 $pdf->SetFont('Times', 'b',14);
@@ -99,7 +99,7 @@ $pdf->Cell('50',5,'MRN: '.$data3->pmrn,0,1,'L');
 
 $pdf->Cell('110',5,'Gender: '.$data3->pgender,0,0,'L');
 $pdf->Cell('50',5,'Age: '.$data3->page,0,1,'L');
-$pdf->Cell('110',5,'Sample Date: '.$data3->retime,0,0,'L');	
+$pdf->Cell('110',5,'Sample Date: '.$data3->rtime,0,0,'L');	
 $pdf->Cell('50',5,'Result Time: '.$data3->resulttime,0,1,'L');
 
 $pdf->Cell('110',5,'',0,0,'L');

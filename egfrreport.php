@@ -25,7 +25,9 @@ $data3 = mysqli_fetch_array($query3);
 
 $barcode=$data3['barcode'];
 
-
+$tt1=$data3['code'];
+$queryc = $db1->query("SELECT * FROM radio where code= '$tt1'");
+$resultc = $queryc->Fetch(PDO::FETCH_OBJ);
 
 //$db = new PDO('mysql:host=localhost;dbname=sfmmkpj','root','');
 

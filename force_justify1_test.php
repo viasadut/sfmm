@@ -283,6 +283,7 @@ function __construct($orientation='P', $unit='mm', $format='A4') {
 
 //________________ Fonction encodage et dessin du code 128 _____________________
 function Code128($x, $y, $code, $w, $h) {
+    if ((string)$code === '') { return; }                                            // rien à encoder, éviter le warning PHP8 sur $crypt[0]
     $Aguid = "";                                                                      // Création des guides de choix ABC
     $Bguid = "";
     $Cguid = "";

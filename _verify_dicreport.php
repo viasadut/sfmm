@@ -1,0 +1,160 @@
+<?php
+//require('force_justify.php');
+//require('fpdf/fpdf.php');
+
+
+require('force_justify1.php');
+$pmrn=$_REQUEST['pmrn'];
+$id='I'.$_REQUEST['id'];
+$id1=$_REQUEST['id'];
+//$date=$_REQUEST['date'];
+$eid=$_REQUEST['eid'];
+
+$db = mysqli_connect('localhost','root','');
+mysqli_select_db($db,'sfmmkpjnew');
+$query = mysqli_query($db,"select * from dic where pmrn='$pmrn' and eid='$eid' and sno='$id'");
+$data = mysqli_fetch_array($query);
+
+//$dname=$data['dname'];
+$query2 = mysqli_query($db,"select * from inpatient where pmrn='$pmrn' and eid='$eid'");
+$data2 = mysqli_fetch_array($query2);
+
+$query3 = mysqli_query($db,"select * from iinves where pmrn='$pmrn' and eid='$eid' and id='$id1'");
+$data3 = mysqli_fetch_array($query3);
+
+
+$barcode=$data3['barcode'];
+
+
+
+//$db = new PDO('mysql:host=localhost;dbname=sfmmkpj','root','');
+
+
+$pdf=new PDF_Code128();
+$pdf->AliasNbPages();
+$pdf->AddPage('P','A4',1);
+$pdf->SetFont('Arial' , 'b' , 9);
+$pdf->SetLeftMargin('17');
+
+
+$pdf->Image('logo3.jpg',15,7);
+$pdf->Image('logo4.jpg',180,7);
+$pdf->SetFont('Arial','B',12);
+$pdf->Cell(190,5,'SHEIKH FAZILATUNNESA MUJIB MEMORIAL',0,0,'C');
+$pdf->Ln(3);
+$pdf->SetFont('Arial','B',12);
+$pdf->Cell(195,10,'KPJ SPECIALIZED HOSPITAL AND NURSING COLLEGE',0,0,'C'); 
+$pdf->ln(5);
+$pdf->SetFont('Arial','B',12);
+$pdf->Cell(190,10,'C/12, Tetuibari, Kashimpur, Gazipur, Bangladesh.',0,0,'C'); 
+$pdf->ln(5);
+$pdf->SetFont('Arial','B',10);
+$pdf->Cell(190,10,'Contact Numbers:  Ambulance:  +880244077029, +8801791987466, Appointments: +880244077030, +8801703788561',0,0,'C');
+
+
+
+
+$pdf->SetXY(150,745);
+$pdf->Code128(18,90,$barcode,40,10);
+$pdf->SetXY(50,45);
+
+
+
+
+
+$pdf->ln(1);
+$pdf->SetFont('Times', 'bu',14);
+$pdf->Cell('182',6,$data['iname'].' Report',0,1,'C');
+$pdf->Ln(2);
+
+$pdf->SetFont('Times', 'b',14);
+$pdf->Cell('30',5,'_________________________________________________________________________',0,1,'L');	
+
+$pdf->Ln(4);
+$pdf->SetFont('Times', 'b',12);
+
+$pdf->Cell('60',5,'Referring Consultant Name: '. $data2['adoc'],0,1,'L');
+
+$pdf->Ln(4);
+$pdf->SetFont('Times', 'b',10);
+$pdf->Cell('110',5,'Patient Name: '. $data2['pname'],0,0,'L');
+$pdf->Cell('50',5,'MRN: '.$data2['pmrn'],0,1,'L');
+
+$pdf->Cell('110',5,'Gender: '.$data2['gender'],0,0,'L');
+$pdf->Cell('50',5,'Age: '.$data2['age'],0,1,'L');
+$pdf->Cell('110',5,'Sample Date: '.$data3['rtime'],0,0,'L');	
+$pdf->Cell('50',5,'Result Time: '.$data3['resulttime'],0,1,'L');
+
+$pdf->Cell('110',5,'',0,0,'L');
+$pdf->Cell('50',5,'Result Status: '. $data3['resultstatus'],0,1,'L');
+
+$pdf->SetFont('Times', 'b',14);
+
+$pdf->ln(6);
+
+
+
+$pdf->Cell('30',5,'_________________________________________________________________________',0,1,'L');	
+$pdf->ln(3);
+
+
+
+
+$pdf->SetFont('Arial' , 'b' , 10);
+
+
+
+$pdf->Cell('80',5,'Particulars',1,0,'C');
+$pdf->Cell('30',5,'Value',1,0,'C');
+$pdf->Cell('31',5,'Unit',1,0,'C');
+$pdf->Cell('40',5,'Reference Range',1,1,'C');
+
+
+
+$pdf->Cell('80',5,'Prothrombin Time',1,0,'C');
+$pdf->Cell('30',5,$data['ptime'],1,0,'C');
+$pdf->Cell('31',5,'sec',1,0,'C');
+$pdf->Cell('40',5,'11.0-16.0',1,1,'C');
+
+$pdf->Cell('80',5,'PT Control(Normal)',1,0,'C');
+$pdf->Cell('30',5,$data['pcontrol'],1,0,'C');
+$pdf->Cell('31',5,'sec',1,0,'C');
+$pdf->Cell('40',5,'11.5-15.5',1,1,'C');
+
+$pdf->Cell('80',5,'% Activity PT',1,0,'C');
+$pdf->Cell('30',5,$data['apt'],1,0,'C');
+$pdf->Cell('31',5,'%',1,0,'C');
+$pdf->Cell('40',5,'',1,1,'C');
+
+$pdf->Cell('80',5,'INR',1,0,'C');
+$pdf->Cell('30',5,$data['inr'],1,0,'C');
+$pdf->Cell('31',5,'',1,0,'C');
+$pdf->Cell('40',5,'0.85-1.35',1,1,'C');
+
+$pdf->Cell('80',5,'aPartial Thromboplastin Time',1,0,'C');
+$pdf->Cell('30',5,$data['atime'],1,0,'C');
+$pdf->Cell('31',5,'sec',1,0,'C');
+$pdf->Cell('40',5,'30.0-40.0',1,1,'C');
+
+$pdf->Cell('80',5,'aPTT Control',1,0,'C');
+$pdf->Cell('30',5,$data['appt'],1,0,'C');
+$pdf->Cell('31',5,'sec',1,0,'C');
+$pdf->Cell('40',5,'28.0-36.0',1,1,'C');
+
+$pdf->Cell('80',5,'Fibrinogen Level',1,0,'C');
+$pdf->Cell('30',5,$data['flevel'],1,0,'C');
+$pdf->Cell('31',5,'mg/dL',1,0,'C');
+$pdf->Cell('40',5,'200.0-400.0',1,1,'C');
+
+
+
+
+$pdf->ln(50);
+
+$pdf->SetFont('Arial' , 'b' , 10);
+// -------------------- Approval-flow footer (auto-inserted) --------------------
+require_once('lab_report_footer.php');
+lab_render_approval_footer($pdf, $db, 'PROFILE', (isset($data3['resultby'])?$data3['resultby']:''));
+$pdf->Ln(10);
+
+$pdf->Output();

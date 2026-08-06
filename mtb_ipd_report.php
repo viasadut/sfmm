@@ -89,7 +89,7 @@ $pdf->SetFont('Times', 'b',10);
 $pdf->Cell('110',5,'Patient Name: '. $data->pname,0,0,'L');
 $pdf->Cell('50',5,'MRN: '.$data->pmrn,0,1,'L');
 
-$pdf->Cell('110',5,'Gender: '.$data->gender,0,0,'L');
+$pdf->Cell('110',5,'Gender: '.$data->pgender,0,0,'L');
 $pdf->Cell('50',5,'Age: '.$data->page,0,1,'L');
 $pdf->Cell('110',5,'Sample Date: '.$data->rtime,0,0,'L');	
 $pdf->Cell('50',5,'Result Time: '.$data->resulttime,0,1,'L');

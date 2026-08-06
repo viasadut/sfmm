@@ -16,7 +16,6 @@ $data = $query8->Fetch(PDO::FETCH_OBJ);
 //$dname=$data['dname'];
 $query2 = $db->query("select * from inpatient where pmrn='$pmrn' and eid='$eid'");
 $data2 = $query2->Fetch(PDO::FETCH_OBJ);
-$dname2=$data->adoc;
 
 $tt1=$data->code;
 $code=$data->barcode;

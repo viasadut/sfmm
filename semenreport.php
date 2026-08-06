@@ -22,7 +22,7 @@ $data2 = mysqli_fetch_array($query2);
 $query3 = mysqli_query($db,"select * from iinves where pmrn='$pmrn' and eid='$eid' and id='$id1'");
 $data3 = mysqli_fetch_array($query3);
 $barcode=$data3['barcode'];
-$sdate=date('d/m/Y H:i:s',strtotime($data3["retime"]));
+$sdate=date('d/m/Y H:i:s',strtotime($data3["rtime"]));
 
 
 

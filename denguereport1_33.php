@@ -14,7 +14,7 @@ $query8= $db->query("select * from einves where id='$id'");
 $data = $query8->Fetch(PDO::FETCH_OBJ);
 $sdate=date('d/m/Y H:i:s',strtotime($data->rtime));
 //$dname=$data['dname'];
-$query2 = $db->query("select * from emegrency pmrn='$pmrn' and eid='$eid'");
+$query2 = $db->query("select * from emergency where pmrn='$pmrn' and eid='$eid'");
 $data2 = $query2->Fetch(PDO::FETCH_OBJ);
 $dname2=$data->dname;
 
@@ -83,7 +83,7 @@ $pdf->ln(2);
 //$pdf->SetFont('Arial','B',);
 $pdf->ln(1);
 $pdf->SetFont('Times', 'bu',14);
-$pdf->Cell('182',6,$data->medi.' Report',0,1,'C');
+$pdf->Cell('182',6,$data->infusion.' Report',0,1,'C');
 $pdf->Ln(2);
 
 $pdf->SetFont('Times', 'b',14);

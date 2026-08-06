@@ -124,7 +124,7 @@ $pdf->ln(50);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db1, 'BIOCHEMISTRY', (isset($data3['resultby'])?$data3['resultby']:''));
+lab_render_approval_footer($pdf, $db, 'BIOCHEMISTRY', (isset($data3['resultby'])?$data3['resultby']:''));
 $pdf->Ln(10);
 
 $pdf->Output();

@@ -32,10 +32,6 @@ $unit=$resultc->unit;
 
 
 
-$query23 = $db->query("select * from user where uname='$dname2'");
-$data23 = $query23->Fetch(PDO::FETCH_OBJ);
-$dname23=$data23->fullname;
-
 
 
 require('force_justify1.php');
