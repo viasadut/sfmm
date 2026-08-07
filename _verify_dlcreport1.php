@@ -161,7 +161,7 @@ $pdf->Cell('182',5,'Computer Generated Report, No Signature Required',0,1,'R');
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'HAEMATOLOGY', (isset($data3['resultby'])?$data3['resultby']:(isset($data['resultby'])?$data['resultby']:'')), (isset($data3['cby'])?$data3['cby']:''), '');
+lab_render_approval_footer($pdf, $db, 'HAEMATOLOGY', (isset($data3['resultby'])?$data3['resultby']:(isset($data['resultby'])?$data['resultby']:'')), (isset($data3['checked_by'])?$data3['checked_by']:''), (isset($data3['cby'])?$data3['cby']:''));
 $pdf->Ln(10);
 
 $pdf->Output();

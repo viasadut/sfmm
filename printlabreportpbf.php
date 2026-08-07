@@ -188,7 +188,7 @@ $pdf->ln(100);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'HAEMATOLOGY', (isset($data->resultby)?$data->resultby:''), (isset($data->cby)?$data->cby:''), (isset($data->conby)?$data->conby:''));
+lab_render_approval_footer($pdf, $db, 'HAEMATOLOGY', (isset($data->resultby)?$data->resultby:''), (isset($data->checked_by)?$data->checked_by:''), (isset($data->conby)?$data->conby:''));
 $pdf->Ln(10);
 
 $pdf->Output();

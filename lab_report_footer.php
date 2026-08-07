@@ -18,13 +18,21 @@
    $resultby is the staff login id stored in alltest/iinves/einves.resultby.
    $subtype  is the category. If '' it is looked up from radio by the
              calling script's filename (works for 1:1 report files).
-   $checkedByActual / $consultByActual are the report row's own cby / conby
-   values (alltest.cby; iinves.cby + iinves.conby; einves.conby — alltest has
-   no consultant column, einves has no checked-by column). A Checked By /
-   Consultant block is only drawn when that value matches an active
-   lab_approval_flow entry for the subtype — i.e. only when this specific
-   report was actually signed off, not merely because someone is configured
-   as a possible approver for the category.
+   $checkedByActual / $consultByActual are the report row's own checked_by /
+   consultant values:
+       - checked_by: alltest.checked_by / iinves.checked_by / einves.checked_by
+         (a new column — currently always empty on every existing row; no page
+         in the app writes to it yet, so no Checked By block will render until
+         a future "lab staff confirms" write path is built).
+       - consultant: alltest.cby / iinves.conby / einves.conby (all three set
+         by the doctor "Confirm" flow — labreportconfirmopd.php/labreportconfirm.php/
+         labreportconfirmae.php — and its duplicates).
+       NOTE: iinves.cby is UNRELATED ("Cancelled By", set by the order-cancel
+       flow in delete1iinvesdoc.php et al.) and must never be passed here.
+   A Checked By / Consultant block is only drawn when the actual value matches
+   an active lab_approval_flow entry for the subtype — i.e. only when this
+   specific report was actually signed off, not merely because someone is
+   configured as a possible approver for the category.
    ===================================================================== */
 
 if(!function_exists('lab_footer_rows')){
@@ -98,8 +106,8 @@ if(!function_exists('lab_footer_rows')){
      * @param PDO|mysqli   $conn      db connection
      * @param string       $subtype   category; '' => auto lookup by filename
      * @param string       $resultby  staff login id (alltest/iinves/einves.resultby)
-     * @param string       $checkedByActual  report row's own cby (alltest/iinves)
-     * @param string       $consultByActual  report row's own conby (iinves/einves)
+     * @param string       $checkedByActual  report row's own checked_by (alltest/iinves/einves)
+     * @param string       $consultByActual  report row's own consultant value (alltest.cby; iinves/einves.conby)
      * @param array        $opts      optional: cols (default 3), startY (default current Y)
      */
     function lab_render_approval_footer($pdf, $conn, $subtype = '', $resultby = '', $checkedByActual = '', $consultByActual = '', $opts = array()){

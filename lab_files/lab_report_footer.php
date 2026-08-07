@@ -1,31 +1,58 @@
 <?php
+/* =====================================================================
+   Reusable lab report footer (approval flow)
+   ---------------------------------------------------------------------
+   Renders, for a given Category (radio.subtype):
+     - Result Updated By  (name + designation, NO signature)
+     - Result Checked By  (label, signature, name, designation)  x N
+     - Consultant         (label, signature, name, designation)  x N
 
-if (!function_exists('lab_footer_rows')) {
+   Order inside every signatory block:
+        1. Role label   2. Signature   3. Name   4. Designation
+
+   Usage inside any FPDF-based lab report page (unit = mm):
+        require_once('lab_report_footer.php');
+        lab_render_approval_footer($pdf, $conn, $subtype, $resultby, $checkedByActual, $consultByActual);
+
+   $conn may be a PDO or a mysqli connection (both supported).
+   $resultby is the staff login id stored in alltest/iinves/einves.resultby.
+   $subtype  is the category. If '' it is looked up from radio by the
+             calling script's filename (works for 1:1 report files).
+   $checkedByActual / $consultByActual are the report row's own checked_by /
+   consultant values:
+       - checked_by: alltest.checked_by / iinves.checked_by / einves.checked_by
+         (a new column — currently always empty on every existing row; no page
+         in the app writes to it yet, so no Checked By block will render until
+         a future "lab staff confirms" write path is built).
+       - consultant: alltest.cby / iinves.conby / einves.conby (all three set
+         by the doctor "Confirm" flow — labreportconfirmopd.php/labreportconfirm.php/
+         labreportconfirmae.php — and its duplicates).
+       NOTE: iinves.cby is UNRELATED ("Cancelled By", set by the order-cancel
+       flow in delete1iinvesdoc.php et al.) and must never be passed here.
+   A Checked By / Consultant block is only drawn when the actual value matches
+   an active lab_approval_flow entry for the subtype — i.e. only when this
+   specific report was actually signed off, not merely because someone is
+   configured as a possible approver for the category.
+   ===================================================================== */
+
+if(!function_exists('lab_footer_rows')){
 
     /* run a SELECT against PDO or mysqli, return array of assoc rows */
-    function lab_footer_rows($conn, $sql)
-    {
+    function lab_footer_rows($conn, $sql){
         $out = array();
-        if ($conn instanceof PDO) {
+        if($conn instanceof PDO){
             $st = $conn->query($sql);
-            if ($st) {
-                $out = $st->fetchAll(PDO::FETCH_ASSOC);
-            }
+            if($st){ $out = $st->fetchAll(PDO::FETCH_ASSOC); }
         } else {
             $r = mysqli_query($conn, $sql);
-            if ($r) {
-                while ($x = mysqli_fetch_assoc($r)) {
-                    $out[] = $x;
-                }
-            }
+            if($r){ while($x = mysqli_fetch_assoc($r)){ $out[] = $x; } }
         }
         return $out;
     }
 
     /* escape a value for either driver */
-    function lab_footer_esc($conn, $v)
-    {
-        if ($conn instanceof PDO) {
+    function lab_footer_esc($conn, $v){
+        if($conn instanceof PDO){
             $q = $conn->quote((string)$v);
             return substr($q, 1, -1);          // strip the surrounding quotes
         }
@@ -33,25 +60,17 @@ if (!function_exists('lab_footer_rows')) {
     }
 
     /* Resolve subtype from a report filename (only reliable when 1:1). */
-    function lab_subtype_for_report($conn, $basename)
-    {
+    function lab_subtype_for_report($conn, $basename){
         $b = lab_footer_esc($conn, $basename);
-        $rows = lab_footer_rows(
-            $conn,
-            "SELECT DISTINCT subtype FROM radio WHERE type='lab' AND report='$b' AND subtype<>''"
-        );
-        if (count($rows) === 1) {
-            return $rows[0]['subtype'];
-        }
+        $rows = lab_footer_rows($conn,
+            "SELECT DISTINCT subtype FROM radio WHERE type='lab' AND report='$b' AND subtype<>''");
+        if(count($rows) === 1){ return $rows[0]['subtype']; }
         return '';   // ambiguous or unknown -> caller must pass subtype explicitly
     }
 
     /* Draw one vertical signatory block at (x,y) within width w. Returns height used (mm). */
-    function lab_footer_block($pdf, $x, $y, $w, $label, $name, $desig, $sig)
-    {
-        $labelH = 4;
-        $sigH = 13;
-        $nameH = 4;
+    function lab_footer_block($pdf, $x, $y, $w, $label, $name, $desig, $sig){
+        $labelH = 4; $sigH = 13; $nameH = 4;
 
         // 1. label
         $pdf->SetXY($x, $y);
@@ -59,11 +78,10 @@ if (!function_exists('lab_footer_rows')) {
         $pdf->Cell($w, $labelH, $label, 0, 2, 'C');
 
         // 2. signature (image centred in the sig band; band kept even if empty for alignment)
-        if ($sig !== '') {
-            $path = (strpos($sig, ':') !== false || $sig[0] === '/') ? $sig : __DIR__ . '/' . $sig;
-            if (@is_file($path)) {
-                $imgW = 34;
-                $imgH = 12;
+        if($sig !== ''){
+            $path = (strpos($sig, ':') !== false || $sig[0] === '/') ? $sig : __DIR__.'/'.$sig;
+            if(@is_file($path)){
+                $imgW = 34; $imgH = 12;
                 @$pdf->Image($path, $x + ($w - $imgW) / 2, $y + $labelH + 0.5, $imgW, $imgH);
             }
         }
@@ -88,84 +106,66 @@ if (!function_exists('lab_footer_rows')) {
      * @param PDO|mysqli   $conn      db connection
      * @param string       $subtype   category; '' => auto lookup by filename
      * @param string       $resultby  staff login id (alltest/iinves/einves.resultby)
-     * @param string       $checkedByActual  report row's own cby (alltest/iinves)
-     * @param string       $consultByActual  report row's own conby (iinves/einves)
+     * @param string       $checkedByActual  report row's own checked_by (alltest/iinves/einves)
+     * @param string       $consultByActual  report row's own consultant value (alltest.cby; iinves/einves.conby)
      * @param array        $opts      optional: cols (default 3), startY (default current Y)
      */
-    function lab_render_approval_footer($pdf, $conn, $subtype = '', $resultby = '', $checkedByActual = '', $consultByActual = '', $opts = array())
-    {
+    function lab_render_approval_footer($pdf, $conn, $subtype = '', $resultby = '', $checkedByActual = '', $consultByActual = '', $opts = array()){
 
-        if ($subtype === '') {
+        if($subtype === ''){
             $self    = basename($_SERVER['SCRIPT_FILENAME']);
             $subtype = lab_subtype_for_report($conn, $self);
         }
 
         /* ---- Result Updated By (from staff3 by login id) ---- */
-        $upName = '';
-        $upDesig = '';
-        if ($resultby !== '') {
+        $upName = ''; $upDesig = '';
+        if($resultby !== ''){
             $rb   = lab_footer_esc($conn, $resultby);
             $srow = lab_footer_rows($conn, "SELECT sname, desig FROM staff3 WHERE sid='$rb' LIMIT 1");
-            if ($srow) {
-                $upName = $srow[0]['sname'];
-                $upDesig = $srow[0]['desig'];
-            }
+            if($srow){ $upName = $srow[0]['sname']; $upDesig = $srow[0]['desig']; }
         }
 
         /* ---- Checked-by & Consultant: only the person who actually signed off THIS report ---- */
-        $checked = array();
-        $consult = array();
-        if ($subtype !== '' && ($checkedByActual !== '' || $consultByActual !== '')) {
+        $checked = array(); $consult = array();
+        if($subtype !== '' && ($checkedByActual !== '' || $consultByActual !== '')){
             $se    = lab_footer_esc($conn, $subtype);
             $conds = array();
-            if ($checkedByActual !== '') $conds[] = "(f.role='checked' AND TRIM(f.uname)=TRIM('" . lab_footer_esc($conn, $checkedByActual) . "'))";
-            if ($consultByActual !== '') $conds[] = "(f.role='consultant' AND TRIM(f.uname)=TRIM('" . lab_footer_esc($conn, $consultByActual) . "'))";
-            $rows = lab_footer_rows(
-                $conn,
+            if($checkedByActual !== '') $conds[] = "(f.role='checked' AND TRIM(f.uname)=TRIM('".lab_footer_esc($conn, $checkedByActual)."'))";
+            if($consultByActual !== '') $conds[] = "(f.role='consultant' AND TRIM(f.uname)=TRIM('".lab_footer_esc($conn, $consultByActual)."'))";
+            $rows = lab_footer_rows($conn,
                 "SELECT f.role, f.uname,
                         COALESCE(NULLIF(s.fullname,''), f.uname)  AS nm,
                         COALESCE(s.designation,'')                AS dg,
                         COALESCE(s.signature,'')                  AS sg
                  FROM lab_approval_flow f
                  LEFT JOIN lab_signature s ON s.uname = f.uname
-                 WHERE f.subtype='$se' AND f.status='active' AND (" . implode(' OR ', $conds) . ")
-                 ORDER BY f.role, f.sort_order, f.id"
-            );
-            foreach ($rows as $r) {
-                if ($r['role'] === 'checked')    $checked[] = $r;
-                if ($r['role'] === 'consultant') $consult[] = $r;
+                 WHERE f.subtype='$se' AND f.status='active' AND (".implode(' OR ', $conds).")
+                 ORDER BY f.role, f.sort_order, f.id");
+            foreach($rows as $r){
+                if($r['role'] === 'checked')    $checked[] = $r;
+                if($r['role'] === 'consultant') $consult[] = $r;
             }
         }
 
         /* ---- build ordered block list ---- */
         $blocks = array();
-        $blocks[] = array('label' => 'Result Updated By', 'name' => $upName, 'desig' => $upDesig, 'sig' => '');
-        foreach ($checked as $r) {
-            $blocks[] = array('label' => 'Result Checked By', 'name' => $r['nm'], 'desig' => $r['dg'], 'sig' => $r['sg']);
-        }
-        foreach ($consult as $r) {
-            $blocks[] = array('label' => 'Consultant',        'name' => $r['nm'], 'desig' => $r['dg'], 'sig' => $r['sg']);
-        }
+        $blocks[] = array('label'=>'Result Updated By', 'name'=>$upName, 'desig'=>$upDesig, 'sig'=>'');
+        foreach($checked as $r){ $blocks[] = array('label'=>'Result Checked By', 'name'=>$r['nm'], 'desig'=>$r['dg'], 'sig'=>$r['sg']); }
+        foreach($consult as $r){ $blocks[] = array('label'=>'Consultant',        'name'=>$r['nm'], 'desig'=>$r['dg'], 'sig'=>$r['sg']); }
 
         /* ---- layout ---- */
         $cols   = isset($opts['cols']) ? (int)$opts['cols'] : 3;
-        if ($cols < 1) $cols = 1;
+        if($cols < 1) $cols = 1;
 
         // page width + margins, defensively (works for FPDF public props and TCPDF getters)
-        if (method_exists($pdf, 'getPageWidth'))      $pageW = $pdf->getPageWidth();
-        elseif (isset($pdf->w))                       $pageW = $pdf->w;
+        if(method_exists($pdf, 'getPageWidth'))      $pageW = $pdf->getPageWidth();
+        elseif(isset($pdf->w))                       $pageW = $pdf->w;
         else                                         $pageW = 210;
-        if (method_exists($pdf, 'getMargins')) {
-            $mg = $pdf->getMargins();
-            $lm = $mg['left'];
-            $rm = $mg['right'];
-        } elseif (isset($pdf->lMargin)) {
-            $lm = $pdf->lMargin;
-            $rm = $pdf->rMargin;
-        } else {
-            $lm = 17;
-            $rm = 10;
-        }
+        if(method_exists($pdf, 'getMargins')){
+            $mg = $pdf->getMargins(); $lm = $mg['left']; $rm = $mg['right'];
+        } elseif(isset($pdf->lMargin)){
+            $lm = $pdf->lMargin; $rm = $pdf->rMargin;
+        } else { $lm = 17; $rm = 10; }
 
         $usableW = $pageW - $lm - $rm;
         $blockW  = $usableW / $cols;
@@ -176,7 +176,7 @@ if (!function_exists('lab_footer_rows')) {
 
         // page-break guard if the block set won't fit
         $rowsNeeded = (int)ceil(count($blocks) / $cols);
-        if (method_exists($pdf, 'CheckPageBreak') && is_callable([$pdf, 'CheckPageBreak'])) {
+        if(method_exists($pdf, 'CheckPageBreak') && is_callable([$pdf, 'CheckPageBreak'])){
             try {
                 @$pdf->CheckPageBreak($rowsNeeded * $rowH);
                 $startY = $pdf->GetY();
@@ -186,7 +186,7 @@ if (!function_exists('lab_footer_rows')) {
         }
 
         $i = 0;
-        foreach ($blocks as $b) {
+        foreach($blocks as $b){
             $col = $i % $cols;
             $row = intdiv($i, $cols);
             $x = $startX + $col * $blockW;

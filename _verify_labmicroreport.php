@@ -376,7 +376,7 @@ $pdf->SetFont('Times', 'B', 8);
 
 // -------------------- Approval-flow footer (auto-inserted) --------------------
 require_once('lab_report_footer.php');
-lab_render_approval_footer($pdf, $db, 'BACTERIOLOGY', (isset($data['resultby'])?$data['resultby']:''), (isset($data['cby'])?$data['cby']:''), '');
+lab_render_approval_footer($pdf, $db, 'BACTERIOLOGY', (isset($data['resultby'])?$data['resultby']:''), (isset($data['checked_by'])?$data['checked_by']:''), (isset($data['cby'])?$data['cby']:''));
 $pdf->Ln(10);
 
 // -------------------- OUTPUT (FIXED ORDER) --------------------
