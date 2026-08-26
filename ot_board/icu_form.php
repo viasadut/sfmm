@@ -1,16 +1,14 @@
 <?php
 require('db.php');
 
-$statuses = array('In OT', 'In Observation', 'Move to Bed', 'Move to ICU', 'Discharged');
-$addStatuses = array('In OT', 'In Observation', 'Move to Bed', 'Move to ICU');
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
 
     if ($action === 'add') {
         $pname  = trim($_POST['pname']);
         $mrn    = trim($_POST['mrn']);
-        $status = in_array($_POST['status'], $statuses, true) ? $_POST['status'] : 'In OT';
+        $status = trim($_POST['status']);
+        if ($status === '') { $status = 'Move to ICU'; }
         if ($pname !== '' && $mrn !== '') {
             $stmt = mysqli_prepare($con, "INSERT INTO ot_board_status (pname, mrn, status) VALUES (?, ?, ?)");
             mysqli_stmt_bind_param($stmt, 'sss', $pname, $mrn, $status);
@@ -19,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($action === 'update') {
         $id     = (int)$_POST['id'];
-        $status = in_array($_POST['status'], $statuses, true) ? $_POST['status'] : 'In OT';
+        $status = trim($_POST['status']);
+        if ($status === '') { $status = 'Move to ICU'; }
 
         $cur = mysqli_prepare($con, "SELECT pname, mrn, status FROM ot_board_status WHERE id = ?");
         mysqli_stmt_bind_param($cur, 'i', $id);
@@ -54,18 +53,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_close($stmt);
     }
 
-    header('Location: form.php');
+    header('Location: icu_form.php');
     exit;
 }
 
-$result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_board_status ORDER BY id DESC");
+$result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_board_status WHERE status = 'Move to ICU' ORDER BY id DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OT Board - Manage Patients</title>
+<title>OT Board - ICU Patients</title>
 <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: #eef2f6; color: #12263a; }
@@ -81,6 +80,7 @@ $result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_
     input[type="text"] { min-width: 220px; }
     button { padding: 10px 18px; font-size: 15px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; }
     .btn-add { background: #1971c2; color: #fff; }
+    .btn-upd { background: #2f9e44; color: #fff; }
     .btn-del { background: #b02a37; color: #fff; }
     table { border-collapse: collapse; width: 100%; }
     th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #e4eaef; font-size: 15px; }
@@ -91,19 +91,19 @@ $result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_
     .st-bed { background: #2f9e44; }
     .st-icu { background: #b02a37; }
     .st-discharged { background: #6c757d; }
-    .inline { display: inline; }
+    .inline { display: inline-flex; gap: 8px; align-items: center; }
     .muted { color: #8090a0; font-size: 13px; }
 </style>
 </head>
 <body>
 
-<div class="bar">OT Board - Manage Patients <a href="board.php" target="_blank">Open Display Board &raquo;</a><a href="log.php" target="_blank" style="margin-right:16px;">Status Log &raquo;</a></div>
+<div class="bar">OT Board - ICU Patients <a href="board.php" target="_blank">Open Display Board &raquo;</a><a href="log.php" target="_blank" style="margin-right:16px;">Status Log &raquo;</a><a href="form.php" target="_blank" style="margin-right:16px;">All Patients &raquo;</a></div>
 
 <div class="wrap">
 
     <div class="card">
-        <h2>Add Patient</h2>
-        <form method="post" action="form.php">
+        <h2>Add ICU Patient</h2>
+        <form method="post" action="icu_form.php">
             <input type="hidden" name="action" value="add">
             <div class="row">
                 <div class="field">
@@ -116,11 +116,7 @@ $result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_
                 </div>
                 <div class="field">
                     <label>Status</label>
-                    <select name="status">
-                        <?php foreach ($addStatuses as $s): ?>
-                        <option value="<?php echo htmlspecialchars($s); ?>"><?php echo htmlspecialchars($s); ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <input type="text" name="status" value="Move to ICU">
                 </div>
                 <div class="field">
                     <button type="submit" class="btn-add">Add to Board</button>
@@ -130,7 +126,7 @@ $result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_
     </div>
 
     <div class="card">
-        <h2>Current Patients</h2>
+        <h2>Current ICU Patients</h2>
         <table>
             <thead>
                 <tr><th>#</th><th>Patient Name</th><th>MRN</th><th>Status</th><th>Change Status</th><th>Updated</th><th></th></tr>
@@ -141,7 +137,7 @@ $result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_
             $badge = array('In OT' => 'st-ot', 'In Observation' => 'st-obs', 'Move to Bed' => 'st-bed', 'Move to ICU' => 'st-icu', 'Discharged' => 'st-discharged');
             if ($result && mysqli_num_rows($result) > 0):
                 while ($row = mysqli_fetch_assoc($result)):
-                    $cls = isset($badge[$row['status']]) ? $badge[$row['status']] : 'st-ot';
+                    $cls = isset($badge[$row['status']]) ? $badge[$row['status']] : 'st-icu';
             ?>
                 <tr>
                     <td><?php echo $n++; ?></td>
@@ -149,19 +145,16 @@ $result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_
                     <td><?php echo htmlspecialchars($row['mrn']); ?></td>
                     <td><span class="badge <?php echo $cls; ?>"><?php echo htmlspecialchars($row['status']); ?></span></td>
                     <td>
-                        <form method="post" action="form.php" class="inline">
+                        <form method="post" action="icu_form.php" class="inline">
                             <input type="hidden" name="action" value="update">
                             <input type="hidden" name="id" value="<?php echo (int)$row['id']; ?>">
-                            <select name="status" onchange="this.form.submit()">
-                                <?php foreach ($statuses as $s): ?>
-                                <option value="<?php echo htmlspecialchars($s); ?>" <?php echo $s === $row['status'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($s); ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                            <input type="text" name="status" value="<?php echo htmlspecialchars($row['status']); ?>">
+                            <button type="submit" class="btn-upd">Update</button>
                         </form>
                     </td>
                     <td class="muted"><?php echo htmlspecialchars($row['updated_at']); ?></td>
                     <td>
-                        <form method="post" action="form.php" class="inline" onsubmit="return confirm('Remove this patient from the board?');">
+                        <form method="post" action="icu_form.php" class="inline" onsubmit="return confirm('Remove this patient from the board?');">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<?php echo (int)$row['id']; ?>">
                             <button type="submit" class="btn-del">Remove</button>
@@ -172,7 +165,7 @@ $result = mysqli_query($con, "SELECT id, pname, mrn, status, updated_at FROM ot_
                 endwhile;
             else:
             ?>
-                <tr><td colspan="7" class="muted">No patients on the board yet.</td></tr>
+                <tr><td colspan="7" class="muted">No ICU patients on the board.</td></tr>
             <?php endif; ?>
             </tbody>
         </table>

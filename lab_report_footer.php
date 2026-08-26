@@ -68,21 +68,38 @@ if(!function_exists('lab_footer_rows')){
         return '';   // ambiguous or unknown -> caller must pass subtype explicitly
     }
 
-    /* Draw one vertical signatory block at (x,y) within width w. Returns height used (mm). */
+    /* Draw one vertical signatory block at (x,y) within width w. Returns height used (mm).
+       NOTE: the caller switches auto page break OFF around this, because every element is
+       placed at an absolute Y — a Cell() that triggered a break here would scatter the
+       block over several pages. */
     function lab_footer_block($pdf, $x, $y, $w, $label, $name, $desig, $sig){
-        $labelH = 4; $sigH = 13; $nameH = 4;
+        $labelH = 3.5; $sigH = 10; $nameH = 4; $desigH = 3.5;
 
         // 1. label
         $pdf->SetXY($x, $y);
         $pdf->SetFont('Times', 'B', 8);
         $pdf->Cell($w, $labelH, $label, 0, 2, 'C');
 
-        // 2. signature (image centred in the sig band; band kept even if empty for alignment)
+        // 2. signature (scaled to fit the band, aspect ratio preserved; band kept even if
+        //    empty so every block in the row stays aligned)
         if($sig !== ''){
             $path = (strpos($sig, ':') !== false || $sig[0] === '/') ? $sig : __DIR__.'/'.$sig;
             if(@is_file($path)){
-                $imgW = 34; $imgH = 12;
-                @$pdf->Image($path, $x + ($w - $imgW) / 2, $y + $labelH + 0.5, $imgW, $imgH);
+                $boxW = 30; $boxH = $sigH;
+                if($boxW > $w - 2) $boxW = $w - 2;          // never wider than the column
+                $sz = @getimagesize($path);
+                if($sz && $sz[0] > 0 && $sz[1] > 0){
+                    $imgW = $boxW;
+                    $imgH = $imgW * $sz[1] / $sz[0];
+                    if($imgH > $boxH){                       // tall image: fit by height instead
+                        $imgH = $boxH;
+                        $imgW = $imgH * $sz[0] / $sz[1];
+                    }
+                    @$pdf->Image($path,
+                        $x + ($w - $imgW) / 2,               // centred in the column
+                        $y + $labelH + ($boxH - $imgH) / 2,  // centred in the band
+                        $imgW, $imgH);
+                }
             }
         }
 
@@ -94,9 +111,9 @@ if(!function_exists('lab_footer_rows')){
         // 4. designation (may wrap to 2 lines)
         $pdf->SetXY($x, $y + $labelH + $sigH + $nameH);
         $pdf->SetFont('Times', '', 8);
-        $pdf->MultiCell($w, 3.5, $desig, 0, 'C');
+        $pdf->MultiCell($w, $desigH, $desig, 0, 'C');
 
-        return $labelH + $sigH + $nameH + 8;   // ~ block height incl. designation area
+        return $labelH + $sigH + $nameH + 2 * $desigH;   // block height incl. 2 designation lines
     }
 
     /**
@@ -170,20 +187,44 @@ if(!function_exists('lab_footer_rows')){
         $usableW = $pageW - $lm - $rm;
         $blockW  = $usableW / $cols;
         $startX  = $lm;
-        $rowH    = 29;                       // per-row height (mm)
+        $rowH    = 25;                       // per-row height (mm), matches lab_footer_block()
 
-        $startY = isset($opts['startY']) ? $opts['startY'] : $pdf->GetY() + 6;
+        $startY = isset($opts['startY']) ? $opts['startY'] : $pdf->GetY() + 3;
 
-        // page-break guard if the block set won't fit
+        /* ---- keep the whole footer together on one page ----
+           Every element inside a block is placed at an absolute Y, so we must NOT let FPDF
+           auto page break in the middle of the footer (that used to split label/signature/
+           name/designation over 3-4 pages). Instead: measure first, move the footer as a
+           unit if it does not fit, then draw with auto page break switched off.
+           The footer is allowed to use the bottom margin area, down to $safetyBottom mm
+           from the paper edge, so a full-length report still keeps its footer on the
+           report page instead of spilling onto a near-empty extra page. */
         $rowsNeeded = (int)ceil(count($blocks) / $cols);
-        if(method_exists($pdf, 'CheckPageBreak') && is_callable([$pdf, 'CheckPageBreak'])){
-            try {
-                @$pdf->CheckPageBreak($rowsNeeded * $rowH);
-                $startY = $pdf->GetY();
-            } catch (\Throwable $e) {
-                // CheckPageBreak exists but isn't publicly callable (e.g. TCPDF); skip the guard.
-            }
+        $needed     = $rowsNeeded * $rowH;
+
+        if(method_exists($pdf, 'getPageHeight'))     $pageH = $pdf->getPageHeight();
+        elseif(isset($pdf->h))                       $pageH = $pdf->h;
+        else                                         $pageH = 297;
+        // top/bottom margins: public props on FPDF, getMargins() on TCPDF
+        $mgs  = method_exists($pdf, 'getMargins') ? $pdf->getMargins() : array();
+        if(isset($pdf->tMargin))        $topM = $pdf->tMargin;
+        elseif(isset($mgs['top']))      $topM = $mgs['top'];
+        else                            $topM = 10;
+
+        $safetyBottom = isset($opts['safetyBottom']) ? (float)$opts['safetyBottom'] : 10;
+        $bottomLimit  = $pageH - $safetyBottom;
+
+        if($startY + $needed > $bottomLimit){
+            $orient = isset($pdf->CurOrientation) ? $pdf->CurOrientation : '';
+            $pdf->AddPage($orient);
+            $startY = $topM;
         }
+
+        // suspend auto page break while the blocks are drawn, then restore it
+        $prevAuto    = isset($pdf->AutoPageBreak) ? $pdf->AutoPageBreak : true;
+        $prevBMargin = isset($pdf->bMargin) ? $pdf->bMargin
+                     : (isset($mgs['bottom']) ? $mgs['bottom'] : 20);
+        if(method_exists($pdf, 'SetAutoPageBreak')) $pdf->SetAutoPageBreak(false);
 
         $i = 0;
         foreach($blocks as $b){
@@ -195,7 +236,11 @@ if(!function_exists('lab_footer_rows')){
             $i++;
         }
 
-        // leave cursor below the footer
-        $pdf->SetXY($startX, $startY + $rowsNeeded * $rowH);
+        if(method_exists($pdf, 'SetAutoPageBreak')) $pdf->SetAutoPageBreak($prevAuto, $prevBMargin);
+
+        // leave cursor below the footer, clamped so a trailing Ln() cannot spawn a blank page
+        $endY = $startY + $needed;
+        if($endY > $bottomLimit) $endY = $bottomLimit;
+        $pdf->SetXY($startX, $endY);
     }
 }

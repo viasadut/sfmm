@@ -575,12 +575,12 @@ if($data['esr']!='' and $data['promyclocyte']!='0.00' and $data['metamyclocyte']
 }
 
 else if($data['esr']=='' and $data['promyclocyte']=='0.00' and $data['metamyclocyte']=='0.00' and $data['lymphoblast']=='0.00' and $data['myoblast']=='0.00' and $data['nrbc']=='0.00' and $data['a_cell']=='0.00')
-{	$pdf->Ln(45);
+{	$pdf->Ln(38);   // legacy spacer, trimmed so the approval footer fits on this page
 
 }
 
 else if($data['esr']!='' and $data['promyclocyte']=='0.00' and $data['metamyclocyte']=='0.00' and $data['lymphoblast']=='0.00' and $data['myoblast']=='0.00' and $data['nrbc']=='0.00' and $data['a_cell']=='0.00')
-{	$pdf->Ln(35);
+{	$pdf->Ln(28);   // legacy spacer, trimmed so the approval footer fits on this page
 
 }
 
